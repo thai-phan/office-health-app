@@ -1,6 +1,9 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.devtools.ksp") version("1.8.10-1.0.9")
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -56,6 +59,14 @@ dependencies {
     implementation("androidx.navigation:navigation-ui-ktx:2.7.2")
     implementation("androidx.preference:preference-ktx:1.2.1")
 
+
+    // Hilt dependency injection
+    implementation("com.google.dagger:hilt-android:2.48")
+    // kapt "com.google.dagger:hilt-compiler:2.46.1")
+    kapt("androidx.hilt:hilt-compiler:1.0.0")
+    kapt("com.google.dagger:hilt-android-compiler:2.48")
+
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
 
     // DataStore

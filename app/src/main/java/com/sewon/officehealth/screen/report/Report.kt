@@ -39,8 +39,6 @@ fun Report(modifier: Modifier) {
         listOf(Color(0xFF03DAC5), Color(0xFF3E4F9D))
     )
 
-//    Donut chart 4 cai
-
     Column(
         modifier = modifier
             .fillMaxSize()
