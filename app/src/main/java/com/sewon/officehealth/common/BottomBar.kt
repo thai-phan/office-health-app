@@ -22,49 +22,49 @@ import java.util.Locale
 
 @Composable
 fun BottomBar(
-    navController: NavController,
-    bottomBarState: MutableState<Boolean>,
-    tabs: Array<MainTabs>
+  navController: NavController,
+  bottomBarState: MutableState<Boolean>,
+  tabs: Array<MainTabs>
 ) {
 
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
-        ?: MainTabs.ACTIVITY.route
+  val navBackStackEntry by navController.currentBackStackEntryAsState()
+  val currentRoute = navBackStackEntry?.destination?.route
+    ?: MainTabs.ACTIVITY.route
 
-    val routes = remember {
-        MainTabs.values().map { it.route }
-    }
-    if (currentRoute in routes) {
-        AnimatedVisibility(
-            visible = bottomBarState.value,
-            enter = slideInVertically(initialOffsetY = { it }),
-            exit = slideOutVertically(targetOffsetY = { it }),
-            content = {
-                NavigationBar(
-                    containerColor = Color(0xFF000103),
-                ) {
-                    tabs.forEach { tab ->
-                        NavigationBarItem(
-                            icon = { Icon(painterResource(tab.icon), contentDescription = null) },
-                            label = { Text(stringResource(tab.title).uppercase(Locale.getDefault())) },
-                            selected = currentRoute == tab.route,
-                            onClick = {
-                                if (tab.route != currentRoute) {
-                                    navController.navigate(tab.route) {
-                                        popUpTo(navController.graph.startDestinationId) {
-                                            saveState = true
-                                        }
-                                        launchSingleTop = true
-                                        restoreState = true
-                                    }
-                                }
-                            },
-                            modifier = Modifier.navigationBarsPadding()
-                        )
+  val routes = remember {
+    MainTabs.values().map { it.route }
+  }
+  if (currentRoute in routes) {
+    AnimatedVisibility(
+      visible = bottomBarState.value,
+      enter = slideInVertically(initialOffsetY = { it }),
+      exit = slideOutVertically(targetOffsetY = { it }),
+      content = {
+        NavigationBar(
+          containerColor = Color(0xFF000103),
+        ) {
+          tabs.forEach { tab ->
+            NavigationBarItem(
+              icon = { Icon(painterResource(tab.icon), contentDescription = null) },
+              label = { Text(stringResource(tab.title).uppercase(Locale.getDefault())) },
+              selected = currentRoute == tab.route,
+              onClick = {
+                if (tab.route != currentRoute) {
+                  navController.navigate(tab.route) {
+                    popUpTo(navController.graph.startDestinationId) {
+                      saveState = true
                     }
+                    launchSingleTop = true
+                    restoreState = true
+                  }
                 }
-            }
-        )
-    }
+              },
+              modifier = Modifier.navigationBarsPadding()
+            )
+          }
+        }
+      }
+    )
+  }
 
 }

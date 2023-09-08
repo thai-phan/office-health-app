@@ -10,9 +10,7 @@ import androidx.compose.ui.unit.sp
 import com.sewon.officehealth.R
 
 private val fonts = FontFamily(
-    Font(R.font.suite_regular),
-    Font(R.font.suite_medium, FontWeight.W500),
-    Font(R.font.suite_bold, FontWeight.Bold)
+    Font(R.font.pretendard_regular),
 )
 
 val typography = typographyFromDefaults(

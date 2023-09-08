@@ -8,10 +8,10 @@ import com.sewon.officehealth.R
 
 
 class BackgroundSoundService : Service() {
-    var player: MediaPlayer? = null
-    override fun onBind(arg0: Intent?): IBinder? {
-        return null
-    }
+  var player: MediaPlayer? = null
+  override fun onBind(arg0: Intent?): IBinder? {
+    return null
+  }
 
 //    override fun onCreate() {
 //        super.onCreate()
@@ -25,25 +25,25 @@ class BackgroundSoundService : Service() {
 //        return 1
 //    }
 
-    override fun onStart(intent: Intent?, startId: Int) {
-        // TO DO
-    }
+  override fun onStart(intent: Intent?, startId: Int) {
+    // TO DO
+  }
 
-    fun onUnBind(arg0: Intent?): IBinder? {
-        // TO DO Auto-generated method
-        return null
-    }
+  fun onUnBind(arg0: Intent?): IBinder? {
+    // TO DO Auto-generated method
+    return null
+  }
 
-    fun onStop() {}
-    fun onPause() {}
-    override fun onDestroy() {
-        player!!.stop()
-        player!!.release()
-    }
+  fun onStop() {}
+  fun onPause() {}
+  override fun onDestroy() {
+    player!!.stop()
+    player!!.release()
+  }
 
-    override fun onLowMemory() {}
+  override fun onLowMemory() {}
 
-    companion object {
-        private val TAG: String? = null
-    }
+  companion object {
+    private val TAG: String? = null
+  }
 }

@@ -35,7 +35,7 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 @Composable
-fun HealthAppTheme(
+fun OfficeHealthTheme(
     content: @Composable () -> Unit
 ) {
     val colorScheme = DarkColorScheme

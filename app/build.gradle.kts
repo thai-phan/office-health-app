@@ -1,7 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("com.google.devtools.ksp") version("1.8.10-1.0.9")
+    id("com.google.devtools.ksp") version ("1.8.20-1.0.11")
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
 }
@@ -9,7 +9,6 @@ plugins {
 android {
     namespace = "com.sewon.officehealth"
     compileSdk = 34
-
     defaultConfig {
         applicationId = "com.sewon.officehealth"
         minSdk = 29
@@ -19,7 +18,6 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -30,20 +28,23 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.4.6"
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
-        buildConfig  = true
+        buildConfig = true
         viewBinding = true
+        compose = true
     }
 }
 
 dependencies {
-
     implementation("androidx.activity:activity-compose:1.7.2")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.annotation:annotation:1.7.0")
