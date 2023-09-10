@@ -25,11 +25,10 @@ fun NavigationGraph(
     modifier: Modifier = Modifier,
     finishActivity: () -> Unit = {},
     navController: NavHostController = rememberNavController(),
-    startDestination: String = AppDestinations.SPLASH_ROUTE,
+    startDestination: String = AppDestinations.WELCOME_ROUTE,
     showOnboardingInitially: Boolean = false
 ) {
 
-    val mainStartDestination = AppDestinations.ACTIVITY_ROUTE
 
     val context = LocalContext.current
 
@@ -57,7 +56,7 @@ fun NavigationGraph(
 
         composable(AppDestinations.WELCOME_ROUTE) {
             WelcomeScreen(
-
+                navController = navController,
             )
         }
         composable(AppDestinations.DEVICE_ROUTE) {

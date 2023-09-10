@@ -1,4 +1,4 @@
-package com.sewon.officehealth
+package com.sewon.officehealth.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -12,18 +12,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.sewon.officehealth.common.NavigationGraph
-import com.sewon.officehealth.common.MainTabs
 import com.sewon.officehealth.common.theme.OfficeHealthTheme
 
 @Composable
-fun OfficeHealthApp(finishActivity: () -> Unit) {
+fun OfficeHealth(finishActivity: () -> Unit) {
 
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()

@@ -1,4 +1,4 @@
-package com.sewon.officehealth
+package com.sewon.officehealth.common
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -16,8 +16,10 @@ class MainActivity : ComponentActivity() {
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
+
+
         setContent {
-            OfficeHealthApp {
+            OfficeHealth {
                 finish()
             }
 
