@@ -1,8 +1,14 @@
 package com.sewon.officehealth.screen.device
 
+import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
+import android.bluetooth.le.ScanCallback
+import android.bluetooth.le.ScanResult
+import android.bluetooth.le.ScanSettings
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Handler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sewon.officehealth.common.theme.checkedBorderColor
@@ -37,55 +44,31 @@ fun DeviceList(
     viewModel: ViewModelUserSetting = hiltViewModel()
 ) {
 
-    val leDeviceListAdapter = LeDeviceListAdapter()
-// Device scan callback.
-    val leScanCallback: ScanCallback = object : ScanCallback() {
-        override fun onScanResult(callbackType: Int, result: ScanResult) {
-            super.onScanResult(callbackType, result)
-            leDeviceListAdapter.addDevice(result.device)
-            leDeviceListAdapter.notifyDataSetChanged()
-        }
-    }
-
-
-    val context = LocalContext.current
-    val bluetoothManager: BluetoothManager = context.getSystemService(BluetoothManager::class.java)
-    val bluetoothAdapter: BluetoothAdapter = bluetoothManager.getAdapter()
-
-
-    val bluetoothLeScanner = bluetoothAdapter.bluetoothLeScanner
-    var scanning = false
-    val handler = Handler()
-
-// Stops scanning after 10 seconds.
-    val SCAN_PERIOD: Long = 10000
-
-    fun scanLeDevice() {
-        if (!scanning) { // Stops scanning after a pre-defined scan period.
-            handler.postDelayed({
-                scanning = false
-                bluetoothLeScanner.stopScan(leScanCallback)
-            }, SCAN_PERIOD)
-            scanning = true
-            bluetoothLeScanner.startScan(leScanCallback)
-        } else {
-            scanning = false
-            bluetoothLeScanner.stopScan(leScanCallback)
-        }
-    }
+//    val permissions = mutableListOf(Manifest.permission.ACCESS_FINE_LOCATION)
+//    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+//        permissions.add(Manifest.permission.BLUETOOTH_SCAN)
+//    }
+//    PermissionBox(permissions = permissions) {
+//        BLEScanIntentScreen()
+//    }
+//
+//    val leDeviceListAdapter = LeDeviceListAdapter()
+//// Device scan callback.
+//    val leScanCallback: ScanCallback = object : ScanCallback() {
+//        override fun onScanResult(callbackType: Int, result: ScanResult) {
+//            super.onScanResult(callbackType, result)
+//            leDeviceListAdapter.addDevice(result.device)
+//            leDeviceListAdapter.notifyDataSetChanged()
+//        }
+//    }
+//
+//
+//
 
 
 //    setListAdapter(ArrayAdapter<String>(this, R.layout.list, s))
 
 
-    val switchColors: SwitchColors = SwitchDefaults.colors(
-        checkedThumbColor = checkedThumbColor,
-        checkedTrackColor = checkedTrackColor,
-        checkedBorderColor = checkedBorderColor,
-        uncheckedThumbColor = uncheckedThumbColor,
-        uncheckedTrackColor = uncheckedTrackColor,
-        uncheckedBorderColor = uncheckedBorderColor,
-    )
     Column(
         modifier = modifier.padding(
                 start = 20.dp, top = 20.dp, end = 20.dp, bottom = 10.dp

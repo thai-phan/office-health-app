@@ -96,12 +96,14 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
     implementation("androidx.compose.ui:ui-viewbinding:$composeVersion")
+    implementation("com.google.accompanist:accompanist-permissions:0.32.0")
 
     debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
 
     // Log
     //
     implementation("com.jakewharton.timber:timber:5.0.1")
+
 
 
     // Test
