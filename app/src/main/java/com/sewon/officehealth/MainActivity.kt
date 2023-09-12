@@ -1,17 +1,16 @@
-package com.sewon.officehealth.common
+package com.sewon.officehealth
 
 import android.Manifest
-import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
-import androidx.compose.material3.Text
 import androidx.core.app.ActivityCompat
 import androidx.core.view.WindowCompat
-import com.sewon.officehealth.screen.device.BLEScanIntentSample
+import com.sewon.officehealth.screen.device.ble.BLEScanIntentSample
+import com.sewon.officehealth.screen.device.ble.FindBLEDevicesSample
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -133,7 +132,7 @@ class MainActivity : ComponentActivity() {
       ) != PackageManager.PERMISSION_GRANTED
     ) {
       setContent {
-                BLEScanIntentSample()
+        FindBLEDevicesSample()
       }
 
 //            OfficeHealth {
@@ -142,7 +141,8 @@ class MainActivity : ComponentActivity() {
 
     } else {
       setContent {
-        BLEScanIntentSample()
+//        BLEScanIntentSample()
+        FindBLEDevicesSample()
       }
     }
   }

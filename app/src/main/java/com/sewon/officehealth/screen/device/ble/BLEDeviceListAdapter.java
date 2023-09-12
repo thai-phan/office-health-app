@@ -1,4 +1,4 @@
-package com.sewon.officehealth.screen.device;
+package com.sewon.officehealth.screen.device.ble;
 
 import android.bluetooth.BluetoothDevice;
 import android.view.LayoutInflater;
@@ -8,11 +8,11 @@ import android.widget.BaseAdapter;
 
 import java.util.ArrayList;
 
-public class LeDeviceListAdapter extends BaseAdapter {
+public class BLEDeviceListAdapter extends BaseAdapter {
     private ArrayList<BluetoothDevice> mLeDevices;
     private LayoutInflater mInflator;
 
-    public LeDeviceListAdapter() {
+    public BLEDeviceListAdapter() {
         super();
         mLeDevices = new ArrayList<BluetoothDevice>();
 //        mInflator = DeviceScanActivity.this.getLayoutInflater();
