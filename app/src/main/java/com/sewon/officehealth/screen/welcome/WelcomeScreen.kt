@@ -35,7 +35,10 @@ import com.sewon.officehealth.common.AppDestinations
 fun WelcomeScreen(
     navController: NavController,
 ) {
-
+//  rgba(0, 150, 53, 1),
+//
+//
+//  rgba(172, 225, 175, 1)
 
     Column(
         verticalArrangement = Arrangement.Top,
@@ -45,17 +48,17 @@ fun WelcomeScreen(
           .systemBarsPadding()
           .fillMaxSize()
           .paint(
-            painterResource(id = R.mipmap.ic_welcome_foreground),
+            painterResource(id = R.mipmap.ic_image_2_foreground),
             alignment = Alignment.BottomCenter,
             contentScale = ContentScale.FillWidth
           ),
     ) {
         Spacer(modifier = Modifier.height(50.dp))
         Image(
-            painter = painterResource(id = R.drawable.ic_splash_icon),
+            painter = painterResource(id = R.mipmap.ic_image_5_foreground),
             contentDescription = "Logo",
             modifier = Modifier
-                .size(width = 300.dp, height = 70.dp)
+                .size(width = 500.dp, height = 200.dp)
         )
         Spacer(modifier = Modifier.height(50.dp))
         Text(

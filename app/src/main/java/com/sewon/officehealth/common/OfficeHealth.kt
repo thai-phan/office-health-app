@@ -20,31 +20,31 @@ import com.sewon.officehealth.common.theme.OfficeHealthTheme
 @Composable
 fun OfficeHealth(finishActivity: () -> Unit) {
 
-    val navController = rememberNavController()
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
+  val navController = rememberNavController()
+  val navBackStackEntry by navController.currentBackStackEntryAsState()
+  val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
 
-    OfficeHealthTheme() {
-        val tabs = remember { MainTabs.values() }
+  OfficeHealthTheme() {
+    val tabs = remember { MainTabs.values() }
 
-        Scaffold(
+    Scaffold(
 
-        ) { innerPaddingModifier ->
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(color = Color(0xFFE7F5FE)),
-            ) {
-                NavigationGraph(
-                    finishActivity = finishActivity,
-                    navController = navController,
-                    modifier = Modifier.padding(innerPaddingModifier)
-                )
-            }
-
-        }
+    ) { innerPaddingModifier ->
+      Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+          .fillMaxSize()
+          .whiteGreenBackground(),
+      ) {
+        NavigationGraph(
+          finishActivity = finishActivity,
+          navController = navController,
+          modifier = Modifier.padding(innerPaddingModifier)
+        )
+      }
 
     }
+
+  }
 }
 

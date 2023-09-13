@@ -11,6 +11,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.app.ActivityCompat
 import androidx.core.view.WindowCompat
+import com.sewon.officehealth.common.OfficeHealth
 import com.sewon.officehealth.screen.device.FindBLEDevicesSample
 import com.sewon.officehealth.screen.device.ble.SerialListener
 import com.sewon.officehealth.screen.device.ble.SerialService
@@ -47,18 +48,22 @@ class MainActivity : ComponentActivity(), ServiceConnection, SerialListener {
       ) != PackageManager.PERMISSION_GRANTED
     ) {
       setContent {
-        FindBLEDevicesSample(appContext)
+//        FindBLEDevicesSample(appContext)
+        OfficeHealth {
+          finish()
+        }
       }
 
-//            OfficeHealth {
-//                finish()
-//            }
+//
 
     } else {
       setContent {
+        OfficeHealth {
+          finish()
+        }
 //        BLEScanIntentSample()
 //        SoundUI(context = LocalContext.current)
-        FindBLEDevicesSample(appContext)
+//        FindBLEDevicesSample(appContext)
       }
     }
   }

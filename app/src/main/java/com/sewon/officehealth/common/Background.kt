@@ -7,15 +7,14 @@ import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import com.sewon.officehealth.common.theme.BackgroundBottom
-import com.sewon.officehealth.common.theme.BackgroundMiddle
 import com.sewon.officehealth.common.theme.BackgroundTop
 
 
 @SuppressLint("UnnecessaryComposedModifier")
-fun Modifier.blackGreenBackground(): Modifier = this.composed {
+fun Modifier.whiteGreenBackground(): Modifier = this.composed {
   Modifier.drawWithCache {
-    val gradientBrush = Brush.verticalGradient(
-      listOf(BackgroundTop, BackgroundMiddle, BackgroundBottom)
+    val gradientBrush = Brush.linearGradient(
+      listOf(BackgroundTop, BackgroundBottom)
     )
     onDrawBehind {
       drawRect(gradientBrush)

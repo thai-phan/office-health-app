@@ -3,10 +3,8 @@ package com.sewon.officehealth.common.theme
 import androidx.compose.ui.graphics.Color
 
 // Background color
-val BackgroundTop = Color(0xff006d63)
-val BackgroundMiddle = Color(0xff091d3f)
-val BackgroundBottom = Color(0xff071224)
-
+val BackgroundTop = Color(0xff009635)
+val BackgroundBottom = Color(0xffACE1AF)
 
 // SwitchColors color
 val checkedThumbColor = Color(0xFF09897D)
