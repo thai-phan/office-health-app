@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.sewon.officehealth.screen.device.ble
+package com.sewon.officehealth.screen.device
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -23,6 +23,8 @@ import android.bluetooth.BluetoothManager
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
+import android.content.Context
+import android.content.Intent
 import android.os.ParcelUuid
 import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.layout.Arrangement
@@ -60,38 +62,65 @@ import androidx.core.content.getSystemService
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
+import com.sewon.officehealth.screen.demo.SoundService
+import com.sewon.officehealth.screen.device.ble.BLEDeviceItem
+import com.sewon.officehealth.screen.device.ble.BluetoothSampleBox
+import com.sewon.officehealth.screen.device.ble.SerialService
+import com.sewon.officehealth.screen.device.ble.SerialSocket
+import com.sewon.officehealth.service.MyService
 import kotlinx.coroutines.delay
 import timber.log.Timber
 import java.util.UUID
 
 @SuppressLint("MissingPermission")
 @Composable
-fun FindBLEDevicesSample() {
+fun FindBLEDevicesSample(appContext: Context) {
+
+
+
   val service = SerialService()
   val context = LocalContext.current
   val adapter = checkNotNull(context.getSystemService<BluetoothManager>()?.adapter)
+  val lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
+
+  DisposableEffect(lifecycleOwner) {
+    val observer = LifecycleEventObserver { _, event ->
+      if (event == Lifecycle.Event.ON_START) {
+//        context.startService(Intent(context, SoundService::class.java))
+        context.startService(Intent(context, SerialService::class.java))
+      } else if (event == Lifecycle.Event.ON_STOP) {
+        context.stopService(Intent(context, SerialService::class.java))
+      }
+    }
+
+    // Add the observer to the lifecycle
+    lifecycleOwner.lifecycle.addObserver(observer)
+
+    // When the effect leaves the Composition, remove the observer
+    onDispose {
+      lifecycleOwner.lifecycle.removeObserver(observer)
+    }
+
+  }
+
+  fun onConnect(bluetoothDevice: BluetoothDevice) {
+    adapter.let { adapter ->
+      try {
+        val device = adapter.getRemoteDevice(bluetoothDevice.address)
+
+        val socket = SerialSocket(appContext, device)
+        service.connect(socket)
+
+      } catch (exception: IllegalArgumentException) {
+        Timber.tag("Timber").w(exception)
+      }
+      // connect to the GATT server on the device
+    }
+  }
 
 
   BluetoothSampleBox {
-    FindDevicesScreen {
-
-
-      adapter.let { adapter ->
-        try {
-          val device = adapter.getRemoteDevice(it.address)
-
-          val socket = SerialSocket(context, device)
-          service.connect(socket)
-
-        } catch (exception: IllegalArgumentException) {
-          Timber.tag("TAG").w("Device not found with provided address.")
-        }
-        // connect to the GATT server on the device
-      }
-
-      Timber.tag("FindDeviceSample")
-        .d("Name: " + it.name + " Address: " + it.address + " Type: " + it.type)
-    }
+    FindDevicesScreen(onConnect = { onConnect(it) })
   }
 }
 
@@ -126,7 +155,7 @@ internal fun FindDevicesScreen(onConnect: (BluetoothDevice) -> Unit) {
       scanSettings = scanSettings,
       onScanFailed = {
         scanning = false
-        Timber.tag("FindBLEDevicesSample").w("Scan failed with error: %s", it)
+        Timber.tag("Timber").w("Scan failed with error: %s", it)
       },
       onDeviceFound = { scanResult ->
         if (!devices.contains(scanResult.device)) {
