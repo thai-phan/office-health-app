@@ -79,6 +79,7 @@ fun FindBLEDevicesSample(appContext: Context) {
 
 
   val service = SerialService()
+
   val context = LocalContext.current
   val adapter = checkNotNull(context.getSystemService<BluetoothManager>()?.adapter)
   val lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
@@ -108,7 +109,7 @@ fun FindBLEDevicesSample(appContext: Context) {
       try {
         val device = adapter.getRemoteDevice(bluetoothDevice.address)
 
-        val socket = SerialSocket(appContext, device)
+        val socket = SerialSocket(context, device)
         service.connect(socket)
 
       } catch (exception: IllegalArgumentException) {

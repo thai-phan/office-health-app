@@ -2,6 +2,7 @@ package com.sewon.officehealth
 
 import android.Manifest
 import android.content.ComponentName
+import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -34,7 +35,7 @@ class MainActivity : ComponentActivity(), ServiceConnection, SerialListener {
     super.onCreate(savedInstanceState)
     WindowCompat.setDecorFitsSystemWindows(window, false)
 
-
+    startService(Intent(applicationContext, SerialService::class.java))
 
 //    startService(Intent(applicationContext, SoundService::class.java))
 

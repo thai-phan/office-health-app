@@ -327,9 +327,6 @@ public class SerialSocket extends BluetoothGattCallback {
     }
   }
 
-  /*
-   * read
-   */
   @Override
   public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
     if (canceled)
@@ -344,9 +341,6 @@ public class SerialSocket extends BluetoothGattCallback {
     }
   }
 
-  /*
-   * write
-   */
   void write(byte[] data) throws IOException {
     if (canceled || !connected || writeCharacteristic == null)
       throw new IOException("not connected");
