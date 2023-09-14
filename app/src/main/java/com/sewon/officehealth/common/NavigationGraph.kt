@@ -26,7 +26,7 @@ fun NavigationGraph(
   modifier: Modifier = Modifier,
   finishActivity: () -> Unit = {},
   navController: NavHostController = rememberNavController(),
-  startDestination: String = AppDestinations.ACTIVITY_ROUTE,
+  startDestination: String = AppDestinations.DEVICE_ROUTE,
   showOnboardingInitially: Boolean = false
 ) {
 
