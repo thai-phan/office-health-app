@@ -1,4 +1,4 @@
-package com.sewon.officehealth.screen.device.ble;
+package com.sewon.officehealth.service.ble;
 
 import android.text.Editable;
 import android.text.InputType;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.sewon.officehealth.screen.device.ble
+package com.sewon.officehealth.service.ble
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -40,7 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.getSystemService
-import com.sewon.officehealth.screen.permission.PermissionScreen
+import com.sewon.officehealth.permission.PermissionScreen
 import timber.log.Timber
 
 

@@ -14,110 +14,106 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 import java.util.*;
-import java.text.*; 
+import java.text.*;
 
 
 public class ECG_ANALYSIS_PROC {
 
-	public static List<ECG_RESULT> ECG_AnalysisData(List<Double> lstData)
-	{
-		List<ECG_RESULT> listECGResult = new ArrayList<ECG_RESULT>(); //분석결과를 담기위한 List 
-		
-		listECGResult.clear();
-		
-	    try
-	    {
-            double sum = 0;
-            double rri = 0;
-            double cumulIntAVG = 0;
-            double cumulSDNNAVG = 0;
-            double cumulRMSSDAVG = 0;
-            double iCnt = 0;
-            
-            List<Double> listRRI = new ArrayList<Double>();
-            
-        	for(int y = 0; y < lstData.size(); y++)
-        	{	
-        		sum += lstData.get(y); //RRI를 Sum한다
-        		
-        		listRRI.add(lstData.get(y));
-        		
-        		//9개 그룹마다 RRI 평균, SDNN, RMSSD를 구한다.
-        		if((y+1) % 9 == 0)
-        		{
-        			iCnt++;
-        			ECG_RESULT node = new ECG_RESULT();
-            		node.iCycle = y;  
-            		node.NNInterval = sum / 9; 
-            		node.SDNN = CalcStdDev(listRRI, node.NNInterval);
-            		node.RMSSD = CalcRMSSD(listRRI);
-            		
-            		//실시간 평균내기, 9개까지만
-            		cumulIntAVG = CumulativeAVG(cumulIntAVG, node.NNInterval, iCnt);
-            		cumulSDNNAVG = CumulativeAVG(cumulSDNNAVG, node.SDNN, iCnt);
-            		cumulRMSSDAVG = CumulativeAVG(cumulRMSSDAVG, node.RMSSD, iCnt);
-            		
-            		node.IntAVG = cumulIntAVG;
-            		node.SDNNAVG = cumulSDNNAVG;
-            		node.RMSSDAVG = cumulRMSSDAVG;
-            		
-            		listRRI.clear();
-            		sum = 0;
-            		rri = 0;
-            		
-            		if(iCnt % 9 == 0)
-            		{
-	            		cumulIntAVG = 0;
-	            		cumulSDNNAVG = 0;
-	            		cumulRMSSDAVG = 0;
-	            		iCnt = 0;
-            		}
-            		
-            		node.NormNNint = node.NNInterval / node.IntAVG;
-            		node.NormSDNN = node.SDNN / node.SDNNAVG;
-            		node.NormRMSSD = node.RMSSD / node.RMSSDAVG;
-            		node.LnNint = Math.log(node.NormNNint);
-            		node.LnNSDNN = Math.log(node.NormSDNN);
-            		node.LnNRMSSD = Math.log(node.NormRMSSD);
-            		node.sqNint = Math.pow(node.NormNNint, 2);
-            		node.sqSDNN = Math.pow(node.NormSDNN, 2);
-            		node.sqRMSSD = Math.pow(node.NormRMSSD, 2);
-            		
-            		//현재 분석된 데이터로 아래의 모델식 계산을 하여 sleep5에 대한 State를 판정한다.
-            		// P = exp(Intercept Estimate상수 + sqNint의 Estimate상수 * 분석된 sqNint)
-            		// 결과 = P / (1 + P)
-            		
-            		node.sleep5_predict = Math.exp(-3.129 + 3.106*node.sqNint) / (1 + Math.exp(-3.129 + 3.106*node.sqNint));
-            		
-            		if(node.sleep5_predict > 0.5)
-	       				node.sleep5_State = "sleep5";
-            		else
-            			node.sleep5_State = "sleep1";
-            		
-            		//현재 분석된 데이터로 아래의 모델식 계산을 하여 stress에 대한 State를 판정한다.
-            		// P = exp(Intercept Estimate상수 + NormRMSSD의 Estimate상수 * 분석된 NormRMSSD)
-            		// 결과 = P / (1 + P)
-            		
-            		node.stress_predict = Math.exp(1.94 - 2.145*node.NormRMSSD) / (1 + Math.exp(1.94 - 2.145*node.NormRMSSD));
-            		
-            		if(node.stress_predict > 0.5)
-            			node.stress_State = "stress";
-            		else
-            			node.stress_State = "sleep1";
-            		
-            		//ECG_PQRST 최종 결과 클래스를 리스트에 담는다.
-            		listECGResult.add(node);
-        		}
-        	}	
+  public static List<ECG_RESULT> ECG_AnalysisData(List<Double> lstData) {
+    //분석결과를 담기위한 List
+    List<ECG_RESULT> listECGResult = new ArrayList<ECG_RESULT>();
 
-			
+    listECGResult.clear();
 
-			/////////////////////////////////////////////////////////////
-			//
-			//분석결과 내역을 파일로 생성한다.
-			//
-			/////////////////////////////////////////////////////////////
-/*
+    try {
+      double sum = 0;
+      double rri = 0;
+      double cumulIntAVG = 0;
+      double cumulSDNNAVG = 0;
+      double cumulRMSSDAVG = 0;
+      double iCnt = 0;
+
+      List<Double> listRRI = new ArrayList<Double>();
+
+      for (int y = 0; y < lstData.size(); y++) {
+        //RRI를 Sum한다
+        sum += lstData.get(y);
+
+        listRRI.add(lstData.get(y));
+
+        //9개 그룹마다 RRI 평균, SDNN, RMSSD를 구한다.
+        if ((y + 1) % 9 == 0) {
+          iCnt++;
+          ECG_RESULT node = new ECG_RESULT();
+          node.iCycle = y;
+          node.NNInterval = sum / 9;
+          node.SDNN = CalcStdDev(listRRI, node.NNInterval);
+          node.RMSSD = CalcRMSSD(listRRI);
+
+          //실시간 평균내기, 9개까지만
+          cumulIntAVG = CumulativeAVG(cumulIntAVG, node.NNInterval, iCnt);
+          cumulSDNNAVG = CumulativeAVG(cumulSDNNAVG, node.SDNN, iCnt);
+          cumulRMSSDAVG = CumulativeAVG(cumulRMSSDAVG, node.RMSSD, iCnt);
+
+          node.IntAVG = cumulIntAVG;
+          node.SDNNAVG = cumulSDNNAVG;
+          node.RMSSDAVG = cumulRMSSDAVG;
+
+          listRRI.clear();
+          sum = 0;
+          rri = 0;
+
+          if (iCnt % 9 == 0) {
+            cumulIntAVG = 0;
+            cumulSDNNAVG = 0;
+            cumulRMSSDAVG = 0;
+            iCnt = 0;
+          }
+
+          node.NormNNint = node.NNInterval / node.IntAVG;
+          node.NormSDNN = node.SDNN / node.SDNNAVG;
+          node.NormRMSSD = node.RMSSD / node.RMSSDAVG;
+          node.LnNint = Math.log(node.NormNNint);
+          node.LnNSDNN = Math.log(node.NormSDNN);
+          node.LnNRMSSD = Math.log(node.NormRMSSD);
+          node.sqNint = Math.pow(node.NormNNint, 2);
+          node.sqSDNN = Math.pow(node.NormSDNN, 2);
+          node.sqRMSSD = Math.pow(node.NormRMSSD, 2);
+
+          //현재 분석된 데이터로 아래의 모델식 계산을 하여 sleep5에 대한 State를 판정한다.
+          // P = exp(Intercept Estimate상수 + sqNint의 Estimate상수 * 분석된 sqNint)
+          // 결과 = P / (1 + P)
+
+          node.sleep5_predict = Math.exp(-3.129 + 3.106 * node.sqNint) / (1 + Math.exp(-3.129 + 3.106 * node.sqNint));
+
+          if (node.sleep5_predict > 0.5)
+            node.sleep5_State = "sleep5";
+          else
+            node.sleep5_State = "sleep1";
+
+          //현재 분석된 데이터로 아래의 모델식 계산을 하여 stress에 대한 State를 판정한다.
+          // P = exp(Intercept Estimate상수 + NormRMSSD의 Estimate상수 * 분석된 NormRMSSD)
+          // 결과 = P / (1 + P)
+
+          node.stress_predict = Math.exp(1.94 - 2.145 * node.NormRMSSD) / (1 + Math.exp(1.94 - 2.145 * node.NormRMSSD));
+
+          if (node.stress_predict > 0.5)
+            node.stress_State = "stress";
+          else
+            node.stress_State = "sleep1";
+
+          //ECG_PQRST 최종 결과 클래스를 리스트에 담는다.
+          listECGResult.add(node);
+        }
+      }
+
+
+      /////////////////////////////////////////////////////////////
+      //
+      //분석결과 내역을 파일로 생성한다.
+      //
+      /////////////////////////////////////////////////////////////
+    /*
 			String strFile = "C:\\Users\\knw79\\Downloads\\Sub20_Analysis_Data.csv";
 
 			File fi = new File(strFile);
@@ -165,64 +161,58 @@ public class ECG_ANALYSIS_PROC {
 			}
 
 			bufWriter.close();
-*/
-        }
-	    catch(Exception e) {
-	    	e.printStackTrace();
-	    }
-        
-        //최종 결과를 담은 리스트를 리턴한다.
-		return listECGResult;
-	}
+    */
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
 
-	public static double CalcRRIAvg(double[] rriData)
-	{
-		double sum = 0;
-	    for (int i=0; i < rriData.length; i++)
-	    {
-	        sum += rriData[i];
-	    }
-	    return sum/rriData.length;
-	}
-	
-	public static double CalcStdDev(List<Double> listRRI, double meanValue) 
-	{
-	    if (listRRI.size() < 2) return Double.NaN;
+    //최종 결과를 담은 리스트를 리턴한다.
+    return listECGResult;
+  }
 
-	    double sum = 0.0;
-	    double sd = 0.0;
-	    double diff;
+  public static double CalcRRIAvg(double[] rriData) {
+    double sum = 0;
+    for (double rriDatum : rriData) {
+      sum += rriDatum;
+    }
+    return sum / rriData.length;
+  }
 
-	    for (int i = 0; i < listRRI.size(); i++) {
-	      diff = listRRI.get(i) - meanValue;
-	      sum += diff * diff;
-	    }
-	    sd = Math.sqrt(sum / listRRI.size());
+  public static double CalcStdDev(List<Double> listRRI, double meanValue) {
+    if (listRRI.size() < 2) return Double.NaN;
 
-	    return sd;
-	}
-	
-	public static double CalcRMSSD(List<Double> listRRI) 
-	{
-		if (listRRI.size() < 2) return Double.NaN;
+    double sum = 0.0;
+    double sd = 0.0;
+    double diff;
 
-	    double sum = 0.0;
-	    double sd = 0.0;
-	    double diff;
+    for (int i = 0; i < listRRI.size(); i++) {
+      diff = listRRI.get(i) - meanValue;
+      sum += diff * diff;
+    }
+    sd = Math.sqrt(sum / listRRI.size());
 
-	    for (int i = 0; i < listRRI.size()-1; i++) {
-	      diff = listRRI.get(i) - listRRI.get(i+1);
-	      sum += diff * diff;
-	    }
-	    sd = Math.sqrt(sum / (listRRI.size()-1));
+    return sd;
+  }
 
-	    return sd;
-	}
-	
-	public static double CumulativeAVG (double prevAvg, double newNumber, double listLength) {
-		  double oldWeight = (listLength - 1) / listLength;
-		  double newWeight = 1 / listLength;
-		  return (prevAvg * oldWeight) + (newNumber * newWeight);
-	}
-	
+  public static double CalcRMSSD(List<Double> listRRI) {
+    if (listRRI.size() < 2) return Double.NaN;
+
+    double sum = 0.0;
+    double sd = 0.0;
+    double diff;
+
+    for (int i = 0; i < listRRI.size() - 1; i++) {
+      diff = listRRI.get(i) - listRRI.get(i + 1);
+      sum += diff * diff;
+    }
+    sd = Math.sqrt(sum / (listRRI.size() - 1));
+
+    return sd;
+  }
+
+  public static double CumulativeAVG(double prevAvg, double newNumber, double listLength) {
+    double oldWeight = (listLength - 1) / listLength;
+    double newWeight = 1 / listLength;
+    return (prevAvg * oldWeight) + (newNumber * newWeight);
+  }
 }

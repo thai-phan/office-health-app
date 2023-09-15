@@ -33,9 +33,9 @@
 
     <!-- Mention the service name here -->
     <service android:name=".service.MyService" />
-    <service android:name=".screen.demo.SoundService" />
-    <service android:name=".screen.device.ble.SerialService" />
-    <service android:name=".screen.demo.BoundService" />
+    <service android:name=".temp.SoundService" />
+    <service android:name=".service.ble.SerialService" />
+    <service android:name=".temp.BoundService" />
   </application>
 
 </manifest>

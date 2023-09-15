@@ -1,4 +1,4 @@
-package com.sewon.officehealth.screen.device.ble
+package com.sewon.officehealth.service.ble
 
 import android.bluetooth.le.BluetoothLeScanner
 import android.bluetooth.le.ScanResult

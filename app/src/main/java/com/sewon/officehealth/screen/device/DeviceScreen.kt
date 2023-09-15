@@ -10,6 +10,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Handler
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -43,7 +44,7 @@ import com.sewon.officehealth.common.theme.checkedTrackColor
 import com.sewon.officehealth.common.theme.uncheckedBorderColor
 import com.sewon.officehealth.common.theme.uncheckedThumbColor
 import com.sewon.officehealth.common.theme.uncheckedTrackColor
-import com.sewon.officehealth.screen.components.DeviceItem
+import com.sewon.officehealth.screen.device.components.DeviceItem
 
 
 @Composable
@@ -51,28 +52,6 @@ fun DeviceList(
   modifier: Modifier = Modifier,
   viewModel: ViewModelUserSetting = hiltViewModel()
 ) {
-
-//    val permissions = mutableListOf(Manifest.permission.ACCESS_FINE_LOCATION)
-//    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-//        permissions.add(Manifest.permission.BLUETOOTH_SCAN)
-//    }
-//    PermissionBox(permissions = permissions) {
-//        BLEScanIntentScreen()
-//    }
-//
-//    val leDeviceListAdapter = LeDeviceListAdapter()
-//// Device scan callback.
-//    val leScanCallback: ScanCallback = object : ScanCallback() {
-//        override fun onScanResult(callbackType: Int, result: ScanResult) {
-//            super.onScanResult(callbackType, result)
-//            leDeviceListAdapter.addDevice(result.device)
-//            leDeviceListAdapter.notifyDataSetChanged()
-//        }
-//    }
-//
-//
-//
-
 
 //    setListAdapter(ArrayAdapter<String>(this, R.layout.list, s))
 
@@ -100,10 +79,12 @@ fun DeviceList(
         modifier = Modifier
           .size(50.dp)
       )
+      FindBLEDevicesSample()
+//      DeviceItem(Color(0xFFE3ECA6))
 
-      DeviceItem(Color(0xFFE3ECA6))
-      DeviceItem(Color(0xFFABEEAD))
-      DeviceItem(Color(0xFFABEEAD))
+//      DeviceItem(Color(0xFFABEEAD))
+
+//      DeviceItem(Color(0xFFABEEAD))
 
     }
 
@@ -112,9 +93,9 @@ fun DeviceList(
   }
 
 }
-
-@Preview
-@Composable
-fun PreviewUserSetting() {
-  DeviceList()
-}
+//
+//@Preview
+//@Composable
+//fun PreviewUserSetting() {
+//  DeviceList()
+//}

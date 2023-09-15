@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.sewon.officehealth.screen.device.ble
+package com.sewon.officehealth.screen.device.components
 
 import android.Manifest
 import android.app.Activity
@@ -40,7 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.getSystemService
-import com.sewon.officehealth.screen.permission.PermissionScreen
+import com.sewon.officehealth.permission.PermissionScreen
 
 
 /**

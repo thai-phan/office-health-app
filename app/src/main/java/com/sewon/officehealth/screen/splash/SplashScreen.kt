@@ -58,7 +58,7 @@ fun SplashScreen(navController: NavController, redirectRoute: String) {
         navController.navigate(redirectRoute)
     }
     Column(
-        verticalArrangement = Arrangement.Top,
+        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .statusBarsPadding()
@@ -92,10 +92,9 @@ fun SplashScreen(navController: NavController, redirectRoute: String) {
         )
         Image(
           painter = painterResource(id = R.mipmap.ic_image_4_foreground),
-          contentDescription = "Logo",
+          contentDescription = "Table Logo",
           modifier = Modifier
             .size(500.dp)
-            .scale(scale.value)
         )
       }
 

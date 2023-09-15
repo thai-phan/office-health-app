@@ -1,4 +1,4 @@
-package com.sewon.officehealth.screen.permission
+package com.sewon.officehealth.permission
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement

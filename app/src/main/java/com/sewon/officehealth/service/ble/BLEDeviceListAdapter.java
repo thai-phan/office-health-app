@@ -1,4 +1,4 @@
-package com.sewon.officehealth.screen.device.ble;
+package com.sewon.officehealth.service.ble;
 
 import android.bluetooth.BluetoothDevice;
 import android.view.LayoutInflater;

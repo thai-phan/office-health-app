@@ -1,4 +1,4 @@
-package com.sewon.officehealth.screen.device.ble;
+package com.sewon.officehealth.service.ble;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -92,9 +92,7 @@ public class SerialService extends Service implements SerialListener {
     return binder;
   }
 
-  /**
-   * Api
-   */
+
   public void connect(SerialSocket socket) throws IOException {
     Timber.tag("Timber").w("Connect SerialSocket");
     socket.connect(this);

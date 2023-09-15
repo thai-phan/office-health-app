@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.sewon.officehealth.screen.permission
+package com.sewon.officehealth.permission
 
 import android.content.Intent
 import android.net.Uri
