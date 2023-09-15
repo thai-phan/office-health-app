@@ -53,9 +53,9 @@ class MainActivity : ComponentActivity() {
     ) {
       setContent {
 //        FindBLEDevicesSample(appContext)
-//        OfficeHealth {
-//          finish()
-//        }
+        OfficeHealth {
+          finish()
+        }
 
       }
     } else {
