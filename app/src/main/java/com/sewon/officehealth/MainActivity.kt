@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.os.IBinder
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.content.getSystemService
 import androidx.core.view.WindowCompat
@@ -24,9 +25,7 @@ import timber.log.Timber
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-  lateinit var serialService: SerialService
 
-  var dataListener: DataListener = DataListener()
 
 
 
@@ -74,37 +73,19 @@ class MainActivity : ComponentActivity() {
 
   override fun onStart() {
     super.onStart()
-    val intent = Intent(this, SerialService::class.java)
-    startService(intent)
-    bindService(intent, mServiceConnection, BIND_AUTO_CREATE)
+
   }
 
   override fun onStop() {
     super.onStop()
 //    if (mServiceBound) {
-    unbindService(mServiceConnection)
 //      mServiceBound = false
   }
 
   private fun disconnect() {
     connected = Connected.False
-    serialService.disconnect()
   }
 
 
-  private val mServiceConnection: ServiceConnection = object : ServiceConnection {
-    override fun onServiceDisconnected(name: ComponentName) {
-//      TODO mServiceBound = false
 
-    }
-
-    override fun onServiceConnected(name: ComponentName, service: IBinder) {
-      Timber.tag("Timber").d("onServiceConnected")
-      serialService = (service as SerialService.SerialBinder).getService()
-      serialService.attach(dataListener)
-      val myBinder = service
-//      TODO mServiceBound = true
-
-    }
-  }
 }

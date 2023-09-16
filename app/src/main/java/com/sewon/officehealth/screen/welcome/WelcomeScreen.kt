@@ -35,6 +35,7 @@ import com.sewon.officehealth.common.AppDestinations
 fun WelcomeScreen(
     navController: NavController,
 ) {
+
 //  rgba(0, 150, 53, 1),
 //
 //

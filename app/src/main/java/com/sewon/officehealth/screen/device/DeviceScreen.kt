@@ -63,7 +63,6 @@ fun DeviceList(
   ) {
     Spacer(modifier = Modifier.height(20.dp))
     Column(
-      modifier = Modifier.verticalScroll(rememberScrollState()),
       verticalArrangement = Arrangement.spacedBy(20.dp),
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -80,12 +79,6 @@ fun DeviceList(
           .size(50.dp)
       )
       FindBLEDevicesSample()
-//      DeviceItem(Color(0xFFE3ECA6))
-
-//      DeviceItem(Color(0xFFABEEAD))
-
-//      DeviceItem(Color(0xFFABEEAD))
-
     }
 
 //        PullRefreshIndicator(refreshing, state, Modifier.align(Alignment.TopCenter))
@@ -93,9 +86,9 @@ fun DeviceList(
   }
 
 }
-//
-//@Preview
-//@Composable
-//fun PreviewUserSetting() {
-//  DeviceList()
-//}
+
+@Preview
+@Composable
+fun PreviewUserSetting() {
+  DeviceList()
+}
