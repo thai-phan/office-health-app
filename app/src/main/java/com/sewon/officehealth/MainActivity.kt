@@ -26,8 +26,10 @@ import timber.log.Timber
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+  companion object {
+    public var test = "123123"
 
-
+  }
 
 
   private enum class Connected {

@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.getSystemService
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import com.sewon.officehealth.MainActivity
 import com.sewon.officehealth.service.ble.DataListener
 import com.sewon.officehealth.service.ble.SerialService
 import com.sewon.officehealth.service.ble.SerialSocket
@@ -48,7 +49,7 @@ fun DeviceItem(
 ) {
   lateinit var serialService: SerialService
 
-  var dataListener = DataListener()
+  val dataListener = DataListener()
 
   val context = LocalContext.current
 
