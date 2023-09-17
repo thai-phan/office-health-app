@@ -1,4 +1,4 @@
-package com.sewon.officehealth.temp;
+package com.sewon.officehealth.temp.bound;
 
 
 import android.content.ComponentName;
@@ -24,7 +24,7 @@ public class DemoMain extends AppCompatActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.main);
+    setContentView(R.layout.timer_main);
     final TextView timestampText = (TextView) findViewById(R.id.timestamp_text);
     Button printTimestampButton = (Button) findViewById(R.id.print_timestamp);
     Button stopServiceButon = (Button) findViewById(R.id.stop_service);

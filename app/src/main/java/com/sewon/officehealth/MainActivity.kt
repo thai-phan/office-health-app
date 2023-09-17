@@ -34,7 +34,6 @@ class MainActivity : ComponentActivity() {
 
 
 
-
   private enum class Connected {
     False, Pending, True
   }

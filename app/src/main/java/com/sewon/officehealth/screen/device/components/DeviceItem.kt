@@ -74,6 +74,11 @@ fun DeviceItem(
 //  context.startService(intent)
 //  context.bindService(intent, mServiceConnection, ComponentActivity.BIND_AUTO_CREATE)
 
+  fun sendNoti() {
+    MainActivity.serialService.createNotificationHealth()
+  }
+
+
   fun connect(address: String) {
     try {
       val adapter = context.getSystemService<BluetoothManager>()?.adapter
@@ -104,7 +109,6 @@ fun DeviceItem(
     Row(
       modifier = Modifier
         .shadow(elevation = 10.dp, spotColor = Color(0x40000000), ambientColor = Color(0x40000000))
-        .width(200.dp)
         .height(80.dp)
         .background(color = color, shape = RoundedCornerShape(size = 10.dp))
         .clickable { connect(bluetoothDevice.address) },
@@ -134,7 +138,11 @@ fun DeviceItem(
     Button(onClick = { disconnect() }) {
       Text("Disconnect")
     }
+    Button(onClick = { sendNoti() }) {
+      Text("Send Noti")
+    }
   }
+
 
 }
 

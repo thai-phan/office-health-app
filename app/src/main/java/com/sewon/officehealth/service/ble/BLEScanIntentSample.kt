@@ -86,7 +86,7 @@ fun startScan1(
   context: Context,
   scanner: BluetoothLeScanner,
 ): PendingIntent? {
-  Timber.d("Timber", "start scan")
+  Timber.tag("Timber").d("start scan")
   val bluetoothManager: BluetoothManager = context.getSystemService(BluetoothManager::class.java)
   val bluetoothAdapter: BluetoothAdapter = bluetoothManager.getAdapter()
 

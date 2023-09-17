@@ -72,7 +72,7 @@ class ViewModelUserSetting @Inject constructor(
 //    }
 
     override fun onCleared() {
-        Timber.d("Timber")
+        Timber.tag("Timber").d("onCleared")
 //        coroutineScope.cancel()
     }
 

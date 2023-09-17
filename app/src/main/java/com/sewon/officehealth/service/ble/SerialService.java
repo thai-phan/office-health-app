@@ -1,5 +1,6 @@
 package com.sewon.officehealth.service.ble;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -12,6 +13,9 @@ import android.os.IBinder;
 import android.os.Looper;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+
+import com.sewon.officehealth.R;
 
 import java.io.IOException;
 import java.util.ArrayDeque;
@@ -153,33 +157,34 @@ public class SerialService extends Service implements SerialListener {
     listener = null;
   }
 
-  private void createNotification() {
-    NotificationChannel nc = new NotificationChannel(Constants.NOTIFICATION_CHANNEL, "Background service", NotificationManager.IMPORTANCE_LOW);
-    nc.setShowBadge(false);
-    NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-    nm.createNotificationChannel(nc);
-    Intent disconnectIntent = new Intent()
-        .setAction(Constants.INTENT_ACTION_DISCONNECT);
+  public void createNotificationHealth() {
+    NotificationChannel notificationChannel = new NotificationChannel(Constants.NOTIFICATION_CHANNEL,
+        "Background service", NotificationManager.IMPORTANCE_LOW);
+
+    notificationChannel.setShowBadge(false);
+    NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    notificationManager.createNotificationChannel(notificationChannel);
+
     Intent restartIntent = new Intent()
         .setClassName(this, Constants.INTENT_CLASS_MAIN_ACTIVITY)
         .setAction(Intent.ACTION_MAIN)
         .addCategory(Intent.CATEGORY_LAUNCHER);
     int flags = PendingIntent.FLAG_IMMUTABLE;
-    PendingIntent disconnectPendingIntent = PendingIntent.getBroadcast(this, 1, disconnectIntent, flags);
+
     PendingIntent restartPendingIntent = PendingIntent.getActivity(this, 1, restartIntent, flags);
-//        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, Constants.NOTIFICATION_CHANNEL)
-//                .setSmallIcon(R.drawable.ic_notification)
-//                .setColor(getResources().getColor(R.color.colorPrimary))
-//                .setContentTitle(getResources().getString(R.string.app_name))
-//                .setContentText(socket != null ? "Connected to "+socket.getName() : "Background Service")
-//                .setContentIntent(restartPendingIntent)
-//                .setOngoing(true)
-//                .addAction(new NotificationCompat.Action(R.drawable.ic_clear_white_24dp, "Disconnect", disconnectPendingIntent));
-//        // @drawable/ic_notification created with Android Studio -> New -> Image Asset using @color/colorPrimaryDark as background color
-//        // Android < API 21 does not support vectorDrawables in notifications, so both drawables used here, are created as .png instead of .xml
-//        Notification notification = builder.build();
-//        startForeground(Constants.NOTIFY_MANAGER_START_FOREGROUND_SERVICE, notification);
+
+    NotificationCompat.Builder builder = new NotificationCompat.Builder(this, Constants.NOTIFICATION_CHANNEL)
+        .setSmallIcon(R.drawable.ic_bluetooth_searching)
+        .setContentTitle(getResources().getString(R.string.app_name))
+        .setContentText(socket != null ? "Connected to " + socket.getName() : "Background Service")
+        .setContentIntent(restartPendingIntent)
+        .setOngoing(true);
+
+    Notification notification = builder.build();
+
+    notificationManager.notify(5, notification);
   }
+
 
   private void cancelNotification() {
     stopForeground(true);
@@ -287,4 +292,36 @@ public class SerialService extends Service implements SerialListener {
     }
   }
 
+  private void createNotification() {
+    NotificationChannel notificationChannel = new NotificationChannel(Constants.NOTIFICATION_CHANNEL,
+        "Background service", NotificationManager.IMPORTANCE_LOW);
+
+    notificationChannel.setShowBadge(false);
+    NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    notificationManager.createNotificationChannel(notificationChannel);
+
+    Intent disconnectIntent = new Intent().setAction(Constants.INTENT_ACTION_DISCONNECT);
+    Intent restartIntent = new Intent()
+        .setClassName(this, Constants.INTENT_CLASS_MAIN_ACTIVITY)
+        .setAction(Intent.ACTION_MAIN)
+        .addCategory(Intent.CATEGORY_LAUNCHER);
+
+    int flags = PendingIntent.FLAG_IMMUTABLE;
+
+    PendingIntent disconnectPendingIntent = PendingIntent.getBroadcast(this, 1, disconnectIntent, flags);
+    PendingIntent restartPendingIntent = PendingIntent.getActivity(this, 1, restartIntent, flags);
+
+    NotificationCompat.Builder builder = new NotificationCompat.Builder(this, Constants.NOTIFICATION_CHANNEL)
+        .setSmallIcon(R.drawable.ic_bluetooth_searching)
+        .setColor(getResources().getColor(R.color.black))
+        .setContentTitle(getResources().getString(R.string.app_name))
+        .setContentText(socket != null ? "Connected to " + socket.getName() : "Background Service")
+        .setContentIntent(restartPendingIntent)
+        .setOngoing(true)
+        .addAction(new NotificationCompat.Action(R.drawable.ic_intelli, "Disconnect", disconnectPendingIntent));
+    // @drawable/ic_notification created with Android Studio -> New -> Image Asset using @color/colorPrimaryDark as background color
+    // Android < API 21 does not support vectorDrawables in notifications, so both drawables used here, are created as .png instead of .xml
+    Notification notification = builder.build();
+    startForeground(Constants.NOTIFY_MANAGER_START_FOREGROUND_SERVICE, notification);
+  }
 }
