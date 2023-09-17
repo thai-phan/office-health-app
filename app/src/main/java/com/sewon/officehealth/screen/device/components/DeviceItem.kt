@@ -47,39 +47,39 @@ fun DeviceItem(
   bluetoothDevice: BluetoothDevice,
   isSampleServer: Boolean = false,
 ) {
-  lateinit var serialService: SerialService
-
-  val dataListener = DataListener()
+//  lateinit var serialService: SerialService
+//
+//  val dataListener = DataListener()
 
   val context = LocalContext.current
 
 
-  val mServiceConnection: ServiceConnection = object : ServiceConnection {
-    override fun onServiceDisconnected(name: ComponentName) {
-//      TODO mServiceBound = false
+//  val mServiceConnection: ServiceConnection = object : ServiceConnection {
+//    override fun onServiceDisconnected(name: ComponentName) {
+////      TODO mServiceBound = false
+//
+//    }
+//
+//    override fun onServiceConnected(name: ComponentName, service: IBinder) {
+//      Timber.tag("Timber").d("onServiceConnected")
+//      serialService = (service as SerialService.SerialBinder).getService()
+//      serialService.attach(dataListener)
+//      val myBinder = service
+////      TODO mServiceBound = true
+//
+//    }
+//  }
 
-    }
-
-    override fun onServiceConnected(name: ComponentName, service: IBinder) {
-      Timber.tag("Timber").d("onServiceConnected")
-      serialService = (service as SerialService.SerialBinder).getService()
-      serialService.attach(dataListener)
-      val myBinder = service
-//      TODO mServiceBound = true
-
-    }
-  }
-
-  val intent = Intent(context, SerialService::class.java)
-  context.startService(intent)
-  context.bindService(intent, mServiceConnection, ComponentActivity.BIND_AUTO_CREATE)
+//  val intent = Intent(context, SerialService::class.java)
+//  context.startService(intent)
+//  context.bindService(intent, mServiceConnection, ComponentActivity.BIND_AUTO_CREATE)
 
   fun connect(address: String) {
     try {
       val adapter = context.getSystemService<BluetoothManager>()?.adapter
       val device = adapter?.getRemoteDevice(address)
       val socket = SerialSocket(context, device)
-      serialService.connect(socket)
+      MainActivity.serialService.connect(socket)
 
     } catch (exception: IllegalArgumentException) {
       Timber.tag("Timber").w(exception)
@@ -88,7 +88,7 @@ fun DeviceItem(
   }
 
   fun disconnect() {
-    serialService.disconnect()
+    MainActivity.serialService.disconnect()
   }
 
   val lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
