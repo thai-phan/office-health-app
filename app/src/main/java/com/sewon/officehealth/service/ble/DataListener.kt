@@ -27,24 +27,24 @@ class DataListener : SerialListener {
     connected = Connected.True
   }
 
-  override fun onSerialConnectError(e: Exception?) {
-    Timber.tag("Timber").d("onSerialConnectError")
+  override fun onSerialConnectError(e: Exception) {
     connected = Connected.False
   }
 
-  override fun onSerialRead(data: ByteArray?) {
+
+  override fun onSerialRead(data: ByteArray) {
     val datas = ArrayDeque<ByteArray>()
     datas.add(data)
     receive(datas)
   }
 
-  override fun onSerialRead(datas: ArrayDeque<ByteArray>?) {
+  override fun onSerialRead(datas: ArrayDeque<ByteArray>) {
     if (datas != null) {
       receive(datas)
     }
   }
 
-  override fun onSerialIoError(e: Exception?) {
+  override fun onSerialIoError(e: Exception) {
     Timber.tag("Timber").d("onSerialRead")
   }
 

@@ -1,4 +1,4 @@
-package com.sewon.officehealth
+package com.sewon.officehealth.temp
 
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -35,17 +35,7 @@ class TimerActivity : ComponentActivity() {
     val appContext = applicationContext
 
 
-    val timer = object : CountDownTimer(a, b) {
-      override fun onTick(millisUntilFinished: Long) {
-        Timber.tag("MYLOG").d("text updated programmatically")
-        c.longValue = millisUntilFinished
-      }
 
-      override fun onFinish() {
-        c.longValue = 0
-      }
-    }
-    timer.start()
     setContent {
       CountDown()
     }

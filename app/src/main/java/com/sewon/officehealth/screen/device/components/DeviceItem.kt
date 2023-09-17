@@ -3,20 +3,12 @@ package com.sewon.officehealth.screen.device.components
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
-import android.bluetooth.le.ScanCallback
-import android.bluetooth.le.ScanResult
-import android.content.ComponentName
-import android.content.Intent
-import android.content.ServiceConnection
-import android.os.IBinder
-import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -31,11 +23,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.content.getSystemService
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.sewon.officehealth.MainActivity
-import com.sewon.officehealth.service.ble.DataListener
-import com.sewon.officehealth.service.ble.SerialService
 import com.sewon.officehealth.service.ble.SerialSocket
 import timber.log.Timber
 
@@ -83,8 +72,10 @@ fun DeviceItem(
     try {
       val adapter = context.getSystemService<BluetoothManager>()?.adapter
       val device = adapter?.getRemoteDevice(address)
-      val socket = SerialSocket(context, device)
-      MainActivity.serialService.connect(socket)
+      val socket = device?.let { SerialSocket(context, it) }
+      if (socket != null) {
+        MainActivity.serialService.connect(socket)
+      }
 
     } catch (exception: IllegalArgumentException) {
       Timber.tag("Timber").w(exception)

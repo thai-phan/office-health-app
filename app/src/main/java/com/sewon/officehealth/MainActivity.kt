@@ -1,7 +1,6 @@
 package com.sewon.officehealth
 
 import android.Manifest
-import android.bluetooth.BluetoothManager
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
@@ -11,13 +10,10 @@ import android.os.IBinder
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.app.ActivityCompat
-import androidx.core.content.getSystemService
 import androidx.core.view.WindowCompat
 import com.sewon.officehealth.common.OfficeHealth
-import com.sewon.officehealth.screen.device.FindBLEDevicesSample
 import com.sewon.officehealth.service.ble.DataListener
 import com.sewon.officehealth.service.ble.SerialService
-import com.sewon.officehealth.service.ble.SerialSocket
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -103,7 +99,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onServiceConnected(name: ComponentName, service: IBinder) {
       Timber.tag("Timber").d("onServiceConnected")
-      serialService = (service as SerialService.SerialBinder).getService()
+      serialService = (service as SerialService.SerialBinder).service
       serialService.attach(dataListener)
       val myBinder = service
 //      TODO mServiceBound = true
