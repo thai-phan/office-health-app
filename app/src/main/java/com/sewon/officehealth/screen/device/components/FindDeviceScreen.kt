@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Refresh
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,6 +38,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.getSystemService
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.sewon.officehealth.common.AppDestinations
 import kotlinx.coroutines.delay
 import timber.log.Timber
 import java.util.UUID
@@ -45,7 +49,7 @@ import java.util.UUID
 @SuppressLint("InlinedApi", "MissingPermission")
 @RequiresPermission(Manifest.permission.BLUETOOTH_SCAN)
 @Composable
-internal fun FindDevicesScreen() {
+internal fun FindDevicesScreen(navController: NavHostController = rememberNavController()) {
   val context = LocalContext.current
   val adapter = checkNotNull(context.getSystemService<BluetoothManager>()?.adapter)
   var scanning by remember {
@@ -138,6 +142,12 @@ internal fun FindDevicesScreen() {
           bluetoothDevice = item,
           isSampleServer = sampleServerDevices.contains(item),
         )
+      }
+
+      item {
+        Button(onClick = { navController.navigate(AppDestinations.ACTIVITY_ROUTE) }) {
+          Text("Move")
+        }
       }
 
       if (pairedDevices.isNotEmpty()) {

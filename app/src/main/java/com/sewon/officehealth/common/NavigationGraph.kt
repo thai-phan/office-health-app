@@ -63,7 +63,7 @@ fun NavigationGraph(
 
     composable(AppDestinations.DEVICE_ROUTE) {
       DeviceList(
-
+        navController = navController
       )
     }
 

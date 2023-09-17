@@ -1,6 +1,7 @@
 package com.sewon.officehealth.screen.activity
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.sewon.officehealth.MainActivity
 import com.sewon.officehealth.common.theme.checkedBorderColor
 import com.sewon.officehealth.common.theme.checkedThumbColor
 import com.sewon.officehealth.common.theme.checkedTrackColor
@@ -41,20 +43,16 @@ fun ScreenActivity(
 
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-  val switchColors: SwitchColors = SwitchDefaults.colors(
-    checkedThumbColor = checkedThumbColor,
-    checkedTrackColor = checkedTrackColor,
-    checkedBorderColor = checkedBorderColor,
-    uncheckedThumbColor = uncheckedThumbColor,
-    uncheckedTrackColor = uncheckedTrackColor,
-    uncheckedBorderColor = uncheckedBorderColor,
-  )
+  val milliseconds by MainActivity.serialService.c
+
+  val text = (milliseconds / 1000).toString()
 
   Column(
     modifier = modifier
       .padding(horizontal = 30.dp, vertical = 20.dp)
   ) {
     Text("수면시간 체크", fontWeight = FontWeight.Bold, fontSize = 24.sp)
+    Text(text, fontWeight = FontWeight.Bold, fontSize = 24.sp)
 
     Spacer(modifier = Modifier.height(10.dp))
     Spacer(modifier = Modifier.height(10.dp))
@@ -84,7 +82,6 @@ fun ScreenActivity(
       verticalAlignment = Alignment.CenterVertically
     ) {
       Text("수면유도에너지")
-      Switch(checked = true, colors = switchColors, onCheckedChange = {})
     }
     Row(
       modifier = Modifier.fillMaxWidth(),
@@ -92,7 +89,6 @@ fun ScreenActivity(
       verticalAlignment = Alignment.CenterVertically
     ) {
       Text("수면유도사운드")
-      Switch(checked = true, colors = switchColors, onCheckedChange = {})
     }
     Text(uiState.status3)
     Row(

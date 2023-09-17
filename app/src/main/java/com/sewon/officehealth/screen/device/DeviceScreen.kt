@@ -37,6 +37,8 @@ import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.sewon.officehealth.R
 import com.sewon.officehealth.common.theme.checkedBorderColor
 import com.sewon.officehealth.common.theme.checkedThumbColor
@@ -50,6 +52,7 @@ import com.sewon.officehealth.screen.device.components.DeviceItem
 @Composable
 fun DeviceList(
   modifier: Modifier = Modifier,
+  navController: NavHostController = rememberNavController(),
   viewModel: ViewModelUserSetting = hiltViewModel()
 ) {
 
@@ -78,7 +81,7 @@ fun DeviceList(
         modifier = Modifier
           .size(50.dp)
       )
-      FindBLEDevicesSample()
+      FindBLEDevicesSample(navController = navController)
     }
 
 //        PullRefreshIndicator(refreshing, state, Modifier.align(Alignment.TopCenter))

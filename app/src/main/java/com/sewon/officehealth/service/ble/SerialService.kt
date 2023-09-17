@@ -6,9 +6,11 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.os.Binder
+import android.os.CountDownTimer
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.core.app.NotificationCompat
 import com.sewon.officehealth.R
 import timber.log.Timber
@@ -68,6 +70,7 @@ class SerialService : Service(), SerialListener {
   private var connected = false
   private val a = 10000L
   private val b = 1000L
+  val c = mutableLongStateOf(a)
 
   init {
     mainLooper = Handler(Looper.getMainLooper())
@@ -77,18 +80,31 @@ class SerialService : Service(), SerialListener {
     lastRead = QueueItem(QueueType.Read)
   }
 
+  private val timer = object : CountDownTimer(a, b) {
+    override fun onTick(millisUntilFinished: Long) {
+      Timber.tag("MYLOG").d("text updated programmatically")
+      c.longValue = millisUntilFinished
+    }
+
+    override fun onFinish() {
+      c.longValue = 0
+    }
+  }
+
+
   override fun onDestroy() {
     cancelNotification()
     disconnect()
     super.onDestroy()
   }
 
-  override fun onBind(intent: Intent): IBinder? {
+  override fun onBind(intent: Intent): IBinder {
     return binder
   }
 
   @Throws(IOException::class)
   fun connect(socket: SerialSocket) {
+    timer.start()
     Timber.tag("Timber").w("Connect SerialSocket")
     socket.connect(this)
     this.socket = socket
@@ -113,6 +129,7 @@ class SerialService : Service(), SerialListener {
   }
 
   fun attach(listener: SerialListener) {
+
     require(Looper.getMainLooper().thread === Thread.currentThread()) { "not in main thread" }
     cancelNotification()
     // use synchronized() to prevent new items in queue2
