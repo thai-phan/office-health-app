@@ -254,6 +254,7 @@ class SerialService : Service(), SerialListener {
    * While not consumed (2), add more data (3).
    */
   override fun onSerialRead(data: ByteArray) {
+    //  TODO: Check data
     if (connected) {
       synchronized(this) {
         if (listener != null) {

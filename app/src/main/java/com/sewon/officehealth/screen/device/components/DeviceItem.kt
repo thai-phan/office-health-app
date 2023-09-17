@@ -123,8 +123,7 @@ fun DeviceItem(
         else -> "None"
       }
       Text(text = state)
-
-
+      Text(text = "STATUS")
     }
     Button(onClick = { disconnect() }) {
       Text("Disconnect")
@@ -133,7 +132,5 @@ fun DeviceItem(
       Text("Send Noti")
     }
   }
-
-
 }
 
