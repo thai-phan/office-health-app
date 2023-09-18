@@ -25,6 +25,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
@@ -57,30 +58,41 @@ fun BluetoothSampleBox(
 
   // If we derive physical location from BT devices or if the device runs on Android 11 or below
   // we need location permissions otherwise we don't need to request them (see AndroidManifest).
-  val locationPermission = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
-    setOf(
-      Manifest.permission.ACCESS_FINE_LOCATION,
-      Manifest.permission.ACCESS_COARSE_LOCATION,
-    )
-  } else {
-    emptySet()
-  }
+  val locationPermission = setOf(
+    Manifest.permission.ACCESS_FINE_LOCATION,
+    Manifest.permission.ACCESS_COARSE_LOCATION,
+  )
 
-  // For Android 12 and above we only need connect and scan
-  val bluetoothPermissionSet = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+
+  val bluetoothPermissionSet = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
     setOf(
       Manifest.permission.BLUETOOTH_CONNECT,
       Manifest.permission.BLUETOOTH_SCAN,
-    )
-  } else {
-    setOf(
       Manifest.permission.BLUETOOTH,
       Manifest.permission.BLUETOOTH_ADMIN,
+      Manifest.permission.POST_NOTIFICATIONS
     )
+  } else {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+      setOf(
+        Manifest.permission.BLUETOOTH_CONNECT,
+        Manifest.permission.BLUETOOTH_SCAN,
+        Manifest.permission.BLUETOOTH,
+        Manifest.permission.BLUETOOTH_ADMIN,
+      )
+    } else {
+      setOf(
+        Manifest.permission.BLUETOOTH,
+        Manifest.permission.BLUETOOTH_ADMIN,
+      )
+    }
   }
 
+
+  val permissionFinal = (bluetoothPermissionSet + locationPermission + extraPermissions).toList()
+
   PermissionScreen(
-    permissions = (bluetoothPermissionSet + locationPermission + extraPermissions).toList(),
+    permissions = permissionFinal,
     contentAlignment = Alignment.Center,
   ) {
     // Check to see if the Bluetooth classic feature is available.

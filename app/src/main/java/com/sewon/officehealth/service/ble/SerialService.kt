@@ -5,12 +5,13 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Binder
-import android.os.CountDownTimer
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
-import androidx.compose.runtime.mutableLongStateOf
+import android.provider.Settings
+import androidx.compose.runtime.mutableStateOf
 import androidx.core.app.NotificationCompat
 import com.sewon.officehealth.R
 import timber.log.Timber
@@ -36,17 +37,17 @@ class SerialService : Service(), SerialListener {
     var datas: ArrayDeque<ByteArray>? = null
     var e: Exception? = null
 
-    internal constructor(type: QueueType) {
+    constructor(type: QueueType) {
       this.type = type
       if (type == QueueType.Read) init()
     }
 
-    internal constructor(type: QueueType, e: Exception?) {
+    constructor(type: QueueType, e: Exception?) {
       this.type = type
       this.e = e
     }
 
-    internal constructor(type: QueueType, datas: ArrayDeque<ByteArray>?) {
+    constructor(type: QueueType, datas: ArrayDeque<ByteArray>?) {
       this.type = type
       this.datas = datas
     }
@@ -68,9 +69,10 @@ class SerialService : Service(), SerialListener {
   private var socket: SerialSocket? = null
   private var listener: SerialListener? = null
   private var connected = false
-  private val a = 10000L
-  private val b = 1000L
-  val c = mutableLongStateOf(a)
+
+  val isPlaySound = mutableStateOf(false)
+  val isPlaySoundStress = mutableStateOf(false)
+
 
   init {
     mainLooper = Handler(Looper.getMainLooper())
@@ -78,17 +80,6 @@ class SerialService : Service(), SerialListener {
     queue1 = ArrayDeque()
     queue2 = ArrayDeque()
     lastRead = QueueItem(QueueType.Read)
-  }
-
-  private val timer = object : CountDownTimer(a, b) {
-    override fun onTick(millisUntilFinished: Long) {
-      Timber.tag("MYLOG").d("text updated programmatically")
-      c.longValue = millisUntilFinished
-    }
-
-    override fun onFinish() {
-      c.longValue = 0
-    }
   }
 
 
@@ -104,7 +95,8 @@ class SerialService : Service(), SerialListener {
 
   @Throws(IOException::class)
   fun connect(socket: SerialSocket) {
-    timer.start()
+
+//    countDownTimer
     Timber.tag("Timber").w("Connect SerialSocket")
     socket.connect(this)
     this.socket = socket
@@ -188,7 +180,7 @@ class SerialService : Service(), SerialListener {
   }
 
   private fun cancelNotification() {
-    stopForeground(true)
+    stopForeground(STOP_FOREGROUND_REMOVE)
   }
 
   override fun onSerialConnect() {
@@ -209,6 +201,30 @@ class SerialService : Service(), SerialListener {
     }
   }
 
+  private lateinit var player1: MediaPlayer
+  private lateinit var player2: MediaPlayer
+
+  fun playSoundAlarm() {
+    isPlaySound.value = true
+    player1 = MediaPlayer.create(this, Settings.System.DEFAULT_RINGTONE_URI)
+    player1.start()
+  }
+
+  fun stopSoundAlarm() {
+    isPlaySound.value = false
+    player1.stop()
+  }
+
+  fun playSoundStress() {
+    isPlaySoundStress.value = true
+    player2 = MediaPlayer.create(this, R.raw.gangnam)
+    player2.start()
+  }
+
+  fun stopSoundStress() {
+    isPlaySoundStress.value = false
+    player2.stop()
+  }
 
   override fun onSerialConnectError(e: Exception) {
     if (connected) {
@@ -218,22 +234,12 @@ class SerialService : Service(), SerialListener {
             if (listener != null) {
               listener!!.onSerialConnectError(e)
             } else {
-              queue1.add(
-                QueueItem(
-                  QueueType.ConnectError,
-                  e
-                )
-              )
+              queue1.add(QueueItem(QueueType.ConnectError, e))
               disconnect()
             }
           }
         } else {
-          queue2.add(
-            QueueItem(
-              QueueType.ConnectError,
-              e
-            )
-          )
+          queue2.add(QueueItem(QueueType.ConnectError, e))
           disconnect()
         }
       }
@@ -254,7 +260,8 @@ class SerialService : Service(), SerialListener {
    * While not consumed (2), add more data (3).
    */
   override fun onSerialRead(data: ByteArray) {
-    //  TODO: Check data
+
+
     if (connected) {
       synchronized(this) {
         if (listener != null) {
@@ -265,29 +272,21 @@ class SerialService : Service(), SerialListener {
           }
           if (first) {
             mainLooper.post {
-              var datas: ArrayDeque<ByteArray>?
+              var datas: ArrayDeque<ByteArray>
               synchronized(lastRead) {
-                datas = lastRead.datas
+                datas = lastRead.datas!!
                 lastRead.init() // (2)
               }
               if (listener != null) {
-                datas?.let { listener!!.onSerialRead(it) }
+                datas.let { listener!!.onSerialRead(it) }
               } else {
-                queue1.add(
-                  QueueItem(
-                    QueueType.Read,
-                    datas
-                  )
-                )
+                queue1.add(QueueItem(QueueType.Read, datas))
               }
             }
           }
         } else {
-          if (queue2.isEmpty() || queue2.last.type != QueueType.Read) queue2.add(
-            QueueItem(
-              QueueType.Read
-            )
-          )
+          if (queue2.isEmpty() || queue2.last.type != QueueType.Read)
+            queue2.add(QueueItem(QueueType.Read))
           queue2.last.add(data)
         }
       }
@@ -302,22 +301,12 @@ class SerialService : Service(), SerialListener {
             if (listener != null) {
               listener!!.onSerialIoError(e)
             } else {
-              queue1.add(
-                QueueItem(
-                  QueueType.IoError,
-                  e
-                )
-              )
+              queue1.add(QueueItem(QueueType.IoError, e))
               disconnect()
             }
           }
         } else {
-          queue2.add(
-            QueueItem(
-              QueueType.IoError,
-              e
-            )
-          )
+          queue2.add(QueueItem(QueueType.IoError, e))
           disconnect()
         }
       }

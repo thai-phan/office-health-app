@@ -21,7 +21,7 @@ public class ECG_ANALYSIS_PROC {
 
   public static List<ECG_RESULT> ECG_AnalysisData(List<Double> lstData) {
     //분석결과를 담기위한 List
-    List<ECG_RESULT> listECGResult = new ArrayList<ECG_RESULT>();
+    List<ECG_RESULT> listECGResult = new ArrayList<>();
 
     listECGResult.clear();
 
@@ -33,7 +33,7 @@ public class ECG_ANALYSIS_PROC {
       double cumulRMSSDAVG = 0;
       double iCnt = 0;
 
-      List<Double> listRRI = new ArrayList<Double>();
+      List<Double> listRRI = new ArrayList<>();
 
       for (int y = 0; y < lstData.size(); y++) {
         //RRI를 Sum한다

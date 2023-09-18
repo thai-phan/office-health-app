@@ -9,11 +9,17 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bluetooth
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -24,7 +30,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.content.getSystemService
 import androidx.lifecycle.LifecycleOwner
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.sewon.officehealth.MainActivity
+import com.sewon.officehealth.common.AppDestinations
 import com.sewon.officehealth.service.ble.SerialSocket
 import timber.log.Timber
 
@@ -33,35 +42,11 @@ import timber.log.Timber
 @Composable
 fun DeviceItem(
   color: Color,
+  navController: NavHostController = rememberNavController(),
   bluetoothDevice: BluetoothDevice,
-  isSampleServer: Boolean = false,
 ) {
-//  lateinit var serialService: SerialService
-//
-//  val dataListener = DataListener()
 
   val context = LocalContext.current
-
-
-//  val mServiceConnection: ServiceConnection = object : ServiceConnection {
-//    override fun onServiceDisconnected(name: ComponentName) {
-////      TODO mServiceBound = false
-//
-//    }
-//
-//    override fun onServiceConnected(name: ComponentName, service: IBinder) {
-//      Timber.tag("Timber").d("onServiceConnected")
-//      serialService = (service as SerialService.SerialBinder).getService()
-//      serialService.attach(dataListener)
-//      val myBinder = service
-////      TODO mServiceBound = true
-//
-//    }
-//  }
-
-//  val intent = Intent(context, SerialService::class.java)
-//  context.startService(intent)
-//  context.bindService(intent, mServiceConnection, ComponentActivity.BIND_AUTO_CREATE)
 
   fun sendNoti() {
     MainActivity.serialService.createNotificationHealth()
@@ -76,6 +61,7 @@ fun DeviceItem(
       if (socket != null) {
         MainActivity.serialService.connect(socket)
       }
+//      MainActivity.dataListener.countDownTimer.start()
 
     } catch (exception: IllegalArgumentException) {
       Timber.tag("Timber").w(exception)
@@ -83,14 +69,11 @@ fun DeviceItem(
     // connect to the GATT server on the device
   }
 
-  fun disconnect() {
-    MainActivity.serialService.disconnect()
-  }
 
   val lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
 
   DisposableEffect(lifecycleOwner) {
-        // When the effect leaves the Composition, remove the observer and stop scanning
+    // When the effect leaves the Composition, remove the observer and stop scanning
     onDispose {
 
     }
@@ -99,35 +82,27 @@ fun DeviceItem(
   Row(modifier = Modifier.fillMaxWidth()) {
     Row(
       modifier = Modifier
+        .fillMaxWidth()
         .shadow(elevation = 10.dp, spotColor = Color(0x40000000), ambientColor = Color(0x40000000))
         .height(80.dp)
         .background(color = color, shape = RoundedCornerShape(size = 10.dp))
-        .clickable { connect(bluetoothDevice.address) },
-      horizontalArrangement = Arrangement.SpaceBetween
+        .padding(10.dp)
+        .clickable {
+          connect(bluetoothDevice.address)
+          navController.navigate(AppDestinations.ACTIVITY_ROUTE)
+        },
+      horizontalArrangement = Arrangement.SpaceBetween,
+      verticalAlignment = Alignment.CenterVertically
     ) {
+      Icon(Icons.Filled.Bluetooth, contentDescription = "Localized description", tint = Color.Black)
       Text(
-        if (isSampleServer) {
-          "GATT Sample server"
-        } else {
-          bluetoothDevice.name ?: "N/A"
-        },
-        style = if (isSampleServer) {
-          TextStyle(fontWeight = FontWeight.Bold)
-        } else {
-          TextStyle(fontWeight = FontWeight.Normal)
-        },
+        bluetoothDevice.name ?: "N/A",
+        style = TextStyle(fontWeight = FontWeight.Normal),
+        color = Color.Black
       )
-      val state = when (bluetoothDevice.bondState) {
-        BluetoothDevice.BOND_BONDED -> "Paired"
-        BluetoothDevice.BOND_BONDING -> "Pairing"
-        else -> "None"
-      }
-      Text(text = state)
-      Text(text = "STATUS")
+      Text(text = "STATUS", color = Color.Black)
     }
-    Button(onClick = { disconnect() }) {
-      Text("Disconnect")
-    }
+
     Button(onClick = { sendNoti() }) {
       Text("Send Noti")
     }

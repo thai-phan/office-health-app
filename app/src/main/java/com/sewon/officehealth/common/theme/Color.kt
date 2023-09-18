@@ -18,8 +18,8 @@ val uncheckedBorderColor = Color(0xFF938F99)
 // Dark Theme
 val DarkPrimary = Color(0xff03DAC5)
 val DarkOnPrimary = Color(0xFF000000)
-val DarkPrimaryContainer = Color(0xFFFF0000)
-val DarkOnPrimaryContainer = Color(0xFFFFFB00)
+val DarkPrimaryContainer = Color(0xFF003917)
+val DarkOnPrimaryContainer = Color(0xFFFFFFFF)
 
 val DarkSecondary = Color(0xAD088514)
 val DarkOnSecondary = Color(0xFFFFFFFF)

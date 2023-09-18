@@ -56,9 +56,9 @@ fun BLEScanIntentSample() {
     permissions.add(Manifest.permission.BLUETOOTH_ADMIN)
     permissions.add(Manifest.permission.BLUETOOTH_ADVERTISE)
   }
-  PermissionScreen(permissions = permissions) {
-    BLEScanIntentScreen()
-  }
+//  PermissionScreen(permissions = permissions) {
+//    BLEScanIntentScreen()
+//  }
 }
 
 @SuppressLint("InlinedApi")

@@ -1,6 +1,7 @@
 package com.sewon.officehealth.screen.device
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.ScanCallback
@@ -46,18 +47,18 @@ import com.sewon.officehealth.common.theme.checkedTrackColor
 import com.sewon.officehealth.common.theme.uncheckedBorderColor
 import com.sewon.officehealth.common.theme.uncheckedThumbColor
 import com.sewon.officehealth.common.theme.uncheckedTrackColor
+import com.sewon.officehealth.screen.device.components.BluetoothSampleBox
 import com.sewon.officehealth.screen.device.components.DeviceItem
+import com.sewon.officehealth.screen.device.components.FindDevicesScreen
 
 
+@SuppressLint("MissingPermission")
 @Composable
 fun DeviceList(
   modifier: Modifier = Modifier,
   navController: NavHostController = rememberNavController(),
   viewModel: ViewModelUserSetting = hiltViewModel()
 ) {
-
-//    setListAdapter(ArrayAdapter<String>(this, R.layout.list, s))
-
 
   Column(
     modifier = modifier.padding(
@@ -73,15 +74,15 @@ fun DeviceList(
         painter = painterResource(id = R.mipmap.ic_image_5_foreground),
         contentDescription = "Logo",
         modifier = Modifier
-          .size(width = 200.dp, height = 100.dp)
+          .size(width = 400.dp, height = 150.dp)
       )
       Image(
-        painter = painterResource(id = R.drawable.ic_bluetooth_searching),
+        painter = painterResource(id = R.drawable.ic_bluetooth_wing),
         contentDescription = "Logo",
-        modifier = Modifier
-          .size(50.dp)
       )
-      FindBLEDevicesSample(navController = navController)
+      BluetoothSampleBox {
+        FindDevicesScreen(navController)
+      }
     }
 
 //        PullRefreshIndicator(refreshing, state, Modifier.align(Alignment.TopCenter))

@@ -40,33 +40,10 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 
-/**
- * The PermissionBox uses a [Box] to show a simple permission request UI when the provided [permission]
- * is revoked or the provided [onGranted] content if the permission is granted.
- *
- * This composable follows the permission request flow but for a complete example check the samples
- * under privacy/permissions
- */
-@Composable
-fun PermissionScreen(
-    modifier: Modifier = Modifier,
-    permission: String,
-    description: String? = null,
-    contentAlignment: Alignment = Alignment.TopStart,
-    onGranted: @Composable BoxScope.() -> Unit,
-) {
-    PermissionScreen(
-        modifier,
-        permissions = listOf(permission),
-        requiredPermissions = listOf(permission),
-        description,
-        contentAlignment,
-    ) { onGranted() }
-}
 
 /**
- * A variation of [PermissionScreen] that takes a list of permissions and only calls [onGranted] when
- * all the [requiredPermissions] are granted.
+ * A variation of PermissionScreen that takes a list of permissions and only calls [onGranted] when
+ * all the requiredPermissions are granted.
  *
  * By default it assumes that all [permissions] are required.
  */

@@ -23,10 +23,9 @@ class MainActivity : ComponentActivity() {
 
   companion object {
     lateinit var serialService: SerialService
-
+    var dataListener = DataListener()
   }
 
-  var dataListener: DataListener = DataListener()
 
 
 
@@ -101,7 +100,7 @@ class MainActivity : ComponentActivity() {
       Timber.tag("Timber").d("onServiceConnected")
       serialService = (service as SerialService.SerialBinder).service
       serialService.attach(dataListener)
-      val myBinder = service
+//      val myBinder = service
 //      TODO mServiceBound = true
 
     }

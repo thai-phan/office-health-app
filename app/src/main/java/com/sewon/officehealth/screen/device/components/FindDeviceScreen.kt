@@ -52,19 +52,20 @@ import java.util.UUID
 internal fun FindDevicesScreen(navController: NavHostController = rememberNavController()) {
   val context = LocalContext.current
   val adapter = checkNotNull(context.getSystemService<BluetoothManager>()?.adapter)
+
   var scanning by remember {
     mutableStateOf(true)
   }
+
   val devices = remember {
     mutableStateListOf<BluetoothDevice>()
   }
+
   val pairedDevices = remember {
     // Get a list of previously paired devices
     mutableStateListOf<BluetoothDevice>(*adapter.bondedDevices.toTypedArray())
   }
-  val sampleServerDevices = remember {
-    mutableStateListOf<BluetoothDevice>()
-  }
+
   val scanSettings: ScanSettings = ScanSettings.Builder()
     .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
     .setScanMode(ScanSettings.SCAN_MODE_BALANCED)
@@ -85,15 +86,10 @@ internal fun FindDevicesScreen(navController: NavHostController = rememberNavCon
             devices.add(scanResult.device)
           }
         }
-        val SERVICE_UUID: UUID = UUID.fromString("00002222-0000-1000-8000-00805f9b34fb")
 
         // If we find our GATT server sample let's highlight it
         val serviceUuids = scanResult.scanRecord?.serviceUuids.orEmpty()
-        if (serviceUuids.contains(ParcelUuid(SERVICE_UUID))) {
-          if (!sampleServerDevices.contains(scanResult.device)) {
-            sampleServerDevices.add(scanResult.device)
-          }
-        }
+
       },
     )
     // Stop scanning after a while
@@ -139,15 +135,9 @@ internal fun FindDevicesScreen(navController: NavHostController = rememberNavCon
       items(devices) { item ->
         DeviceItem(
           Color(0xFFE3ECA6),
+          navController = navController,
           bluetoothDevice = item,
-          isSampleServer = sampleServerDevices.contains(item),
         )
-      }
-
-      item {
-        Button(onClick = { navController.navigate(AppDestinations.ACTIVITY_ROUTE) }) {
-          Text("Move")
-        }
       }
 
       if (pairedDevices.isNotEmpty()) {

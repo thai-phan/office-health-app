@@ -69,7 +69,7 @@ fun NavigationGraph(
 
     composable(AppDestinations.ACTIVITY_ROUTE) {
       ScreenActivity(
-
+        navController = navController
       )
     }
   }
