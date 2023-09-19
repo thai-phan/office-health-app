@@ -14,7 +14,7 @@ import android.provider.Settings
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.app.NotificationCompat
 import com.sewon.officehealth.R
-import timber.log.Timber
+import com.sewon.officehealth.service.Constants
 import java.io.IOException
 import java.util.ArrayDeque
 

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,7 +15,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddAlert
 import androidx.compose.material.icons.filled.CalendarMonth
@@ -92,9 +95,9 @@ fun ScreenActivity(
     modifier = modifier
       .background(Color(0xFFCCF8D4))
       .fillMaxSize()
-      .padding(vertical = 50.dp),
+      .padding(vertical = 50.dp)
 
-    ) {
+  ) {
 
     Row(
       modifier = Modifier.fillMaxWidth(),
@@ -299,7 +302,7 @@ fun ScreenActivity(
               MainActivity.serialService.playSoundStretch()
             }
           },
-          dialogTitle = "스트레스 솔루션",
+          dialogTitle = "스트레칭 솔루션",
           dialogText = "스트레칭이 필요한 시간입니다.\n" +
               "솔루션을 재생하시겠습니까?",
           icon = Icons.Default.AddAlert,
@@ -334,11 +337,19 @@ fun ScreenActivity(
 
     Spacer(modifier = Modifier.height(20.dp))
 
+    //      Button(onClick = { MainActivity.dataListener.resetTimer() }) {
+//        Text(text = "Test")
+//      }
+
     var isShowLog by remember {
       mutableStateOf(false)
     }
 
-    Row(modifier = Modifier.padding(10.dp)) {
+    Row(
+      modifier = Modifier
+        .padding(10.dp)
+        .verticalScroll(rememberScrollState())
+    ) {
       Button(
         colors = ButtonDefaults.buttonColors(Color(0xFFFFFFFF)),
         modifier = Modifier
@@ -354,7 +365,7 @@ fun ScreenActivity(
         )
       }
       if (isShowLog) {
-        Text(logUI, fontWeight = FontWeight.Bold, fontSize = 24.sp, color = Color.Black)
+        Text(logUI, fontWeight = FontWeight.Bold, color = Color.Black)
       }
 
     }

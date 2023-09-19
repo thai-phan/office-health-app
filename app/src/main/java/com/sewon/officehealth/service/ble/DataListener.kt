@@ -5,6 +5,7 @@ import android.text.SpannableStringBuilder
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import com.sewon.officehealth.algorithm.ECG_ANALYSIS_PROC
+import com.sewon.officehealth.service.Constants
 import timber.log.Timber
 import java.util.ArrayDeque
 
@@ -26,8 +27,8 @@ class DataListener : SerialListener {
   private val dataArrayList = ArrayList<Double>()
 
   private val totalDuration = 50 * 60 * 1000L
+//  private val totalDuration = 10 * 1000L
 
-  //  private val totalDuration = 10 * 1000L
   private val b = 1000L
   val timeRemaining = mutableLongStateOf(0)
 
@@ -73,26 +74,22 @@ class DataListener : SerialListener {
 
 
   fun stretchDetected() {
-    resetTimer()
     isStretch.value = true
   }
 
   fun stretchStop() {
-//    MainActivity.serialService.stopSoundStretch()
     isStretch.value = false
   }
 
   fun stressDetected() {
-//    MainActivity.serialService.playSoundStress()
     isStress.value = true
   }
 
   fun stressStop() {
-//    MainActivity.serialService.stopSoundStress()
     isStress.value = false
   }
 
-  var prevValue = Constants.STABLE_MOVING;
+//  var prevValue = Constants.STABLE_MOVING;
 
   var countNoVitalSign = 0
   var countNoTarget = 0
@@ -103,22 +100,31 @@ class DataListener : SerialListener {
     if (messageArray[0] == Constants.STABLE_NO_VITAL_SIGN) {
       countNoVitalSign += 1
       if (countNoVitalSign == Constants.NO_VITAL_SIGN_THRESHOLD) {
-        stretchDetected()
+        resetTimer()
       }
     } else {
       countNoVitalSign = 0
     }
 
-
-    if (prevValue == Constants.STABLE_NO_TARGET && messageArray[0] != Constants.STABLE_NO_TARGET) {
-//      countNoTarget += 1
-//      if (countNoTarget == Constants.NO_TARGET_THRESHOLD) {
-//        stretchDetected()
-//      }
-      stretchDetected()
+    if (messageArray[0] == Constants.STABLE_NO_TARGET) {
+      countNoTarget += 1
+      if (countNoTarget == Constants.NO_TARGET_THRESHOLD) {
+        resetTimer()
+      }
+    } else {
+      countNoTarget = 0
     }
 
-    prevValue = messageArray[0]
+
+//    if (prevValue == Constants.STABLE_NO_TARGET && messageArray[0] != Constants.STABLE_NO_TARGET) {
+////      countNoTarget += 1
+////      if (countNoTarget == Constants.NO_TARGET_THRESHOLD) {
+////        stretchDetected()
+////      }
+//      resetTimer()
+//    }
+
+//    prevValue = messageArray[0]
 
     if (dataArrayList.size == 9) {
       val result = ECG_ANALYSIS_PROC.ECG_AnalysisData(dataArrayList)
@@ -130,7 +136,7 @@ class DataListener : SerialListener {
     dataArrayList.add(messageArray.get(4).toDouble())
   }
 
-  var count = 0
+  private var tempCount = 0
 
   private fun receive(datas: ArrayDeque<ByteArray>) {
     val spn = SpannableStringBuilder()
@@ -145,13 +151,13 @@ class DataListener : SerialListener {
       }
     }
 
-    if (count < 2) {
-      count += 1
+    if (tempCount < 2) {
+      tempCount += 1
     } else {
-      count = 0
+      tempCount = 0
     }
 
-    log.value = spn.toString() + "" + count.toString()
+    log.value = "$spn $tempCount"
   }
 
 
