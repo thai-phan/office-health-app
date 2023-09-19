@@ -67,10 +67,10 @@ class SerialService : Service(), SerialListener {
   private val queue2: ArrayDeque<QueueItem>
   private val lastRead: QueueItem
   private var socket: SerialSocket? = null
-  private var listener: SerialListener? = null
+  var listener: SerialListener? = null
   private var connected = false
 
-  val isPlaySound = mutableStateOf(false)
+  val isPlaySoundStretch = mutableStateOf(false)
   val isPlaySoundStress = mutableStateOf(false)
 
 
@@ -95,8 +95,6 @@ class SerialService : Service(), SerialListener {
 
   @Throws(IOException::class)
   fun connect(socket: SerialSocket) {
-
-//    countDownTimer
     Timber.tag("Timber").w("Connect SerialSocket")
     socket.connect(this)
     this.socket = socket
@@ -201,29 +199,29 @@ class SerialService : Service(), SerialListener {
     }
   }
 
-  private lateinit var player1: MediaPlayer
-  private lateinit var player2: MediaPlayer
+  lateinit var playerStretch: MediaPlayer
+  lateinit var playerStress: MediaPlayer
 
-  fun playSoundAlarm() {
-    isPlaySound.value = true
-    player1 = MediaPlayer.create(this, Settings.System.DEFAULT_RINGTONE_URI)
-    player1.start()
+  fun playSoundStretch() {
+    isPlaySoundStretch.value = true
+    playerStretch = MediaPlayer.create(this, Settings.System.DEFAULT_RINGTONE_URI)
+    playerStretch.start()
   }
 
-  fun stopSoundAlarm() {
-    isPlaySound.value = false
-    player1.stop()
+  fun stopSoundStretch() {
+    isPlaySoundStretch.value = false
+    playerStretch.stop()
   }
 
   fun playSoundStress() {
     isPlaySoundStress.value = true
-    player2 = MediaPlayer.create(this, R.raw.gangnam)
-    player2.start()
+    playerStress = MediaPlayer.create(this, R.raw.timeless)
+    playerStress.start()
   }
 
   fun stopSoundStress() {
     isPlaySoundStress.value = false
-    player2.stop()
+    playerStress.stop()
   }
 
   override fun onSerialConnectError(e: Exception) {
@@ -260,8 +258,6 @@ class SerialService : Service(), SerialListener {
    * While not consumed (2), add more data (3).
    */
   override fun onSerialRead(data: ByteArray) {
-
-
     if (connected) {
       synchronized(this) {
         if (listener != null) {

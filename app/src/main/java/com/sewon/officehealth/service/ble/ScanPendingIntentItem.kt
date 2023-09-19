@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.sewon.officehealth.screen.device.components.BLEDeviceItem
+import com.sewon.officehealth.temp.startScan
 
 
 @OptIn(ExperimentalFoundationApi::class)

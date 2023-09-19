@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bluetooth
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -45,13 +44,7 @@ fun DeviceItem(
   navController: NavHostController = rememberNavController(),
   bluetoothDevice: BluetoothDevice,
 ) {
-
   val context = LocalContext.current
-
-  fun sendNoti() {
-    MainActivity.serialService.createNotificationHealth()
-  }
-
 
   fun connect(address: String) {
     try {
@@ -61,8 +54,7 @@ fun DeviceItem(
       if (socket != null) {
         MainActivity.serialService.connect(socket)
       }
-//      MainActivity.dataListener.countDownTimer.start()
-
+      navController.navigate(AppDestinations.ACTIVITY_ROUTE)
     } catch (exception: IllegalArgumentException) {
       Timber.tag("Timber").w(exception)
     }
@@ -89,7 +81,6 @@ fun DeviceItem(
         .padding(10.dp)
         .clickable {
           connect(bluetoothDevice.address)
-          navController.navigate(AppDestinations.ACTIVITY_ROUTE)
         },
       horizontalArrangement = Arrangement.SpaceBetween,
       verticalAlignment = Alignment.CenterVertically
@@ -100,11 +91,7 @@ fun DeviceItem(
         style = TextStyle(fontWeight = FontWeight.Normal),
         color = Color.Black
       )
-      Text(text = "STATUS", color = Color.Black)
-    }
-
-    Button(onClick = { sendNoti() }) {
-      Text("Send Noti")
+      Text(text = bluetoothDevice.address, color = Color.Black)
     }
   }
 }

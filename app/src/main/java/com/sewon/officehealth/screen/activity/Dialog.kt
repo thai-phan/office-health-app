@@ -15,6 +15,7 @@ fun AlertDialogExample(
   dialogTitle: String,
   dialogText: String,
   icon: ImageVector,
+  isPlay: Boolean
 ) {
   AlertDialog(
     icon = {
@@ -30,7 +31,17 @@ fun AlertDialogExample(
       onDismissRequest()
     },
     confirmButton = {
-
+      TextButton(
+        onClick = {
+          onConfirmation()
+        }
+      ) {
+        if (!isPlay) {
+          Text("재생"  )
+        } else {
+          Text("정지")
+        }
+      }
     },
     dismissButton = {
       TextButton(

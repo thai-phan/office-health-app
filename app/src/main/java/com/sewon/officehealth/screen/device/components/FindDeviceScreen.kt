@@ -40,10 +40,8 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.getSystemService
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.sewon.officehealth.common.AppDestinations
 import kotlinx.coroutines.delay
 import timber.log.Timber
-import java.util.UUID
 
 
 @SuppressLint("InlinedApi", "MissingPermission")
@@ -86,10 +84,6 @@ internal fun FindDevicesScreen(navController: NavHostController = rememberNavCon
             devices.add(scanResult.device)
           }
         }
-
-        // If we find our GATT server sample let's highlight it
-        val serviceUuids = scanResult.scanRecord?.serviceUuids.orEmpty()
-
       },
     )
     // Stop scanning after a while

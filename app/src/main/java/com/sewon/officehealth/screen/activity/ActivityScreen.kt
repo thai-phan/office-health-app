@@ -55,8 +55,6 @@ fun ScreenActivity(
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
   val milliseconds by MainActivity.dataListener.timeRemaining
-  val isPlaySoundUi by MainActivity.serialService.isPlaySound
-  val isPlaySoundStressUi by MainActivity.serialService.isPlaySoundStress
 
   val second = milliseconds / 1000
   val minuteStr = ((second % 3600) / 60).toString();
@@ -68,7 +66,7 @@ fun ScreenActivity(
   }
 
   fun stopSoundAlarm() {
-    MainActivity.serialService.stopSoundAlarm()
+    MainActivity.serialService.stopSoundStretch()
   }
 
   fun stopSoundStress() {
@@ -82,9 +80,13 @@ fun ScreenActivity(
   val date = calendar.get(DAY_OF_MONTH).toString()
 
   val logUI by MainActivity.dataListener.log
+  val textUI = MainActivity.dataListener.receiveText.toString()
 
   val isStretchUI by MainActivity.dataListener.isStretch
   val isStressUI by MainActivity.dataListener.isStress
+
+  val isPlayStretch by MainActivity.serialService.isPlaySoundStretch
+  val isPlayStress by MainActivity.serialService.isPlaySoundStress
 
   Column(
     modifier = modifier
@@ -163,10 +165,11 @@ fun ScreenActivity(
         contentDescription = "Localized description",
         tint = Color.Black
       )
-//목요일
+      //목요일
       Text(year + "년 " + month + "월 " + date + "일 ", color = Color.Black)
       Text("")
     }
+
     Row(
       modifier = Modifier
         .fillMaxWidth()
@@ -181,14 +184,28 @@ fun ScreenActivity(
         contentDescription = "Logo",
       )
       Text("스트레스 해소", color = Color.Black)
-      Button(onClick = {
 
-      }) {
-        Icon(
-          Icons.Filled.PauseCircleOutline,
-          contentDescription = "Localized description",
-          tint = Color.Black
-        )
+      if (isPlayStretch) {
+        Button(onClick = {
+          MainActivity.serialService.stopSoundStretch()
+        }) {
+          Icon(
+            Icons.Filled.PauseCircleOutline,
+            contentDescription = "Localized description",
+            tint = Color.Black
+          )
+        }
+      } else {
+        Button(onClick = {
+          MainActivity.serialService.playSoundStretch()
+        }) {
+          Icon(
+            Icons.Filled.PlayCircleOutline,
+            contentDescription = "Localized description",
+            tint = Color.Black
+          )
+        }
+
       }
     }
     Row(
@@ -205,20 +222,31 @@ fun ScreenActivity(
         contentDescription = "Logo",
       )
       Text("집중력 향상", color = Color.Black)
-      Button(onClick = {
-        /* TODO*/
-      }) {
-        Icon(
-          Icons.Filled.PlayCircleOutline,
-          contentDescription = "Localized description",
-          tint = Color.Black
-        )
+      if (isPlayStress) {
+        Button(onClick = {
+          MainActivity.serialService.stopSoundStress()
+        }) {
+          Icon(
+            Icons.Filled.PauseCircleOutline,
+            contentDescription = "Localized description",
+            tint = Color.Black
+          )
+        }
+
+      } else {
+        Button(onClick = {
+          MainActivity.serialService.playSoundStress()
+        }) {
+          Icon(
+            Icons.Filled.PlayCircleOutline,
+            contentDescription = "Localized description",
+            tint = Color.Black
+          )
+        }
       }
     }
 
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-      Text(logUI, fontWeight = FontWeight.Bold, fontSize = 24.sp, color = Color.Black)
-    }
+    Spacer(modifier = Modifier.height(20.dp))
 
     Row(
       modifier = Modifier.fillMaxWidth(),
@@ -228,14 +256,11 @@ fun ScreenActivity(
       Button(onClick = { navController.navigate(AppDestinations.DEVICE_ROUTE) }) {
         Text("Back to device")
       }
-      Spacer(modifier = Modifier.width(10.dp))
+      Spacer(modifier = Modifier.width(20.dp))
       Button(onClick = { disconnect() }) {
         Text("Disconnect")
       }
     }
-
-
-
 
     when {
       isStretchUI -> {
@@ -244,12 +269,17 @@ fun ScreenActivity(
             MainActivity.dataListener.stretchStop()
           },
           onConfirmation = {
-            MainActivity.dataListener.stretchStop()
+            if (isPlayStretch) {
+              MainActivity.serialService.stopSoundStretch()
+            } else {
+              MainActivity.serialService.playSoundStretch()
+            }
           },
           dialogTitle = "스트레스 솔루션",
           dialogText = "스트레칭이 필요한 시간입니다.\n" +
               "솔루션을 재생하시겠습니까?",
           icon = Icons.Default.AddAlert,
+          isPlay = isPlayStretch
         )
       }
     }
@@ -261,30 +291,41 @@ fun ScreenActivity(
             MainActivity.dataListener.stressStop()
           },
           onConfirmation = {
-            MainActivity.dataListener.stressStop()
-            println("Confirmation registered") // Add logic here to handle confirmation.
+            if (isPlayStress) {
+              MainActivity.serialService.stopSoundStress()
+            } else {
+              MainActivity.serialService.playSoundStress()
+            }
           },
           dialogTitle = "스트레스 솔루션",
           dialogText = "스트레스가 감지되었습니다.\n" +
               "솔루션을 재생하시겠습니까?",
           icon = Icons.Default.AddAlert,
+          isPlay = isPlayStress
         )
       }
     }
 
-    Row {
-      Button(onClick = {
-        MainActivity.dataListener.stretchDetected()
-      }) {
-        Text("Stretch")
-      }
-      Button(onClick = {
-        MainActivity.dataListener.stressDetected()
-      }) {
-        Text("Stress")
-      }
-
-    }
+//    // Test
+//    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+//      Text(logUI, fontWeight = FontWeight.Bold, fontSize = 24.sp, color = Color.Black)
+//    }
+//    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+//      Text(textUI, fontWeight = FontWeight.Bold, fontSize = 24.sp, color = Color.Black)
+//    }
+//
+//    Row {
+//      Button(onClick = {
+//        MainActivity.dataListener.stretchDetected()
+//      }) {
+//        Text("Stretch")
+//      }
+//      Button(onClick = {
+//        MainActivity.dataListener.stressDetected()
+//      }) {
+//        Text("Stress")
+//      }
+//    }
   }
 }
 
