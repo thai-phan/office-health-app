@@ -3,6 +3,7 @@ package com.sewon.officehealth.screen.activity
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,20 +14,25 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddAlert
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.PauseCircleOutline
 import androidx.compose.material.icons.filled.PlayCircleOutline
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -63,16 +69,8 @@ fun ScreenActivity(
 
   fun disconnect() {
     MainActivity.serialService.disconnect()
+    navController.navigate(AppDestinations.DEVICE_ROUTE)
   }
-
-  fun stopSoundAlarm() {
-    MainActivity.serialService.stopSoundStretch()
-  }
-
-  fun stopSoundStress() {
-    MainActivity.serialService.stopSoundStress()
-  }
-
 
   val calendar = Calendar.getInstance()
   val year = calendar.get(YEAR).toString()
@@ -87,6 +85,8 @@ fun ScreenActivity(
 
   val isPlayStretch by MainActivity.serialService.isPlaySoundStretch
   val isPlayStress by MainActivity.serialService.isPlaySoundStress
+
+  val rowHeight = 120.dp
 
   Column(
     modifier = modifier
@@ -153,7 +153,7 @@ fun ScreenActivity(
     Row(
       modifier = Modifier
         .fillMaxWidth()
-        .height(100.dp)
+        .height(rowHeight)
         .background(color = Color(0xFF60AC70))
         .padding(horizontal = 20.dp),
       horizontalArrangement = Arrangement.SpaceBetween,
@@ -173,7 +173,7 @@ fun ScreenActivity(
     Row(
       modifier = Modifier
         .fillMaxWidth()
-        .height(100.dp)
+        .height(rowHeight)
         .background(color = Color(0xCC60AC70))
         .padding(horizontal = 20.dp),
       horizontalArrangement = Arrangement.SpaceBetween,
@@ -186,9 +186,11 @@ fun ScreenActivity(
       Text("스트레스 해소", color = Color.Black)
 
       if (isPlayStretch) {
-        Button(onClick = {
-          MainActivity.serialService.stopSoundStretch()
-        }) {
+        Button(
+          colors = ButtonDefaults.buttonColors(Color(0xCC60AC70)),
+          onClick = {
+            MainActivity.serialService.stopSoundStretch()
+          }) {
           Icon(
             Icons.Filled.PauseCircleOutline,
             contentDescription = "Localized description",
@@ -196,22 +198,23 @@ fun ScreenActivity(
           )
         }
       } else {
-        Button(onClick = {
-          MainActivity.serialService.playSoundStretch()
-        }) {
+        Button(
+          colors = ButtonDefaults.buttonColors(Color(0xCC60AC70)),
+          onClick = {
+            MainActivity.serialService.playSoundStretch()
+          }) {
           Icon(
             Icons.Filled.PlayCircleOutline,
             contentDescription = "Localized description",
             tint = Color.Black
           )
         }
-
       }
     }
     Row(
       modifier = Modifier
         .fillMaxWidth()
-        .height(100.dp)
+        .height(rowHeight)
         .background(color = Color(0x9960AC70))
         .padding(horizontal = 20.dp),
       horizontalArrangement = Arrangement.SpaceBetween,
@@ -223,9 +226,11 @@ fun ScreenActivity(
       )
       Text("집중력 향상", color = Color.Black)
       if (isPlayStress) {
-        Button(onClick = {
-          MainActivity.serialService.stopSoundStress()
-        }) {
+        Button(
+          colors = ButtonDefaults.buttonColors(Color(0x9960AC70)),
+          onClick = {
+            MainActivity.serialService.stopSoundStress()
+          }) {
           Icon(
             Icons.Filled.PauseCircleOutline,
             contentDescription = "Localized description",
@@ -234,9 +239,11 @@ fun ScreenActivity(
         }
 
       } else {
-        Button(onClick = {
-          MainActivity.serialService.playSoundStress()
-        }) {
+        Button(
+          colors = ButtonDefaults.buttonColors(Color(0x9960AC70)),
+          onClick = {
+            MainActivity.serialService.playSoundStress()
+          }) {
           Icon(
             Icons.Filled.PlayCircleOutline,
             contentDescription = "Localized description",
@@ -253,12 +260,29 @@ fun ScreenActivity(
       horizontalArrangement = Arrangement.Center,
       verticalAlignment = Alignment.CenterVertically
     ) {
-      Button(onClick = { navController.navigate(AppDestinations.DEVICE_ROUTE) }) {
-        Text("Back to device")
-      }
-      Spacer(modifier = Modifier.width(20.dp))
-      Button(onClick = { disconnect() }) {
-        Text("Disconnect")
+      Button(
+        colors = ButtonDefaults.buttonColors(Color(0xFFFFFFFF)),
+        modifier = Modifier
+          .shadow(elevation = 4.dp, spotColor = Color(0x1A000000), ambientColor = Color(0x1A000000))
+          .border(
+            width = 4.dp,
+            color = Color(0xFF4EA162),
+            shape = RoundedCornerShape(size = 999.dp)
+          )
+          .width(320.dp)
+          .height(72.dp)
+          .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 999.dp)),
+        onClick = { disconnect() }
+      ) {
+        Text(
+          text = "연결됨",
+          style = TextStyle(
+            fontSize = 24.sp,
+            fontFamily = FontFamily(Font(R.font.jalnan)),
+            fontWeight = FontWeight(700),
+            color = Color(0xFF4EA162),
+          )
+        )
       }
     }
 
@@ -306,26 +330,34 @@ fun ScreenActivity(
       }
     }
 
-//    // Test
-//    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-//      Text(logUI, fontWeight = FontWeight.Bold, fontSize = 24.sp, color = Color.Black)
-//    }
-//    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-//      Text(textUI, fontWeight = FontWeight.Bold, fontSize = 24.sp, color = Color.Black)
-//    }
-//
-//    Row {
-//      Button(onClick = {
-//        MainActivity.dataListener.stretchDetected()
-//      }) {
-//        Text("Stretch")
-//      }
-//      Button(onClick = {
-//        MainActivity.dataListener.stressDetected()
-//      }) {
-//        Text("Stress")
-//      }
-//    }
+
+
+    Spacer(modifier = Modifier.height(20.dp))
+
+    var isShowLog by remember {
+      mutableStateOf(false)
+    }
+
+    Row(modifier = Modifier.padding(10.dp)) {
+      Button(
+        colors = ButtonDefaults.buttonColors(Color(0xFFFFFFFF)),
+        modifier = Modifier
+          .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 999.dp)),
+        onClick = { isShowLog = !isShowLog }
+      ) {
+        Text(
+          text = "Log",
+          style = TextStyle(
+            fontFamily = FontFamily(Font(R.font.jalnan)),
+            color = Color(0xFF4EA162),
+          )
+        )
+      }
+      if (isShowLog) {
+        Text(logUI, fontWeight = FontWeight.Bold, fontSize = 24.sp, color = Color.Black)
+      }
+
+    }
   }
 }
 

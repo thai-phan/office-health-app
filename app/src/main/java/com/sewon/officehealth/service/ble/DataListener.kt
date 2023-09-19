@@ -92,7 +92,7 @@ class DataListener : SerialListener {
     isStress.value = false
   }
 
-  var prevValue = Constants.STABLE_NO_TARGET;
+  var prevValue = Constants.STABLE_MOVING;
 
   var countNoVitalSign = 0
   var countNoTarget = 0
@@ -130,6 +130,8 @@ class DataListener : SerialListener {
     dataArrayList.add(messageArray.get(4).toDouble())
   }
 
+  var count = 0
+
   private fun receive(datas: ArrayDeque<ByteArray>) {
     val spn = SpannableStringBuilder()
     for (data in datas) {
@@ -142,7 +144,14 @@ class DataListener : SerialListener {
         spn.append(text)
       }
     }
-    log.value = spn.toString()
+
+    if (count < 2) {
+      count += 1
+    } else {
+      count = 0
+    }
+
+    log.value = spn.toString() + "" + count.toString()
   }
 
 

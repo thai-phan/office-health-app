@@ -67,7 +67,7 @@ class SerialService : Service(), SerialListener {
   private val queue2: ArrayDeque<QueueItem>
   private val lastRead: QueueItem
   private var socket: SerialSocket? = null
-  var listener: SerialListener? = null
+  var dataListener: DataListener? = null
   private var connected = false
 
   val isPlaySoundStretch = mutableStateOf(false)
@@ -95,13 +95,14 @@ class SerialService : Service(), SerialListener {
 
   @Throws(IOException::class)
   fun connect(socket: SerialSocket) {
-    Timber.tag("Timber").w("Connect SerialSocket")
+    dataListener?.countDownTimer?.start()
     socket.connect(this)
     this.socket = socket
     connected = true
   }
 
   fun disconnect() {
+    dataListener?.countDownTimer?.cancel()
     connected = false // ignore data,errors while disconnecting
     cancelNotification()
     if (socket != null) {
@@ -118,13 +119,13 @@ class SerialService : Service(), SerialListener {
     }
   }
 
-  fun attach(listener: SerialListener) {
+  fun attach(listener: DataListener) {
 
     require(Looper.getMainLooper().thread === Thread.currentThread()) { "not in main thread" }
     cancelNotification()
     // use synchronized() to prevent new items in queue2
     // new items will not be added to queue1 because mainLooper.post and attach() run in main thread
-    synchronized(this) { this.listener = listener }
+    synchronized(this) { this.dataListener = listener }
     for (item in queue1) {
       when (item.type) {
         QueueType.Connect -> listener.onSerialConnect()
@@ -150,7 +151,7 @@ class SerialService : Service(), SerialListener {
     // items already in event queue (posted before detach() to mainLooper) will end up in queue1
     // items occurring later, will be moved directly to queue2
     // detach() and mainLooper.post run in the main thread, so all items are caught
-    listener = null
+    dataListener = null
   }
 
   fun createNotificationHealth() {
@@ -184,10 +185,10 @@ class SerialService : Service(), SerialListener {
   override fun onSerialConnect() {
     if (connected) {
       synchronized(this) {
-        if (listener != null) {
+        if (dataListener != null) {
           mainLooper.post {
-            if (listener != null) {
-              listener!!.onSerialConnect()
+            if (dataListener != null) {
+              dataListener!!.onSerialConnect()
             } else {
               queue1.add(QueueItem(QueueType.Connect))
             }
@@ -227,10 +228,10 @@ class SerialService : Service(), SerialListener {
   override fun onSerialConnectError(e: Exception) {
     if (connected) {
       synchronized(this) {
-        if (listener != null) {
+        if (dataListener != null) {
           mainLooper.post {
-            if (listener != null) {
-              listener!!.onSerialConnectError(e)
+            if (dataListener != null) {
+              dataListener!!.onSerialConnectError(e)
             } else {
               queue1.add(QueueItem(QueueType.ConnectError, e))
               disconnect()
@@ -260,7 +261,7 @@ class SerialService : Service(), SerialListener {
   override fun onSerialRead(data: ByteArray) {
     if (connected) {
       synchronized(this) {
-        if (listener != null) {
+        if (dataListener != null) {
           var first: Boolean
           synchronized(lastRead) {
             first = lastRead.datas!!.isEmpty() // (1)
@@ -273,8 +274,8 @@ class SerialService : Service(), SerialListener {
                 datas = lastRead.datas!!
                 lastRead.init() // (2)
               }
-              if (listener != null) {
-                datas.let { listener!!.onSerialRead(it) }
+              if (dataListener != null) {
+                datas.let { dataListener!!.onSerialRead(it) }
               } else {
                 queue1.add(QueueItem(QueueType.Read, datas))
               }
@@ -292,10 +293,10 @@ class SerialService : Service(), SerialListener {
   override fun onSerialIoError(e: Exception) {
     if (connected) {
       synchronized(this) {
-        if (listener != null) {
+        if (dataListener != null) {
           mainLooper.post {
-            if (listener != null) {
-              listener!!.onSerialIoError(e)
+            if (dataListener != null) {
+              dataListener!!.onSerialIoError(e)
             } else {
               queue1.add(QueueItem(QueueType.IoError, e))
               disconnect()
