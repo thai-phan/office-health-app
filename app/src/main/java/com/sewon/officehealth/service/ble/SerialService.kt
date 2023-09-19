@@ -1,11 +1,14 @@
 package com.sewon.officehealth.service.ble
 
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
+import android.media.AudioAttributes
 import android.media.MediaPlayer
+import android.media.RingtoneManager
 import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
@@ -13,10 +16,12 @@ import android.os.Looper
 import android.provider.Settings
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.app.NotificationCompat
+import com.sewon.officehealth.Application
 import com.sewon.officehealth.R
 import com.sewon.officehealth.service.Constants
 import java.io.IOException
 import java.util.ArrayDeque
+
 
 /**
  * create notification and queue serial data while activity is not in the foreground
@@ -154,28 +159,50 @@ class SerialService : Service(), SerialListener {
     dataListener = null
   }
 
+
   fun createNotificationHealth() {
+    val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+    val att = AudioAttributes.Builder()
+      .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+      .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+      .build()
+
     val notificationChannel = NotificationChannel(
       Constants.NOTIFICATION_CHANNEL,
-      "Background service", NotificationManager.IMPORTANCE_LOW
+      resources.getString(R.string.app_name), NotificationManager.IMPORTANCE_HIGH
     )
+//    notificationChannel.importance = NotificationManager.IMPORTANCE_HIGH
+    notificationChannel.enableLights(true)
+    notificationChannel.enableVibration(true)
+    notificationChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC;
     notificationChannel.setShowBadge(false)
+    notificationChannel.setSound(defaultSoundUri, att)
+
+
     val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
     notificationManager.createNotificationChannel(notificationChannel)
+
     val restartIntent = Intent()
       .setClassName(this, Constants.INTENT_CLASS_MAIN_ACTIVITY)
       .setAction(Intent.ACTION_MAIN)
       .addCategory(Intent.CATEGORY_LAUNCHER)
-    val flags = PendingIntent.FLAG_IMMUTABLE
-    val restartPendingIntent = PendingIntent.getActivity(this, 1, restartIntent, flags)
+    val restartPendingIntent =
+      PendingIntent.getActivity(this, 1, restartIntent, PendingIntent.FLAG_IMMUTABLE)
+
     val builder = NotificationCompat.Builder(this, Constants.NOTIFICATION_CHANNEL)
       .setSmallIcon(R.drawable.ic_bluetooth_searching)
       .setContentTitle(resources.getString(R.string.app_name))
-      .setContentText(if (socket != null) "Connected to " + socket!!.name else "Background Service")
+      .setContentText(
+        "장시간 앉아 계셨군요.\n" +
+            "몸을 움직여줄 시간이에요!"
+      )
       .setContentIntent(restartPendingIntent)
-      .setOngoing(true)
+      .setSound(defaultSoundUri)
+      .setCategory(NotificationCompat.CATEGORY_ALARM)
+
     val notification = builder.build()
-    notificationManager.notify(5, notification)
+
+    notificationManager.notify(1, notification)
   }
 
   private fun cancelNotification() {

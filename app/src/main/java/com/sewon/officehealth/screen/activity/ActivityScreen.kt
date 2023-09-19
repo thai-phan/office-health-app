@@ -89,13 +89,22 @@ fun ScreenActivity(
   val isPlayStretch by MainActivity.serialService.isPlaySoundStretch
   val isPlayStress by MainActivity.serialService.isPlaySoundStress
 
-  val rowHeight = 120.dp
+  val rowHeight = 110.dp
+
+  val normalTextStyle = TextStyle(
+    fontSize = 20.sp,
+    lineHeight = 25.6.sp,
+    fontFamily = FontFamily(Font(R.font.spoqa_han_sans_neo_regular)),
+    fontWeight = FontWeight(400),
+    color = Color(0xFF000000),
+    textAlign = TextAlign.Center,
+  )
 
   Column(
     modifier = modifier
       .background(Color(0xFFCCF8D4))
       .fillMaxSize()
-      .padding(vertical = 50.dp)
+      .padding(vertical = 70.dp)
 
   ) {
 
@@ -105,30 +114,25 @@ fun ScreenActivity(
     ) {
       Text(
         text = "앉아 계신지 ",
-        style = TextStyle(
-          fontSize = 16.sp,
-          lineHeight = 25.6.sp,
-          fontWeight = FontWeight(500),
-          color = Color(0xFF000000),
-          textAlign = TextAlign.Center,
-        )
+        style = normalTextStyle
       )
       Text(
         minuteStr + "분 ",
-        fontWeight = FontWeight.Bold,
-        fontSize = 16.sp,
+        fontWeight = FontWeight.ExtraBold,
+        fontFamily = FontFamily(Font(R.font.spoqa_han_sans_neo_regular)),
+        fontSize = 20.sp,
         color = Color(0xFF00AD53)
       )
-      Text(secondStr, fontWeight = FontWeight.Bold, fontSize = 16.sp, color = Color(0xFF00AD53))
+      Text(
+        secondStr + "초",
+        fontFamily = FontFamily(Font(R.font.spoqa_han_sans_neo_regular)),
+        fontSize = 20.sp,
+        fontWeight = FontWeight.ExtraBold,
+        color = Color(0xFF00AD53)
+      )
       Text(
         text = " 되었습니다.",
-        style = TextStyle(
-          fontSize = 16.sp,
-          lineHeight = 25.6.sp,
-          fontWeight = FontWeight(500),
-          color = Color(0xFF000000),
-          textAlign = TextAlign.Center,
-        )
+        style = normalTextStyle
       )
     }
 
@@ -137,14 +141,23 @@ fun ScreenActivity(
       horizontalArrangement = Arrangement.Center
     ) {
       Text(
-        text = " 스트레스는 낮은 상태입니다.",
+        text = " 스트레스는",
+        style = normalTextStyle
+      )
+      Text(
+        text = " 낮은 ",
         style = TextStyle(
-          fontSize = 16.sp,
+          fontSize = 20.sp,
           lineHeight = 25.6.sp,
-          fontWeight = FontWeight(500),
-          color = Color(0xFF000000),
+          fontFamily = FontFamily(Font(R.font.spoqa_han_sans_neo_regular)),
+          fontWeight = FontWeight.Black,
+          color = Color(0xFF00AD53),
           textAlign = TextAlign.Center,
         )
+      )
+      Text(
+        text = "상태입니다.",
+        style = normalTextStyle
       )
     }
     Image(
@@ -169,7 +182,17 @@ fun ScreenActivity(
         tint = Color.Black
       )
       //목요일
-      Text(year + "년 " + month + "월 " + date + "일 ", color = Color.Black)
+      Text(
+        year + "년 " + month + "월 " + date + "일 ",
+        style = TextStyle(
+          fontSize = 20.sp,
+          lineHeight = 26.sp,
+          fontFamily = FontFamily(Font(R.font.spoqa_han_sans_neo_regular)),
+          fontWeight = FontWeight(500),
+          color = Color(0xFF00210A),
+          textAlign = TextAlign.Center,
+        )
+      )
       Text("")
     }
 
@@ -186,7 +209,18 @@ fun ScreenActivity(
         painter = painterResource(id = R.drawable.ic_graphic_eq),
         contentDescription = "Logo",
       )
-      Text("스트레스 해소", color = Color.Black)
+      Text(
+        text = "스트레스 해소",
+        style = TextStyle(
+          fontSize = 24.sp,
+          lineHeight = 31.2.sp,
+          fontFamily = FontFamily(Font(R.font.spoqa_han_sans_neo_regular)),
+          fontWeight = FontWeight(700),
+          color = Color(0xFF003917),
+          textAlign = TextAlign.Center,
+        )
+      )
+
 
       if (isPlayStretch) {
         Button(
@@ -227,7 +261,19 @@ fun ScreenActivity(
         painter = painterResource(id = R.drawable.ic_ar_on_you),
         contentDescription = "Logo",
       )
-      Text("집중력 향상", color = Color.Black)
+
+      Text(
+        text = "집중력 향상",
+        style = TextStyle(
+          fontSize = 24.sp,
+          lineHeight = 31.2.sp,
+          fontFamily = FontFamily(Font(R.font.spoqa_han_sans_neo_regular)),
+          fontWeight = FontWeight(700),
+          color = Color(0xFF003917),
+          textAlign = TextAlign.Center,
+        )
+      )
+
       if (isPlayStress) {
         Button(
           colors = ButtonDefaults.buttonColors(Color(0x9960AC70)),
@@ -333,13 +379,9 @@ fun ScreenActivity(
       }
     }
 
-
-
-    Spacer(modifier = Modifier.height(20.dp))
-
-    //      Button(onClick = { MainActivity.dataListener.resetTimer() }) {
+//    Button(onClick = { MainActivity.serialService.createNotificationHealth() }) {
 //        Text(text = "Test")
-//      }
+//    }
 
     var isShowLog by remember {
       mutableStateOf(false)

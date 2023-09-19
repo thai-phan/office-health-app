@@ -26,13 +26,13 @@ fun NavigationGraph(
   modifier: Modifier = Modifier,
   finishActivity: () -> Unit = {},
   navController: NavHostController = rememberNavController(),
-  startDestination: String = AppDestinations.DEVICE_ROUTE,
+
   showOnboardingInitially: Boolean = false
 ) {
 
 
   val context = LocalContext.current
-
+  val startDestination: String = AppDestinations.SPLASH_ROUTE
   val onboardingComplete = remember(showOnboardingInitially) {
     mutableStateOf(!showOnboardingInitially)
   }
@@ -41,8 +41,7 @@ fun NavigationGraph(
     navController = navController,
     startDestination = startDestination
   ) {
-    var redirectRoute = AppDestinations.DEVICE_ROUTE
-
+    var redirectRoute = AppDestinations.WELCOME_ROUTE
 
     composable(AppDestinations.SPLASH_ROUTE) {
       // Intercept back in Onboarding: make it finish the activity

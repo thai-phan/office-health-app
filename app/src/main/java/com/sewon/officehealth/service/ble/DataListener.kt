@@ -4,6 +4,7 @@ import android.os.CountDownTimer
 import android.text.SpannableStringBuilder
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
+import com.sewon.officehealth.MainActivity
 import com.sewon.officehealth.algorithm.ECG_ANALYSIS_PROC
 import com.sewon.officehealth.service.Constants
 import timber.log.Timber
@@ -74,6 +75,7 @@ class DataListener : SerialListener {
 
 
   fun stretchDetected() {
+    MainActivity.serialService.createNotificationHealth()
     isStretch.value = true
   }
 
@@ -82,6 +84,7 @@ class DataListener : SerialListener {
   }
 
   fun stressDetected() {
+    MainActivity.serialService.createNotificationHealth()
     isStress.value = true
   }
 

@@ -38,67 +38,76 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(navController: NavController, redirectRoute: String) {
-    val scale = remember {
-        androidx.compose.animation.core.Animatable(0f)
-    }
+  val scale = remember {
+    androidx.compose.animation.core.Animatable(0f)
+  }
 
-    // Animation
-    LaunchedEffect(key1 = true) {
-        scale.animateTo(
-            targetValue = 0.7f,
-            // tween Animation
-            animationSpec = tween(
-                durationMillis = 800,
-                easing = {
-                    OvershootInterpolator(4f).getInterpolation(it)
-                })
-        )
-        // Customize the delay time
-        delay(1000L)
-        navController.navigate(redirectRoute)
-    }
+  // Animation
+  LaunchedEffect(key1 = true) {
+    scale.animateTo(
+      targetValue = 0.7f,
+      // tween Animation
+      animationSpec = tween(
+        durationMillis = 800,
+        easing = {
+          OvershootInterpolator(4f).getInterpolation(it)
+        })
+    )
+    // Customize the delay time
+    delay(1000L)
+    navController.navigate(redirectRoute)
+  }
+  Column(
+    verticalArrangement = Arrangement.Top,
+    horizontalAlignment = Alignment.CenterHorizontally,
+    modifier = Modifier
+      .statusBarsPadding()
+      .systemBarsPadding()
+      .fillMaxSize()
+      .paint(
+        painterResource(id = R.mipmap.ic_image_4_foreground),
+        alignment = Alignment.Center,
+        contentScale = ContentScale.FillWidth
+      )
+
+  ) {
     Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .statusBarsPadding()
-            .systemBarsPadding()
-            .fillMaxSize()
-
+      horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-      Column(
+      Image(
+        painter = painterResource(id = R.mipmap.ic_image_5_foreground),
+        contentDescription = "Logo",
         modifier = Modifier
-          .width(344.dp)
-          .height(608.7478.dp)
-          .background(color = Color(0xFF106D34), shape = RoundedCornerShape(size = 608.7478.dp))
-      ) {
-        Spacer(modifier = Modifier.height(100.dp))
-        Image(
-          painter = painterResource(id = R.mipmap.ic_image_5_foreground),
-          contentDescription = "Logo",
-          modifier = Modifier
-            .size(width = 500.dp, height = 200.dp)
-            .scale(scale.value)
+          .size(width = 250.dp, height = 200.dp)
+          .scale(scale.value)
+      )
+      Text(
+        text = "OFFICE HEALTH PROTECTOR!",
+        style = TextStyle(
+          fontSize = 20.sp,
+          fontFamily = FontFamily(Font(R.font.jalnan)),
+          fontWeight = FontWeight(700),
+          color = Color(0xFFFFFFFF),
+          letterSpacing = 1.4.sp,
         )
-        Text(
-          text = "OFFICE HEALTH PROTECTOR!",
-          style = TextStyle(
-            fontSize = 20.sp,
-            fontFamily = FontFamily(Font(R.font.pretendard_regular)),
-            fontWeight = FontWeight(700),
-            color = Color(0x80000000),
-            letterSpacing = 1.4.sp,
-          )
-        )
-        Image(
-          painter = painterResource(id = R.mipmap.ic_image_4_foreground),
-          contentDescription = "Table Logo",
-          modifier = Modifier
-            .size(500.dp)
-        )
-      }
+      )
+      Spacer(modifier = Modifier.height(350.dp))
 
+      Image(
+        painter = painterResource(id = R.mipmap.ic_logo_png_foreground),
+        contentDescription = "Table Logo",
+        modifier = Modifier
+          .size(300.dp)
+      )
+//        Image(
+//          painter = painterResource(id = R.mipmap.ic_image_4_foreground),
+//          contentDescription = "Table Logo",
+//          modifier = Modifier
+//            .size(500.dp)
+//        )
     }
+
+  }
 
 
 }

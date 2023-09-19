@@ -23,6 +23,18 @@ fun Modifier.whiteGreenBackground(): Modifier = this.composed {
 }
 
 @SuppressLint("UnnecessaryComposedModifier")
+fun Modifier.whiteBackground(): Modifier = this.composed {
+  Modifier.drawWithCache {
+    val gradientBrush = Brush.verticalGradient(
+      listOf(Color(0xFFEDF7EF), Color(0xFFEDF7EF))
+    )
+    onDrawBehind {
+      drawRect(gradientBrush)
+    }
+  }
+}
+
+@SuppressLint("UnnecessaryComposedModifier")
 fun Modifier.yellowBackground(): Modifier = this.composed {
   Modifier.drawWithCache {
     val gradientBrush = Brush.verticalGradient(
