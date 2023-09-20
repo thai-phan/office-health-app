@@ -62,7 +62,6 @@ fun BluetoothWrapper(
     Manifest.permission.ACCESS_COARSE_LOCATION,
   )
 
-
   val bluetoothPermissionSet = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
     setOf(
       Manifest.permission.BLUETOOTH_CONNECT,

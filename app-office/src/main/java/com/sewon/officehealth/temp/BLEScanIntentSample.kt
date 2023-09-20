@@ -40,9 +40,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.getSystemService
-import com.sewon.officehealth.service.ble.BLEDeviceListAdapter
-import com.sewon.officehealth.service.ble.BLEScanReceiver
-import com.sewon.officehealth.service.ble.ScanPendingIntentItem
 import timber.log.Timber
 
 

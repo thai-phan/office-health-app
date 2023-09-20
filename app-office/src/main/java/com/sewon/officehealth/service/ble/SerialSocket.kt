@@ -12,7 +12,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import com.sewon.officehealth.service.Constants
 import timber.log.Timber
 import java.io.IOException
 import java.util.Arrays
@@ -48,14 +47,16 @@ class SerialSocket(private val context: Context, private var device: BluetoothDe
       g: BluetoothGatt,
       c: BluetoothGattCharacteristic,
       status: Int
-    ) { /*nop*/
+    ) {
+
     }
 
     open fun canWrite(): Boolean {
       return true
     }
 
-    open fun disconnect() { /*nop*/
+    open fun disconnect() {
+
     }
   }
 

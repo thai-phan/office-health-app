@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -63,7 +62,7 @@ fun ScreenActivity(
 
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-  val milliseconds by MainActivity.dataListener.timeRemaining
+  val milliseconds by MainActivity.bleDataListener.timeRemaining
 
   val second = milliseconds / 1000
   val minuteStr = ((second % 3600) / 60).toString();
@@ -71,7 +70,7 @@ fun ScreenActivity(
 
 
   fun disconnect() {
-    MainActivity.serialService.disconnect()
+    MainActivity.bleHandleService.disconnect()
     navController.navigate(AppDestinations.DEVICE_ROUTE)
   }
 
@@ -80,14 +79,14 @@ fun ScreenActivity(
   val month = (calendar.get(MONTH) + 1).toString()
   val date = calendar.get(DAY_OF_MONTH).toString()
 
-  val logUI by MainActivity.dataListener.log
-  val textUI = MainActivity.dataListener.receiveText.toString()
+  val logUI by MainActivity.bleDataListener.log
+  val textUI = MainActivity.bleDataListener.receiveText.toString()
 
-  val isStretchUI by MainActivity.dataListener.isStretch
-  val isStressUI by MainActivity.dataListener.isStress
+  val isStretchUI by MainActivity.bleDataListener.isStretch
+  val isStressUI by MainActivity.bleDataListener.isStress
 
-  val isPlayStretch by MainActivity.serialService.isPlaySoundStretch
-  val isPlayStress by MainActivity.serialService.isPlaySoundStress
+  val isPlayStretch by MainActivity.bleHandleService.isPlaySoundStretch
+  val isPlayStress by MainActivity.bleHandleService.isPlaySoundStress
 
   val rowHeight = 110.dp
 
@@ -226,7 +225,7 @@ fun ScreenActivity(
         Button(
           colors = ButtonDefaults.buttonColors(Color(0xCC60AC70)),
           onClick = {
-            MainActivity.serialService.stopSoundStretch()
+            MainActivity.bleHandleService.stopSoundStretch()
           }) {
           Icon(
             Icons.Filled.PauseCircleOutline,
@@ -238,7 +237,7 @@ fun ScreenActivity(
         Button(
           colors = ButtonDefaults.buttonColors(Color(0xCC60AC70)),
           onClick = {
-            MainActivity.serialService.playSoundStretch()
+            MainActivity.bleHandleService.playSoundStretch()
           }) {
           Icon(
             Icons.Filled.PlayCircleOutline,
@@ -278,7 +277,7 @@ fun ScreenActivity(
         Button(
           colors = ButtonDefaults.buttonColors(Color(0x9960AC70)),
           onClick = {
-            MainActivity.serialService.stopSoundStress()
+            MainActivity.bleHandleService.stopSoundStress()
           }) {
           Icon(
             Icons.Filled.PauseCircleOutline,
@@ -291,7 +290,7 @@ fun ScreenActivity(
         Button(
           colors = ButtonDefaults.buttonColors(Color(0x9960AC70)),
           onClick = {
-            MainActivity.serialService.playSoundStress()
+            MainActivity.bleHandleService.playSoundStress()
           }) {
           Icon(
             Icons.Filled.PlayCircleOutline,
@@ -319,8 +318,7 @@ fun ScreenActivity(
             shape = RoundedCornerShape(size = 999.dp)
           )
           .width(320.dp)
-          .height(72.dp)
-          .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 999.dp)),
+          .height(72.dp),
         onClick = { disconnect() }
       ) {
         Text(
@@ -339,13 +337,13 @@ fun ScreenActivity(
       isStretchUI -> {
         AlertDialogExample(
           onDismissRequest = {
-            MainActivity.dataListener.stretchStop()
+            MainActivity.bleDataListener.stretchStop()
           },
           onConfirmation = {
             if (isPlayStretch) {
-              MainActivity.serialService.stopSoundStretch()
+              MainActivity.bleHandleService.stopSoundStretch()
             } else {
-              MainActivity.serialService.playSoundStretch()
+              MainActivity.bleHandleService.playSoundStretch()
             }
           },
           dialogTitle = "스트레칭 솔루션",
@@ -361,13 +359,13 @@ fun ScreenActivity(
       isStressUI -> {
         AlertDialogExample(
           onDismissRequest = {
-            MainActivity.dataListener.stressStop()
+            MainActivity.bleDataListener.stressStop()
           },
           onConfirmation = {
             if (isPlayStress) {
-              MainActivity.serialService.stopSoundStress()
+              MainActivity.bleHandleService.stopSoundStress()
             } else {
-              MainActivity.serialService.playSoundStress()
+              MainActivity.bleHandleService.playSoundStress()
             }
           },
           dialogTitle = "스트레스 솔루션",

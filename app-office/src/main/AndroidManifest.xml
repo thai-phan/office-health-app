@@ -38,9 +38,8 @@
       </intent-filter>
     </activity>
 
-    <!-- Mention the service name here -->
     <service android:name=".service.MyService" />
-    <service android:name=".service.ble.SerialService" />
+    <service android:name=".service.ble.BleHandleService" />
 
     <service android:name=".temp.sound.SoundService" />
     <service android:name=".temp.bound.BoundService" />

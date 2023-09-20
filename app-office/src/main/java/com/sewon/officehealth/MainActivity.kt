@@ -1,19 +1,16 @@
 package com.sewon.officehealth
 
-import android.Manifest
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.IBinder
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.core.app.ActivityCompat
 import androidx.core.view.WindowCompat
-import com.sewon.officehealth.common.OfficeHealth
-import com.sewon.officehealth.service.ble.DataListener
-import com.sewon.officehealth.service.ble.SerialService
+import com.sewon.officehealth.common.RootCompose
+import com.sewon.officehealth.service.ble.BleDataListener
+import com.sewon.officehealth.service.ble.BleHandleService
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -22,19 +19,9 @@ import timber.log.Timber
 class MainActivity : ComponentActivity() {
 
   companion object {
-    lateinit var serialService: SerialService
-    var dataListener = DataListener()
+    lateinit var bleHandleService: BleHandleService
+    var bleDataListener = BleDataListener()
   }
-
-
-
-
-  private enum class Connected {
-    False, Pending, True
-  }
-
-  private var connected = Connected.False
-
 
   override fun onCreate(savedInstanceState: Bundle?) {
     actionBar?.hide();
@@ -44,65 +31,43 @@ class MainActivity : ComponentActivity() {
 //    startService(Intent(applicationContext, SerialService::class.java))
 
 
-    if (ActivityCompat.checkSelfPermission(
-        this,
-        Manifest.permission.BLUETOOTH_SCAN,
-      ) != PackageManager.PERMISSION_GRANTED
-    ) {
-      setContent {
-//        FindBLEDevicesSample(appContext)
-        OfficeHealth {
-          finish()
-        }
-
-      }
-    } else {
-      setContent {
-        OfficeHealth {
-          finish()
-        }
-//        BLEScanIntentSample()
-//        SoundUI(context = LocalContext.current)
-//        FindBLEDevicesSample(onConnectBLE = {
-//          connect(it)
-//        }, appContext)
+    setContent {
+      RootCompose {
+        finish()
       }
     }
   }
 
   override fun onStart() {
     super.onStart()
-    val intent = Intent(this, SerialService::class.java)
+    val intent = Intent(this, BleHandleService::class.java)
     startService(intent)
     bindService(intent, mServiceConnection, BIND_AUTO_CREATE)
   }
 
   override fun onStop() {
     super.onStop()
-//    if (mServiceBound) {
     unbindService(mServiceConnection)
-//      mServiceBound = false
   }
 
+
+  // TODO: Check
   private fun disconnect() {
-    connected = Connected.False
-    serialService.disconnect()
+    bleHandleService.disconnect()
   }
 
 
   private val mServiceConnection: ServiceConnection = object : ServiceConnection {
     override fun onServiceDisconnected(name: ComponentName) {
 //      TODO mServiceBound = false
-
     }
 
     override fun onServiceConnected(name: ComponentName, service: IBinder) {
       Timber.tag("Timber").d("onServiceConnected")
-      serialService = (service as SerialService.SerialBinder).service
-      serialService.attach(dataListener)
+      bleHandleService = (service as BleHandleService.SerialBinder).service
+      bleHandleService.attach(bleDataListener)
 //      val myBinder = service
 //      TODO mServiceBound = true
-
     }
   }
 }
