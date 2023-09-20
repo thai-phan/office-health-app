@@ -100,19 +100,23 @@ class DataListener : SerialListener {
   private fun processData(message: String) {
     val messageArray = message.split(" ").filter { it != "" }
 
+    //  STABLE_NO_VITAL_SIGN = "1"
     if (messageArray[0] == Constants.STABLE_NO_VITAL_SIGN) {
       countNoVitalSign += 1
       if (countNoVitalSign == Constants.NO_VITAL_SIGN_THRESHOLD) {
         resetTimer()
+        countNoVitalSign = 0
       }
     } else {
       countNoVitalSign = 0
     }
 
+    //  STABLE_NO_TARGET = "0"
     if (messageArray[0] == Constants.STABLE_NO_TARGET) {
       countNoTarget += 1
       if (countNoTarget == Constants.NO_TARGET_THRESHOLD) {
         resetTimer()
+        countNoTarget = 0
       }
     } else {
       countNoTarget = 0
