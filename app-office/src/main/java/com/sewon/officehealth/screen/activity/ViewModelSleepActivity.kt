@@ -13,14 +13,14 @@ import javax.inject.Inject
 
 
 data class UiState(
-    val status1: String = "",
-    val status2: String = "",
-    val status3: String = "",
-    val description: String = "",
-    val isTaskCompleted: Boolean = false,
-    val isLoading: Boolean = false,
-    val userMessage: Int? = null,
-    val isTaskSaved: Boolean = false
+  val status1: String = "",
+  val status2: String = "",
+  val status3: String = "",
+  val description: String = "",
+  val isTaskCompleted: Boolean = false,
+  val isLoading: Boolean = false,
+  val userMessage: Int? = null,
+  val isTaskSaved: Boolean = false
 )
 
 
@@ -28,45 +28,44 @@ data class UiState(
 class ViewModelSleepActivity @Inject constructor(
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(UiState())
-    val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+  private val _uiState = MutableStateFlow(UiState())
+  val uiState: StateFlow<UiState> = _uiState.asStateFlow()
 
 
-    fun createNewTask() = viewModelScope.launch {
+  fun createNewTask() = viewModelScope.launch {
 //        val localRadar = LocalRadar(0.1f, 0.1f, 0.1f, "X", "X", "X", "X")
 //
 //        radarRepository.createTopper(localRadar)
 //        _uiState.update {
 //            it.copy(status1 = "Ahahahah")
 //        }
-    }
+  }
 
-    fun getToppers() = viewModelScope.launch {
+  fun getToppers() = viewModelScope.launch {
 
 //        var aaa = radarRepository.getTopper()
 //
 //        _uiState.update {
 //            it.copy(status2 = aaa.first().get(0).moving)
 //        }
-    }
+  }
 
-    fun getCount() = viewModelScope.launch {
+  fun getCount() = viewModelScope.launch {
 
 //        var bbb = radarRepository.getCountTopper()
 //
 //        _uiState.update {
 //            it.copy(status3 = bbb.first().toString())
 //        }
-    }
+  }
 
 
+  val exceptionHandler = CoroutineExceptionHandler { _, error ->
+    // Do what you want with the error
+    Timber.e(error)
+  }
 
-    val exceptionHandler = CoroutineExceptionHandler { _, error ->
-        // Do what you want with the error
-        Timber.e( error)
-    }
-
-    fun queryFromServer() = viewModelScope.launch(exceptionHandler) {
+  fun queryFromServer() = viewModelScope.launch(exceptionHandler) {
 //        try {
 //            val quotesApi = ServerService.create().testServer()
 //            quotesApi.let {
@@ -80,12 +79,12 @@ class ViewModelSleepActivity @Inject constructor(
 //                it.copy(status3 = "Disconnect")
 //            }
 //        }
-        // launching a new coroutine
+    // launching a new coroutine
 
-        println("asdas")
-    }
+    println("asdas")
+  }
 
-    fun queryFromServerHttp() = viewModelScope.launch {
+  fun queryFromServerHttp() = viewModelScope.launch {
 //        try {
 //            val quotesApi = HttpService.create().testServer()
 //            quotesApi.let {
@@ -103,12 +102,12 @@ class ViewModelSleepActivity @Inject constructor(
 //        }
 
 
-        println("asdas")
-    }
+    println("asdas")
+  }
 
-    fun updateTime() = viewModelScope.launch {
+  fun updateTime() = viewModelScope.launch {
 //        settingRepository.countSetting()
 
-    }
+  }
 
 }

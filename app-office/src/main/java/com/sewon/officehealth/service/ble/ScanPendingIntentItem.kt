@@ -83,6 +83,5 @@ fun ScanPendingIntentItem(scanner: BluetoothLeScanner) {
     items(devices) {
       BLEDeviceItem(bluetoothDevice = it.device, isSampleServer = true, onConnect = {})
     }
-
   }
 }
