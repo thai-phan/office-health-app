@@ -95,7 +95,7 @@ class SerialSocket(private val context: Context, private var device: BluetoothDe
   }
 
   val name: String
-    get() = if (device!!.name != null) device!!.name else device!!.address
+    get() = if (device.name != null) device.name else device.address
 
   fun disconnect() {
     Timber.tag(TAG).d("disconnect")
@@ -147,7 +147,7 @@ class SerialSocket(private val context: Context, private var device: BluetoothDe
     )
     context.registerReceiver(pairingBroadcastReceiver, pairingIntentFilter)
     Timber.tag(TAG).d("connectGatt,LE")
-    gatt = device!!.connectGatt(context, false, this, BluetoothDevice.TRANSPORT_LE)
+    gatt = device.connectGatt(context, false, this, BluetoothDevice.TRANSPORT_LE)
     if (gatt == null) throw IOException("connectGatt failed")
     // continues asynchronously in onPairingBroadcastReceive() and onConnectionStateChange()
   }
@@ -553,7 +553,8 @@ class SerialSocket(private val context: Context, private var device: BluetoothDe
       }
     }
 
-    override fun onCharacteristicWrite(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int
+    override fun onCharacteristicWrite(
+      gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int
     ) {
       if (characteristic === writeCharacteristic) { // NOPMD - test object identity
         synchronized(writeBuffer) { if (writeCredits > 0) writeCredits -= 1 }

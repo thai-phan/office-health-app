@@ -1,6 +1,7 @@
 package com.sewon.officehealth.screen.activity
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -24,6 +26,8 @@ import androidx.compose.material.icons.filled.PauseCircleOutline
 import androidx.compose.material.icons.filled.PlayCircleOutline
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -40,6 +44,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
@@ -84,6 +89,7 @@ fun ScreenActivity(
 
   val isStretchUI by MainActivity.bleDataListener.isStretch
   val isStressUI by MainActivity.bleDataListener.isStress
+  val isWrongDeviceUi by MainActivity.bleDataListener.isWrongDeviceType
 
   val isPlayStretch by MainActivity.bleHandleService.isPlaySoundStretch
   val isPlayStress by MainActivity.bleHandleService.isPlaySoundStress
@@ -408,6 +414,32 @@ fun ScreenActivity(
         Text(logUI, fontWeight = FontWeight.Bold, color = Color.Black)
       }
 
+    }
+    fun onDismissRequest() {
+      MainActivity.bleDataListener.isWrongDeviceType.value = false
+    }
+    when {
+      isWrongDeviceUi -> {
+        Dialog(onDismissRequest = { onDismissRequest() }) {
+          Card(
+            modifier = Modifier
+              .fillMaxWidth()
+              .height(200.dp)
+              .padding(16.dp),
+            colors = CardDefaults.cardColors(Color(0xFF4EA162)),
+            shape = RoundedCornerShape(16.dp),
+          ) {
+            Text(
+              text = "Wrong device!",
+              color = Color(0xFF003917),
+              modifier = Modifier
+                .fillMaxSize()
+                .wrapContentSize(Alignment.Center),
+              textAlign = TextAlign.Center,
+            )
+          }
+        }
+      }
     }
   }
 }

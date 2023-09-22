@@ -13,6 +13,7 @@ import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.app.NotificationCompat
 import com.sewon.officehealth.R
@@ -157,7 +158,7 @@ class BleHandleService : Service(), SerialListener {
   }
 
 
-  fun createNotificationHealth() {
+  fun createTimerNotification() {
     val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
     val att = AudioAttributes.Builder()
       .setUsage(AudioAttributes.USAGE_NOTIFICATION)
@@ -252,6 +253,7 @@ class BleHandleService : Service(), SerialListener {
   }
 
   fun stopSoundStress() {
+    Toast.makeText(this, "ALARM ON", Toast.LENGTH_SHORT).show()
     isPlaySoundStress.value = false
     playerStress.stop()
   }

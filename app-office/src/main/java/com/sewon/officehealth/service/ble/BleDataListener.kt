@@ -22,7 +22,7 @@ class BleDataListener : SerialListener {
   val log = mutableStateOf("")
   val isStretch = mutableStateOf(false)
   val isStress = mutableStateOf(false)
-
+  val isWrongDeviceType = mutableStateOf(false)
 
   private val dataArrayList = ArrayList<Double>()
 
@@ -74,7 +74,7 @@ class BleDataListener : SerialListener {
 
 
   fun stretchDetected() {
-    MainActivity.bleHandleService.createNotificationHealth()
+    MainActivity.bleHandleService.createTimerNotification()
     isStretch.value = true
   }
 
@@ -83,7 +83,7 @@ class BleDataListener : SerialListener {
   }
 
   fun stressDetected() {
-    MainActivity.bleHandleService.createNotificationHealth()
+    MainActivity.bleHandleService.createTimerNotification()
     isStress.value = true
   }
 
@@ -96,11 +96,10 @@ class BleDataListener : SerialListener {
   var countNoVitalSign = 0
   var countNoTarget = 0
 
-  private fun processData(message: String) {
-    val messageArray = message.split(" ").filter { it != "" }
+  private fun processData(messageList: List<String>) {
 
     //  STABLE_NO_VITAL_SIGN = "1"
-    if (messageArray[0] == Constants.STABLE_NO_VITAL_SIGN) {
+    if (messageList[0] == Constants.STABLE_NO_VITAL_SIGN) {
       countNoVitalSign += 1
       if (countNoVitalSign == Constants.NO_VITAL_SIGN_THRESHOLD) {
         resetTimer()
@@ -111,7 +110,7 @@ class BleDataListener : SerialListener {
     }
 
     //  STABLE_NO_TARGET = "0"
-    if (messageArray[0] == Constants.STABLE_NO_TARGET) {
+    if (messageList[0] == Constants.STABLE_NO_TARGET) {
       countNoTarget += 1
       if (countNoTarget == Constants.NO_TARGET_THRESHOLD) {
         resetTimer()
@@ -120,15 +119,6 @@ class BleDataListener : SerialListener {
     } else {
       countNoTarget = 0
     }
-
-
-//    if (prevValue == Constants.STABLE_NO_TARGET && messageArray[0] != Constants.STABLE_NO_TARGET) {
-////      countNoTarget += 1
-////      if (countNoTarget == Constants.NO_TARGET_THRESHOLD) {
-////        stretchDetected()
-////      }
-//      resetTimer()
-//    }
 
 //    prevValue = messageArray[0]
 
@@ -139,10 +129,12 @@ class BleDataListener : SerialListener {
       }
       dataArrayList.clear()
     }
-    dataArrayList.add(messageArray[3].toDouble())
+    dataArrayList.add(messageList[3].toDouble())
   }
 
   private var tempCount = 0
+
+  private val regex = Regex("[01234]")
 
   private fun receive(datas: ArrayDeque<ByteArray>) {
     val spn = SpannableStringBuilder()
@@ -151,7 +143,13 @@ class BleDataListener : SerialListener {
         spn.append(TextUtil.toHexString(data)).append('\n')
       } else {
         val message = String(data)
-        processData(message)
+        val messageArray = message.split(" ").filter { it != "" }
+        if (messageArray.size == 6 && messageArray[0].matches(regex)) {
+          processData(messageArray)
+        } else {
+          isWrongDeviceType.value = true
+          MainActivity.bleHandleService.disconnect()
+        }
         val text = TextUtil.toCaretString(message, true)
         spn.append(text)
       }
