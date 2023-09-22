@@ -254,7 +254,6 @@ class BleHandleService : Service(), SerialListener {
   }
 
   fun stopSoundStress() {
-    Toast.makeText(this, "ALARM ON", Toast.LENGTH_SHORT).show()
     isPlaySoundStress.value = false
     playerStress.stop()
   }

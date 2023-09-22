@@ -137,21 +137,25 @@ class BleDataListener : SerialListener {
 
   private val regex = Regex("[01234]")
 
+  private fun validateDataFormatAndProcess(dataStr: String) {
+    val messageList = dataStr.split(" ").filter { it != "" }
+    if (messageList.size == 6 && messageList[0].matches(regex)) {
+      processData(messageList)
+    } else {
+      isWrongDeviceType.value = true
+      MainActivity.bleHandleService.disconnect()
+    }
+  }
+
   private fun receive(datas: ArrayDeque<ByteArray>) {
     val spn = SpannableStringBuilder()
     for (data in datas) {
       if (hexEnabled) {
         spn.append(TextUtil.toHexString(data)).append('\n')
       } else {
-        val message = String(data)
-        val messageArray = message.split(" ").filter { it != "" }
-        if (messageArray.size == 6 && messageArray[0].matches(regex)) {
-          processData(messageArray)
-        } else {
-          isWrongDeviceType.value = true
-          MainActivity.bleHandleService.disconnect()
-        }
-        val text = TextUtil.toCaretString(message, true)
+        val dataStr = String(data)
+        validateDataFormatAndProcess(dataStr)
+        val text = TextUtil.toCaretString(dataStr, true)
         spn.append(text)
       }
     }
@@ -164,6 +168,4 @@ class BleDataListener : SerialListener {
 
     log.value = "$spn $tempCount"
   }
-
-
 }
