@@ -1,27 +1,14 @@
-package com.sewon.officehealth.algorithm;
+package com.sewon.officehealth.algorithm.ecg;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.stream.Collectors;
-
-import java.util.*;
-import java.text.*;
 
 
-public class ECG_ANALYSIS_PROC {
+public class ECGAnalysisProc {
 
-  public static List<ECG_RESULT> ECG_AnalysisData(List<Double> lstData) {
+  public static List<ECGResult> ECG_AnalysisData(List<Double> lstData) {
     //분석결과를 담기위한 List
-    List<ECG_RESULT> listECGResult = new ArrayList<>();
+    List<ECGResult> listECGResult = new ArrayList<>();
 
     listECGResult.clear();
 
@@ -44,7 +31,7 @@ public class ECG_ANALYSIS_PROC {
         //9개 그룹마다 RRI 평균, SDNN, RMSSD를 구한다.
         if ((y + 1) % 9 == 0) {
           iCnt++;
-          ECG_RESULT node = new ECG_RESULT();
+          ECGResult node = new ECGResult();
           node.iCycle = y;
           node.NNInterval = sum / 9;
           node.SDNN = CalcStdDev(listRRI, node.NNInterval);

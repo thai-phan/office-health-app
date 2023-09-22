@@ -9,6 +9,7 @@ import android.content.Intent
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.media.RingtoneManager
+import android.net.Uri
 import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
@@ -16,6 +17,7 @@ import android.os.Looper
 import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.app.NotificationCompat
+import com.sewon.officehealth.MainActivity
 import com.sewon.officehealth.R
 import java.io.IOException
 import java.util.ArrayDeque
@@ -159,22 +161,24 @@ class BleHandleService : Service(), SerialListener {
 
 
   fun createTimerNotification() {
-    val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-    val att = AudioAttributes.Builder()
-      .setUsage(AudioAttributes.USAGE_NOTIFICATION)
-      .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
-      .build()
-
+    playSoundStretch()
+//    val defaultSoundUri =
+//      Uri.parse("android.resource://" + packageName + "/" + R.raw.stress_release)
+//    val att = AudioAttributes.Builder()
+//      .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+//      .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+//      .build()
     val notificationChannel = NotificationChannel(
       Constants.NOTIFICATION_CHANNEL,
-      resources.getString(R.string.app_name), NotificationManager.IMPORTANCE_HIGH
+      resources.getString(R.string.app_name),
+      NotificationManager.IMPORTANCE_HIGH
     )
 //    notificationChannel.importance = NotificationManager.IMPORTANCE_HIGH
     notificationChannel.enableLights(true)
     notificationChannel.enableVibration(true)
     notificationChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC;
     notificationChannel.setShowBadge(false)
-    notificationChannel.setSound(defaultSoundUri, att)
+//    notificationChannel.setSound(defaultSoundUri, att)
 
 
     val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
@@ -195,12 +199,9 @@ class BleHandleService : Service(), SerialListener {
             "몸을 움직여줄 시간이에요!"
       )
       .setContentIntent(restartPendingIntent)
-      .setSound(defaultSoundUri)
       .setCategory(NotificationCompat.CATEGORY_ALARM)
 
-    val notification = builder.build()
-
-    notificationManager.notify(1, notification)
+    notificationManager.notify(1, builder.build())
   }
 
   private fun cancelNotification() {

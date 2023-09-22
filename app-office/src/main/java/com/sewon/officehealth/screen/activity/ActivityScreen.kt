@@ -1,7 +1,6 @@
 package com.sewon.officehealth.screen.activity
 
 import android.annotation.SuppressLint
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -341,7 +340,7 @@ fun ScreenActivity(
 
     when {
       isStretchUI -> {
-        AlertDialogExample(
+        AlertDialog(
           onDismissRequest = {
             MainActivity.bleDataListener.stretchStop()
           },
@@ -363,7 +362,7 @@ fun ScreenActivity(
 
     when {
       isStressUI -> {
-        AlertDialogExample(
+        AlertDialog(
           onDismissRequest = {
             MainActivity.bleDataListener.stressStop()
           },
@@ -424,7 +423,7 @@ fun ScreenActivity(
           Card(
             modifier = Modifier
               .fillMaxWidth()
-              .height(200.dp)
+              .height(150.dp)
               .padding(16.dp),
             colors = CardDefaults.cardColors(Color(0xFF4EA162)),
             shape = RoundedCornerShape(16.dp),

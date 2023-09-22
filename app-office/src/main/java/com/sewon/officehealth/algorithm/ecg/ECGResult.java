@@ -1,6 +1,6 @@
-package com.sewon.officehealth.algorithm;
+package com.sewon.officehealth.algorithm.ecg;
 
-public class ECG_RESULT {
+public class ECGResult {
   //cycle
   public int iCycle;
   //RRI

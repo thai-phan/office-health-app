@@ -5,7 +5,7 @@ import android.text.SpannableStringBuilder
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import com.sewon.officehealth.MainActivity
-import com.sewon.officehealth.algorithm.ECG_ANALYSIS_PROC
+import com.sewon.officehealth.algorithm.ecg.ECGAnalysisProc
 import timber.log.Timber
 import java.util.ArrayDeque
 
@@ -40,6 +40,7 @@ class BleDataListener : SerialListener {
 
     override fun onFinish() {
       stretchDetected()
+
       timeRemaining.longValue = 0
     }
   }
@@ -123,7 +124,7 @@ class BleDataListener : SerialListener {
 //    prevValue = messageArray[0]
 
     if (dataArrayList.size == 9) {
-      val result = ECG_ANALYSIS_PROC.ECG_AnalysisData(dataArrayList)
+      val result = ECGAnalysisProc.ECG_AnalysisData(dataArrayList)
       if (result[0].stress_State == "stress") {
         stressDetected()
       }

@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.sewon.officehealth.MainActivity
 import com.sewon.officehealth.R
 import com.sewon.officehealth.common.AppDestinations
 import com.sewon.officehealth.common.whiteBackground
@@ -44,6 +45,11 @@ import com.sewon.officehealth.common.whiteBackground
 fun WelcomeScreen(
   navController: NavController,
 ) {
+
+  fun navigateToDevice() {
+    navController.navigate(AppDestinations.DEVICE_ROUTE)
+  }
+
 
   val textStyle = TextStyle(
     fontSize = 24.sp,
@@ -143,9 +149,7 @@ fun WelcomeScreen(
         .width(320.dp)
         .height(73.dp)
         .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 999.dp)),
-      onClick = {
-        navController.navigate(AppDestinations.DEVICE_ROUTE)
-      }
+      onClick = { navigateToDevice() }
     ) {
       Text(
         "기기연결",
