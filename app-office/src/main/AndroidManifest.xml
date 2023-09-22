@@ -19,6 +19,7 @@
       android:name="android.hardware.bluetooth_le"
       android:required="true" />
 
+  <uses-permission android:name="android.permission.VIBRATE" />
   <application
       android:name=".Application"
       android:allowBackup="true"
