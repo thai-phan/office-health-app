@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
-  <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
-  <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
-  <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+  <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+  <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+  <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
 
   <uses-permission android:name="android.permission.BLUETOOTH" />
@@ -45,6 +45,10 @@
     <service android:name=".temp.sound.SoundService" />
     <service android:name=".temp.bound.BoundService" />
     <service android:name=".temp.foreground.ForegroundService" />
+
+
+    <receiver android:name=".service.alarm.AlarmReceiver" />
+    <receiver android:name=".temp.BLEScanReceiver" />
 
   </application>
 

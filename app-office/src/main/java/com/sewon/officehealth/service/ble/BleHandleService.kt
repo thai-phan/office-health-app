@@ -228,6 +228,9 @@ class BleHandleService : Service(), SerialListener {
   lateinit var playerStress: MediaPlayer
 
   fun playSoundStretch() {
+    if (isPlaySoundStress.value) {
+      stopSoundStress()
+    }
     isPlaySoundStretch.value = true
     playerStretch = MediaPlayer.create(this, R.raw.concentration)
     playerStretch.start()
@@ -238,7 +241,11 @@ class BleHandleService : Service(), SerialListener {
     playerStretch.stop()
   }
 
+
   fun playSoundStress() {
+    if (isPlaySoundStretch.value) {
+      stopSoundStretch()
+    }
     isPlaySoundStress.value = true
     playerStress = MediaPlayer.create(this, R.raw.stress_release)
     playerStress.start()
@@ -248,6 +255,7 @@ class BleHandleService : Service(), SerialListener {
     isPlaySoundStress.value = false
     playerStress.stop()
   }
+
 
   override fun onSerialConnectError(e: Exception) {
     if (connected) {

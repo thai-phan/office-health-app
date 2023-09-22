@@ -16,7 +16,7 @@ class SoundService : Service() {
 
     // creating a media player which
     // will play the audio of Default
-    // ringtone in android device
+    // ringtone in  android device
     player = MediaPlayer.create(this, Settings.System.DEFAULT_RINGTONE_URI)
 
     // providing the boolean

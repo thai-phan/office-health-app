@@ -31,58 +31,57 @@ import androidx.compose.ui.unit.sp
 class MainActivity : ComponentActivity() {
 
   @OptIn(ExperimentalMaterial3Api::class)
-  @RequiresApi(Build.VERSION_CODES.M)
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContent {
-        // on below line we are specifying background color for our application
-        Surface(
-          // on below line we are specifying modifier and color for our app
-          modifier = Modifier.fillMaxSize()
-        ) {
+      // on below line we are specifying background color for our application
+      Surface(
+        // on below line we are specifying modifier and color for our app
+        modifier = Modifier.fillMaxSize()
+      ) {
 
-          // on the below line we are specifying
-          // the theme as the scaffold.
-          Scaffold(
+        // on the below line we are specifying
+        // the theme as the scaffold.
+        Scaffold(
 
-            // in scaffold we are specifying the top bar.
-            topBar = {
+          // in scaffold we are specifying the top bar.
+          topBar = {
 
-              // inside top bar we are specifying background color.
-              TopAppBar(
+            // inside top bar we are specifying background color.
+            TopAppBar(
 
-                // along with that we are specifying
-                // title for our top bar.
-                title = {
+              // along with that we are specifying
+              // title for our top bar.
+              title = {
 
-                  // in the top bar we are specifying tile as a text
-                  Text(
-                    // on below line we are specifying
-                    // text to display in top app bar.
-                    text = "GFG",
+                // in the top bar we are specifying tile as a text
+                Text(
+                  // on below line we are specifying
+                  // text to display in top app bar.
+                  text = "GFG",
 
-                    // on below line we are specifying
-                    // modifier to fill max width.
-                    modifier = Modifier.fillMaxWidth(),
+                  // on below line we are specifying
+                  // modifier to fill max width.
+                  modifier = Modifier.fillMaxWidth(),
 
-                    // on below line we are specifying
-                    // text alignment.
-                    textAlign = TextAlign.Center,
+                  // on below line we are specifying
+                  // text alignment.
+                  textAlign = TextAlign.Center,
 
-                    // on below line we are specifying
-                    // color for our text.
-                    color = Color.White
-                  )
-                })
-            }) { padding ->
-            // on below line we are calling connection
-            // information method to display UI
-            Column(modifier = Modifier.padding(padding)) {
-              SoundUI(context = LocalContext.current)
+                  // on below line we are specifying
+                  // color for our text.
+                  color = Color.White
+                )
+              })
+          }) { padding ->
+          // on below line we are calling connection
+          // information method to display UI
+          Column(modifier = Modifier.padding(padding)) {
+            SoundUI(context = LocalContext.current)
 
-            }
           }
         }
+      }
     }
   }
 }
@@ -113,7 +112,6 @@ fun SoundUI(context: Context) {
   val buttonValue = remember {
     mutableStateOf("Start Service")
   }
-
 
 
   // on below line we are creating a column,
