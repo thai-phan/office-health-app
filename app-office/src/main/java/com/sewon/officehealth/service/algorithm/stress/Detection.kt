@@ -1,4 +1,4 @@
-package com.sewon.officehealth.algorithm.stress
+package com.sewon.officehealth.service.algorithm.stress
 //
 //class Detection {
 //

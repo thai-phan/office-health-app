@@ -5,7 +5,7 @@ import android.text.SpannableStringBuilder
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import com.sewon.officehealth.MainActivity
-import com.sewon.officehealth.algorithm.ecg.ECGAnalysisProc
+import com.sewon.officehealth.service.algorithm.ecg.ECGAnalysisProc
 import timber.log.Timber
 import java.util.ArrayDeque
 
@@ -120,8 +120,6 @@ class BleDataListener : SerialListener {
     } else {
       countNoTarget = 0
     }
-
-//    prevValue = messageArray[0]
 
     if (dataArrayList.size == 9) {
       val result = ECGAnalysisProc.ECG_AnalysisData(dataArrayList)

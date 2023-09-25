@@ -1,4 +1,4 @@
-package com.sewon.officehealth.algorithm.ecg;
+package com.sewon.officehealth.service.algorithm.ecg;
 
 public class ECGResult {
   //cycle

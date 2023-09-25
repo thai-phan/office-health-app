@@ -1,4 +1,4 @@
-package com.sewon.officehealth.algorithm.ecg;
+package com.sewon.officehealth.service.algorithm.ecg;
 
 import java.util.ArrayList;
 import java.util.List;
