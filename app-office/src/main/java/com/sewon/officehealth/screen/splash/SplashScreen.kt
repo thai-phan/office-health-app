@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -75,10 +76,11 @@ fun SplashScreen(navController: NavController, redirectRoute: String) {
       horizontalAlignment = Alignment.CenterHorizontally,
     ) {
       Image(
-        painter = painterResource(id = R.mipmap.ic_image_5_foreground),
+        painter = painterResource(id = R.mipmap.ic_ohealp_foreground),
         contentDescription = "Logo",
         modifier = Modifier
-          .size(width = 250.dp, height = 200.dp)
+          .fillMaxWidth()
+          .height(250.dp)
           .scale(scale.value)
       )
       Text(

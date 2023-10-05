@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -41,10 +42,11 @@ fun DeviceList(
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
       Image(
-        painter = painterResource(id = R.mipmap.ic_image_5_foreground),
+        painter = painterResource(id = R.mipmap.ic_ohealp_foreground),
         contentDescription = "Logo",
         modifier = Modifier
-          .size(width = 400.dp, height = 150.dp)
+          .fillMaxWidth()
+          .height(150.dp)
       )
       Image(
         painter = painterResource(id = R.drawable.ic_bluetooth_wing),

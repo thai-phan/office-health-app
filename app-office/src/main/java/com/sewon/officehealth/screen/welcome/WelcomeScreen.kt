@@ -75,7 +75,7 @@ fun WelcomeScreen(
   ) {
 
     Image(
-      painter = painterResource(id = R.mipmap.ic_green_foreground),
+      painter = painterResource(id = R.mipmap.ic_ohealp_foreground),
       contentDescription = "Logo",
       modifier = Modifier
         .size(width = 300.dp, height = 200.dp)
