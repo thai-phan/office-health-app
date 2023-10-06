@@ -26,7 +26,6 @@ fun RootCompose(finishActivity: () -> Unit) {
     val tabs = remember { MainTabs.values() }
 
     Scaffold(
-
     ) { innerPaddingModifier ->
       Column(
         horizontalAlignment = Alignment.CenterHorizontally,

@@ -49,9 +49,9 @@
     <service android:name=".temp.bound.BoundService" />
     <service android:name=".temp.foreground.ForegroundService" />
 
-
     <receiver android:name=".service.alarm.AlarmReceiver" />
     <receiver android:name=".temp.BLEScanReceiver" />
+    <receiver android:name=".service.StopAlarmAction" />
 
   </application>
 

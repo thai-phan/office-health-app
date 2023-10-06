@@ -14,6 +14,7 @@ import android.os.Looper
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.app.NotificationCompat
 import com.sewon.officehealth.R
+import com.sewon.officehealth.service.StopAlarmAction
 import java.io.IOException
 import java.util.ArrayDeque
 
@@ -102,6 +103,8 @@ class BleHandleService : Service(), SerialListener {
   }
 
   fun disconnect() {
+    isPlaySoundStress.value = false
+    isPlaySoundStretch.value = false
     bleDataListener?.countDownTimer?.cancel()
     connected = false // ignore data,errors while disconnecting
     cancelNotification()
@@ -166,7 +169,6 @@ class BleHandleService : Service(), SerialListener {
     notificationChannel.setShowBadge(false)
 //    notificationChannel.setSound(defaultSoundUri, att)
 
-
     val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
     notificationManager.createNotificationChannel(notificationChannel)
 
@@ -177,6 +179,14 @@ class BleHandleService : Service(), SerialListener {
     val restartPendingIntent =
       PendingIntent.getActivity(this, 1, restartIntent, PendingIntent.FLAG_IMMUTABLE)
 
+
+    val stopAlarmIntent = Intent(this, StopAlarmAction::class.java)
+    val stopPendingIntent =
+      PendingIntent.getBroadcast(this, 1, stopAlarmIntent, PendingIntent.FLAG_IMMUTABLE)
+    val action = NotificationCompat.Action(
+      R.drawable.ic_graphic_eq, "Stop", stopPendingIntent
+    )
+
     val builder = NotificationCompat.Builder(this, Constants.NOTIFICATION_CHANNEL)
       .setSmallIcon(R.drawable.ic_bluetooth_searching)
       .setContentTitle(resources.getString(R.string.app_name))
@@ -186,6 +196,7 @@ class BleHandleService : Service(), SerialListener {
       )
       .setContentIntent(restartPendingIntent)
       .setCategory(NotificationCompat.CATEGORY_ALARM)
+      .addAction(action)
 
     notificationManager.notify(1, builder.build())
   }
@@ -328,5 +339,42 @@ class BleHandleService : Service(), SerialListener {
         }
       }
     }
+  }
+
+  private fun createNotification() {
+    val notificationChannel = NotificationChannel(
+      Constants.NOTIFICATION_CHANNEL,
+      "Background service", NotificationManager.IMPORTANCE_LOW
+    )
+    notificationChannel.setShowBadge(false)
+    val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+    notificationManager.createNotificationChannel(notificationChannel)
+    val flags = PendingIntent.FLAG_IMMUTABLE
+
+    val disconnectIntent = Intent(this, StopAlarmAction::class.java)
+    val disconnectPendingIntent = PendingIntent.getBroadcast(this, 1, disconnectIntent, flags)
+    val action = NotificationCompat.Action(
+      R.drawable.ic_intelli,
+      "Disconnect",
+      disconnectPendingIntent
+    )
+
+    val restartIntent = Intent()
+      .setClassName(this, Constants.INTENT_CLASS_MAIN_ACTIVITY)
+      .setAction(Intent.ACTION_MAIN)
+      .addCategory(Intent.CATEGORY_LAUNCHER)
+    val restartPendingIntent = PendingIntent.getActivity(this, 1, restartIntent, flags)
+
+    val builder = NotificationCompat.Builder(this, Constants.NOTIFICATION_CHANNEL)
+      .setSmallIcon(R.drawable.ic_bluetooth_searching)
+      .setContentTitle(resources.getString(R.string.app_name))
+      .setContentText(if (socket != null) "Connected to " + socket!!.name else "Background Service")
+      .setContentIntent(restartPendingIntent)
+      .setOngoing(true)
+      .addAction(action)
+    // @drawable/ic_notification created with Android Studio -> New -> Image Asset using @color/colorPrimaryDark as background color
+    // Android < API 21 does not support vectorDrawables in notifications, so both drawables used here, are created as .png instead of .xml
+    val notification = builder.build()
+    startForeground(Constants.NOTIFY_MANAGER_START_FOREGROUND_SERVICE, notification)
   }
 }

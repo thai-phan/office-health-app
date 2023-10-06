@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
@@ -108,7 +110,9 @@ fun ScreenActivity(
     modifier = modifier
       .background(Color(0xFFCCF8D4))
       .fillMaxSize()
-      .padding(vertical = 70.dp)
+      .statusBarsPadding()
+      .systemBarsPadding()
+      .padding(vertical = 10.dp)
 
   ) {
 
@@ -417,6 +421,8 @@ fun ScreenActivity(
     fun onDismissRequest() {
       MainActivity.bleDataListener.isWrongDeviceType.value = false
     }
+
+
     when {
       isWrongDeviceUi -> {
         Dialog(onDismissRequest = { onDismissRequest() }) {

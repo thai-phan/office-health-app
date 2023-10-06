@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
 
   companion object {
     lateinit var bleHandleService: BleHandleService
-    var bleDataListener = BleDataListener()
+    public var bleDataListener = BleDataListener()
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {

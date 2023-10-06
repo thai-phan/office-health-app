@@ -5,6 +5,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -41,6 +43,7 @@ import com.sewon.officehealth.R
 import com.sewon.officehealth.common.AppDestinations
 import com.sewon.officehealth.common.whiteBackground
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun WelcomeScreen(
   navController: NavController,
@@ -63,8 +66,6 @@ fun WelcomeScreen(
     verticalArrangement = Arrangement.Top,
     horizontalAlignment = Alignment.CenterHorizontally,
     modifier = Modifier
-      .statusBarsPadding()
-      .systemBarsPadding()
       .fillMaxSize()
       .whiteBackground()
       .paint(
@@ -78,7 +79,7 @@ fun WelcomeScreen(
       painter = painterResource(id = R.mipmap.ic_ohealp_foreground),
       contentDescription = "Logo",
       modifier = Modifier
-        .size(width = 300.dp, height = 200.dp)
+        .size(width = 300.dp, height = 150.dp)
     )
     Text(
       text = "반갑습니다~ ",
@@ -91,7 +92,7 @@ fun WelcomeScreen(
         .height(1.dp)
         .background(color = Color(0x66000000))
     )
-    Row {
+    FlowRow(horizontalArrangement = Arrangement.Center) {
       Text(
         text = "당신의 건강 지킴이 ",
         style = textStyle

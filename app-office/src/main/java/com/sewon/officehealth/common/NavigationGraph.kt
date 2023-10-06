@@ -29,8 +29,6 @@ fun NavigationGraph(
 
   showOnboardingInitially: Boolean = false
 ) {
-
-
   val context = LocalContext.current
   val startDestination: String = AppDestinations.SPLASH_ROUTE
   val onboardingComplete = remember(showOnboardingInitially) {
