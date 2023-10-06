@@ -93,7 +93,7 @@ fun ScreenActivity(
   val isPlayStretch by MainActivity.bleHandleService.isPlaySoundStretch
   val isPlayStress by MainActivity.bleHandleService.isPlaySoundStress
 
-  val rowHeight = 110.dp
+  val rowHeight = 80.dp
 
   val normalTextStyle = TextStyle(
     fontSize = 20.sp,

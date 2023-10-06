@@ -6,18 +6,13 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
-import android.media.AudioAttributes
 import android.media.MediaPlayer
-import android.media.RingtoneManager
-import android.net.Uri
 import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
-import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.app.NotificationCompat
-import com.sewon.officehealth.MainActivity
 import com.sewon.officehealth.R
 import java.io.IOException
 import java.util.ArrayDeque
@@ -150,15 +145,6 @@ class BleHandleService : Service(), SerialListener {
     queue1.clear()
     queue2.clear()
   }
-
-  fun detach() {
-    if (connected) createNotification()
-    // items already in event queue (posted before detach() to mainLooper) will end up in queue1
-    // items occurring later, will be moved directly to queue2
-    // detach() and mainLooper.post run in the main thread, so all items are caught
-    bleDataListener = null
-  }
-
 
   fun createTimerNotification() {
     playSoundStretch()
@@ -342,40 +328,5 @@ class BleHandleService : Service(), SerialListener {
         }
       }
     }
-  }
-
-  private fun createNotification() {
-    val notificationChannel = NotificationChannel(
-      Constants.NOTIFICATION_CHANNEL,
-      "Background service", NotificationManager.IMPORTANCE_LOW
-    )
-    notificationChannel.setShowBadge(false)
-    val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-    notificationManager.createNotificationChannel(notificationChannel)
-    val disconnectIntent = Intent().setAction(Constants.INTENT_ACTION_DISCONNECT)
-    val restartIntent = Intent()
-      .setClassName(this, Constants.INTENT_CLASS_MAIN_ACTIVITY)
-      .setAction(Intent.ACTION_MAIN)
-      .addCategory(Intent.CATEGORY_LAUNCHER)
-    val flags = PendingIntent.FLAG_IMMUTABLE
-    val disconnectPendingIntent = PendingIntent.getBroadcast(this, 1, disconnectIntent, flags)
-    val restartPendingIntent = PendingIntent.getActivity(this, 1, restartIntent, flags)
-    val builder = NotificationCompat.Builder(this, Constants.NOTIFICATION_CHANNEL)
-      .setSmallIcon(R.drawable.ic_bluetooth_searching)
-      .setContentTitle(resources.getString(R.string.app_name))
-      .setContentText(if (socket != null) "Connected to " + socket!!.name else "Background Service")
-      .setContentIntent(restartPendingIntent)
-      .setOngoing(true)
-      .addAction(
-        NotificationCompat.Action(
-          R.drawable.ic_intelli,
-          "Disconnect",
-          disconnectPendingIntent
-        )
-      )
-    // @drawable/ic_notification created with Android Studio -> New -> Image Asset using @color/colorPrimaryDark as background color
-    // Android < API 21 does not support vectorDrawables in notifications, so both drawables used here, are created as .png instead of .xml
-    val notification = builder.build()
-    startForeground(Constants.NOTIFY_MANAGER_START_FOREGROUND_SERVICE, notification)
   }
 }

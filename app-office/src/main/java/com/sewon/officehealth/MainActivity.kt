@@ -29,8 +29,6 @@ class MainActivity : ComponentActivity() {
     WindowCompat.setDecorFitsSystemWindows(window, false)
 
 //    startService(Intent(applicationContext, SerialService::class.java))
-
-
     setContent {
       RootCompose {
         finish()
@@ -51,23 +49,15 @@ class MainActivity : ComponentActivity() {
   }
 
 
-  // TODO: Check
-  private fun disconnect() {
-    bleHandleService.disconnect()
-  }
-
-
   private val mServiceConnection: ServiceConnection = object : ServiceConnection {
     override fun onServiceDisconnected(name: ComponentName) {
-//      TODO mServiceBound = false
+//      TODO: mServiceBound = false
     }
 
     override fun onServiceConnected(name: ComponentName, service: IBinder) {
       Timber.tag("Timber").d("onServiceConnected")
       bleHandleService = (service as BleHandleService.SerialBinder).service
       bleHandleService.attach(bleDataListener)
-//      val myBinder = service
-//      TODO mServiceBound = true
     }
   }
 }

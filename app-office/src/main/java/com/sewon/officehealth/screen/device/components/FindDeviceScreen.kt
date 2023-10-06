@@ -88,7 +88,7 @@ internal fun FindDevicesScreen(navController: NavHostController = rememberNavCon
     )
     // Stop scanning after a while
     LaunchedEffect(true) {
-      delay(15000)
+      delay(3000)
       scanning = false
     }
   }

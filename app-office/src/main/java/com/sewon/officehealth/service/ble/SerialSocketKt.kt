@@ -24,8 +24,7 @@ import java.util.UUID
  */
 @SuppressLint("MissingPermission") // various BluetoothGatt, BluetoothDevice methods
 
-class SerialSocket(private val context: Context, private var device: BluetoothDevice) :
-  BluetoothGattCallback() {
+class SerialSocketKt(val context: Context, var device: BluetoothDevice) : BluetoothGattCallback() {
   /**
    * delegate device specific behaviour to inner class
    */

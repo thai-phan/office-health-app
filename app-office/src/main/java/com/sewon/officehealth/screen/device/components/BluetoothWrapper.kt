@@ -25,6 +25,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
@@ -41,6 +42,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.getSystemService
 import com.sewon.officehealth.permission.PermissionScreen
+import timber.log.Timber
 
 
 /**
@@ -57,33 +59,38 @@ fun BluetoothWrapper(
 
   // If we derive physical location from BT devices or if the device runs on Android 11 or below
   // we need location permissions otherwise we don't need to request them (see AndroidManifest).
-  val locationPermission = setOf(
-    Manifest.permission.ACCESS_FINE_LOCATION,
-    Manifest.permission.ACCESS_COARSE_LOCATION,
-  )
-
+  val locationPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+    setOf(
+      Manifest.permission.ACCESS_FINE_LOCATION,
+      Manifest.permission.ACCESS_COARSE_LOCATION,
+    )
+  } else {
+    setOf(
+      Manifest.permission.ACCESS_FINE_LOCATION,
+    )
+  }
+  val buildVersion = Build.VERSION.SDK_INT
+  Timber.tag("buildVersion").d(buildVersion.toString())
   val bluetoothPermissionSet = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
     setOf(
       Manifest.permission.BLUETOOTH_CONNECT,
       Manifest.permission.BLUETOOTH_SCAN,
       Manifest.permission.BLUETOOTH,
       Manifest.permission.BLUETOOTH_ADMIN,
-      Manifest.permission.POST_NOTIFICATIONS
+      Manifest.permission.POST_NOTIFICATIONS,
+    )
+  } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+    setOf(
+      Manifest.permission.BLUETOOTH_CONNECT,
+      Manifest.permission.BLUETOOTH_SCAN,
+      Manifest.permission.BLUETOOTH,
+      Manifest.permission.BLUETOOTH_ADMIN,
     )
   } else {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-      setOf(
-        Manifest.permission.BLUETOOTH_CONNECT,
-        Manifest.permission.BLUETOOTH_SCAN,
-        Manifest.permission.BLUETOOTH,
-        Manifest.permission.BLUETOOTH_ADMIN,
-      )
-    } else {
-      setOf(
-        Manifest.permission.BLUETOOTH,
-        Manifest.permission.BLUETOOTH_ADMIN,
-      )
-    }
+    setOf(
+      Manifest.permission.BLUETOOTH,
+      Manifest.permission.BLUETOOTH_ADMIN,
+    )
   }
 
 
