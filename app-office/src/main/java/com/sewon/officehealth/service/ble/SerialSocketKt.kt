@@ -408,20 +408,20 @@ class SerialSocketKt(val context: Context, var device: BluetoothDevice) : Blueto
    * device delegates
    */
   private inner class Cc245XDelegate : DeviceDelegate() {
-    override fun connectCharacteristics(gattService: BluetoothGattService): Boolean {
+    override fun connectCharacteristics(s: BluetoothGattService): Boolean {
       Timber.tag(TAG).d("service cc254x uart")
-      readCharacteristic = gattService.getCharacteristic(BLUETOOTH_LE_CC254X_CHAR_RW)
-      writeCharacteristic = gattService.getCharacteristic(BLUETOOTH_LE_CC254X_CHAR_RW)
+      readCharacteristic = s.getCharacteristic(BLUETOOTH_LE_CC254X_CHAR_RW)
+      writeCharacteristic = s.getCharacteristic(BLUETOOTH_LE_CC254X_CHAR_RW)
       return true
     }
   }
 
   private inner class MicrochipDelegate : DeviceDelegate() {
-    override fun connectCharacteristics(gattService: BluetoothGattService): Boolean {
+    override fun connectCharacteristics(s: BluetoothGattService): Boolean {
       Timber.tag(TAG).d("service microchip uart")
-      readCharacteristic = gattService.getCharacteristic(BLUETOOTH_LE_MICROCHIP_CHAR_RW)
-      writeCharacteristic = gattService.getCharacteristic(BLUETOOTH_LE_MICROCHIP_CHAR_W)
-      if (writeCharacteristic == null) writeCharacteristic = gattService.getCharacteristic(
+      readCharacteristic = s.getCharacteristic(BLUETOOTH_LE_MICROCHIP_CHAR_RW)
+      writeCharacteristic = s.getCharacteristic(BLUETOOTH_LE_MICROCHIP_CHAR_W)
+      if (writeCharacteristic == null) writeCharacteristic = s.getCharacteristic(
         BLUETOOTH_LE_MICROCHIP_CHAR_RW
       )
       return true
@@ -460,16 +460,16 @@ class SerialSocketKt(val context: Context, var device: BluetoothDevice) : Blueto
     private var writeCreditsCharacteristic: BluetoothGattCharacteristic? = null
     private var readCredits = 0
     private var writeCredits = 0
-    override fun connectCharacteristics(gattService: BluetoothGattService): Boolean {
+    override fun connectCharacteristics(s: BluetoothGattService): Boolean {
       Timber.tag(TAG).d("service telit tio 2.0")
       readCredits = 0
       writeCredits = 0
-      readCharacteristic = gattService.getCharacteristic(BLUETOOTH_LE_TIO_CHAR_RX)
-      writeCharacteristic = gattService.getCharacteristic(BLUETOOTH_LE_TIO_CHAR_TX)
-      readCreditsCharacteristic = gattService.getCharacteristic(
+      readCharacteristic = s.getCharacteristic(BLUETOOTH_LE_TIO_CHAR_RX)
+      writeCharacteristic = s.getCharacteristic(BLUETOOTH_LE_TIO_CHAR_TX)
+      readCreditsCharacteristic = s.getCharacteristic(
         BLUETOOTH_LE_TIO_CHAR_RX_CREDITS
       )
-      writeCreditsCharacteristic = gattService.getCharacteristic(
+      writeCreditsCharacteristic = s.getCharacteristic(
         BLUETOOTH_LE_TIO_CHAR_TX_CREDITS
       )
       if (readCharacteristic == null) {
@@ -509,20 +509,20 @@ class SerialSocketKt(val context: Context, var device: BluetoothDevice) : Blueto
     }
 
     override fun onDescriptorWrite(
-      gatt: BluetoothGatt,
-      descriptor: BluetoothGattDescriptor,
+      g: BluetoothGatt,
+      d: BluetoothGattDescriptor,
       status: Int
     ) {
-      if (descriptor.characteristic === readCreditsCharacteristic) {
+      if (d.characteristic === readCreditsCharacteristic) {
         Timber.tag(TAG)
           .d("writing read credits characteristic descriptor finished, status=%s", status)
         if (status != BluetoothGatt.GATT_SUCCESS) {
           onSerialConnectError(IOException("write credits descriptor failed"))
         } else {
-          connectCharacteristics2(gatt)
+          connectCharacteristics2(g)
         }
       }
-      if (descriptor.characteristic === readCharacteristic) {
+      if (d.characteristic === readCharacteristic) {
         Timber.tag(TAG).d("writing read characteristic descriptor finished, status=%s", status)
         if (status == BluetoothGatt.GATT_SUCCESS) {
           readCharacteristic!!.writeType = BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE
@@ -535,9 +535,9 @@ class SerialSocketKt(val context: Context, var device: BluetoothDevice) : Blueto
     }
 
     override fun onCharacteristicChanged(
-      gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic
+      g: BluetoothGatt, c: BluetoothGattCharacteristic
     ) {
-      if (characteristic === readCreditsCharacteristic) { // NOPMD - test object identity
+      if (c === readCreditsCharacteristic) { // NOPMD - test object identity
         val newCredits = readCreditsCharacteristic!!.value[0].toInt()
         synchronized(writeBuffer) { writeCredits += newCredits }
         Timber.tag(TAG).d("got write credits +$newCredits =$writeCredits")
@@ -546,20 +546,20 @@ class SerialSocketKt(val context: Context, var device: BluetoothDevice) : Blueto
           writeNext()
         }
       }
-      if (characteristic === readCharacteristic) { // NOPMD - test object identity
+      if (c === readCharacteristic) { // NOPMD - test object identity
         grantReadCredits()
         Timber.tag(TAG).d("read, credits=%s", readCredits)
       }
     }
 
     override fun onCharacteristicWrite(
-      gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int
+      g: BluetoothGatt, c: BluetoothGattCharacteristic, status: Int
     ) {
-      if (characteristic === writeCharacteristic) { // NOPMD - test object identity
+      if (c === writeCharacteristic) { // NOPMD - test object identity
         synchronized(writeBuffer) { if (writeCredits > 0) writeCredits -= 1 }
         Timber.tag(TAG).d("write finished, credits=%s", writeCredits)
       }
-      if (characteristic === writeCreditsCharacteristic) { // NOPMD - test object identity
+      if (c === writeCreditsCharacteristic) { // NOPMD - test object identity
         Timber.tag(TAG).d("write credits finished, status=%s", status)
       }
     }
@@ -601,8 +601,10 @@ class SerialSocketKt(val context: Context, var device: BluetoothDevice) : Blueto
     private val BLUETOOTH_LE_CC254X_CHAR_RW =
       UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb")
     private val BLUETOOTH_LE_NRF_SERVICE = UUID.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e")
+
+    // read on microbit, write on adafruit
     private val BLUETOOTH_LE_NRF_CHAR_RW2 =
-      UUID.fromString("6e400002-b5a3-f393-e0a9-e50e24dcca9e") // read on microbit, write on adafruit
+      UUID.fromString("6e400002-b5a3-f393-e0a9-e50e24dcca9e")
     private val BLUETOOTH_LE_NRF_CHAR_RW3 = UUID.fromString("6e400003-b5a3-f393-e0a9-e50e24dcca9e")
     private val BLUETOOTH_LE_MICROCHIP_SERVICE =
       UUID.fromString("49535343-FE7D-4AE5-8FA9-9FAFD205E455")
@@ -614,16 +616,25 @@ class SerialSocketKt(val context: Context, var device: BluetoothDevice) : Blueto
     // https://play.google.com/store/apps/details?id=com.telit.tiosample
     // https://www.telit.com/wp-content/uploads/2017/09/TIO_Implementation_Guide_r6.pdf
     private val BLUETOOTH_LE_TIO_SERVICE = UUID.fromString("0000FEFB-0000-1000-8000-00805F9B34FB")
+
+    // WNR
     private val BLUETOOTH_LE_TIO_CHAR_TX =
-      UUID.fromString("00000001-0000-1000-8000-008025000000") // WNR
+      UUID.fromString("00000001-0000-1000-8000-008025000000")
+
+    // N
     private val BLUETOOTH_LE_TIO_CHAR_RX =
-      UUID.fromString("00000002-0000-1000-8000-008025000000") // N
+      UUID.fromString("00000002-0000-1000-8000-008025000000")
+
+    // W
     private val BLUETOOTH_LE_TIO_CHAR_TX_CREDITS =
-      UUID.fromString("00000003-0000-1000-8000-008025000000") // W
+      UUID.fromString("00000003-0000-1000-8000-008025000000")
+
+    // I
     private val BLUETOOTH_LE_TIO_CHAR_RX_CREDITS =
-      UUID.fromString("00000004-0000-1000-8000-008025000000") // I
-    private const val MAX_MTU =
-      512 // BLE standard does not limit, some BLE 4.2 devices support 251, various source say that Android has max 512
+      UUID.fromString("00000004-0000-1000-8000-008025000000")
+
+    // BLE standard does not limit, some BLE 4.2 devices support 251, various source say that Android has max 512
+    private const val MAX_MTU = 512
     private const val DEFAULT_MTU = 23
     private const val TAG = "SerialSocket"
   }
