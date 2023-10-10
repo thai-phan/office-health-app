@@ -429,10 +429,10 @@ class SerialSocketKt(val context: Context, var device: BluetoothDevice) : Blueto
   }
 
   private inner class NrfDelegate : DeviceDelegate() {
-    override fun connectCharacteristics(gattService: BluetoothGattService): Boolean {
+    override fun connectCharacteristics(s: BluetoothGattService): Boolean {
       Timber.tag(TAG).d("service nrf uart")
-      val rw2 = gattService.getCharacteristic(BLUETOOTH_LE_NRF_CHAR_RW2)
-      val rw3 = gattService.getCharacteristic(BLUETOOTH_LE_NRF_CHAR_RW3)
+      val rw2 = s.getCharacteristic(BLUETOOTH_LE_NRF_CHAR_RW2)
+      val rw3 = s.getCharacteristic(BLUETOOTH_LE_NRF_CHAR_RW3)
       if (rw2 != null && rw3 != null) {
         val rw2prop = rw2.properties
         val rw3prop = rw3.properties
