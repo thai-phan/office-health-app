@@ -1,4 +1,4 @@
-package com.sewon.officehealth.permission
+package com.sewon.officehealth.temp.permission
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Button

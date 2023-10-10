@@ -5,7 +5,7 @@ import android.text.SpannableStringBuilder
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import com.sewon.officehealth.MainActivity
-import com.sewon.officehealth.service.algorithm.ecg.ECGAnalysisProc
+import com.sewon.officehealth.service.algorithm.stress.StressDetection
 import timber.log.Timber
 import java.util.ArrayDeque
 
@@ -24,7 +24,6 @@ class BleDataListener : SerialListener {
   val isStress = mutableStateOf(false)
   val isWrongDeviceType = mutableStateOf(false)
 
-  private val dataArrayList = ArrayList<Double>()
 
   private val totalDuration = 50 * 60 * 1000L
 //  private val totalDuration = 10 * 1000L
@@ -94,56 +93,8 @@ class BleDataListener : SerialListener {
 
 //  var prevValue = Constants.STABLE_MOVING;
 
-  var countNoVitalSign = 0
-  var countNoTarget = 0
 
-  private fun processData(messageList: List<String>) {
-
-    //  STABLE_NO_VITAL_SIGN = "1"
-    if (messageList[0] == Constants.STABLE_NO_VITAL_SIGN) {
-      countNoVitalSign += 1
-      if (countNoVitalSign == Constants.NO_VITAL_SIGN_THRESHOLD) {
-        resetTimer()
-        countNoVitalSign = 0
-      }
-    } else {
-      countNoVitalSign = 0
-    }
-
-    //  STABLE_NO_TARGET = "0"
-    if (messageList[0] == Constants.STABLE_NO_TARGET) {
-      countNoTarget += 1
-      if (countNoTarget == Constants.NO_TARGET_THRESHOLD) {
-        resetTimer()
-        countNoTarget = 0
-      }
-    } else {
-      countNoTarget = 0
-    }
-
-    if (dataArrayList.size == 9) {
-      val result = ECGAnalysisProc.ECG_AnalysisData(dataArrayList)
-      if (result[0].stress_State == "stress") {
-        stressDetected()
-      }
-      dataArrayList.clear()
-    }
-    dataArrayList.add(messageList[3].toDouble())
-  }
-
-  private var tempCount = 0
-
-  private val regex = Regex("[01234]")
-
-  private fun validateDataFormatAndProcess(dataStr: String) {
-    val messageList = dataStr.split(" ").filter { it != "" }
-    if (messageList.size == 6 && messageList[0].matches(regex)) {
-      processData(messageList)
-    } else {
-      isWrongDeviceType.value = true
-      MainActivity.bleHandleService.disconnect()
-    }
-  }
+  private var topperCount = 0
 
   private fun receive(datas: ArrayDeque<ByteArray>) {
     val spn = SpannableStringBuilder()
@@ -152,18 +103,18 @@ class BleDataListener : SerialListener {
         spn.append(TextUtil.toHexString(data)).append('\n')
       } else {
         val dataStr = String(data)
-        validateDataFormatAndProcess(dataStr)
+        StressDetection.validateDataFormat(dataStr)
         val text = TextUtil.toCaretString(dataStr, true)
         spn.append(text)
       }
     }
 
-    if (tempCount < 2) {
-      tempCount += 1
+    if (topperCount < 5) {
+      topperCount += 1
     } else {
-      tempCount = 0
+      topperCount = 0
     }
 
-    log.value = "$spn $tempCount"
+    log.value = "$spn $topperCount"
   }
 }
