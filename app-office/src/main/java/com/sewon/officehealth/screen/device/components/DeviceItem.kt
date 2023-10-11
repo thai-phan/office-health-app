@@ -33,6 +33,7 @@ import androidx.navigation.compose.rememberNavController
 import com.sewon.officehealth.MainActivity
 import com.sewon.officehealth.common.AppDestinations
 import com.sewon.officehealth.service.ble.SerialSocket
+import com.sewon.officehealth.service.ble.SerialSocketJava
 import timber.log.Timber
 
 
@@ -49,7 +50,9 @@ fun DeviceItem(
     try {
       val adapter = context.getSystemService<BluetoothManager>()?.adapter
       val device = adapter?.getRemoteDevice(address)
-      val socket = device?.let { SerialSocket(context, it) }
+      val socket = device?.let {
+        SerialSocket(context, it)
+      }
       if (socket != null) {
         MainActivity.bleHandleService.connect(socket)
       }

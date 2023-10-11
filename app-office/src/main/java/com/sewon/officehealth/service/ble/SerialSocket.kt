@@ -12,6 +12,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Build.VERSION.SDK_INT
+import android.os.Bundle
+import android.os.Parcelable
 import timber.log.Timber
 import java.io.IOException
 import java.util.Arrays
@@ -24,7 +27,7 @@ import java.util.UUID
  */
 @SuppressLint("MissingPermission") // various BluetoothGatt, BluetoothDevice methods
 
-class SerialSocketKt(val context: Context, var device: BluetoothDevice) : BluetoothGattCallback() {
+class SerialSocket(val context: Context, var device: BluetoothDevice) : BluetoothGattCallback() {
   /**
    * delegate device specific behaviour to inner class
    */
@@ -47,7 +50,7 @@ class SerialSocketKt(val context: Context, var device: BluetoothDevice) : Blueto
       c: BluetoothGattCharacteristic,
       status: Int
     ) {
-
+      /*nop*/
     }
 
     open fun canWrite(): Boolean {
@@ -55,12 +58,12 @@ class SerialSocketKt(val context: Context, var device: BluetoothDevice) : Blueto
     }
 
     open fun disconnect() {
-
+      /*nop*/
     }
   }
 
-  private val writeBuffer: ArrayList<ByteArray?>
-  private val pairingIntentFilter: IntentFilter
+  private val writeBuffer: ArrayList<ByteArray?> = ArrayList()
+  private val pairingIntentFilter: IntentFilter = IntentFilter()
   private val pairingBroadcastReceiver: BroadcastReceiver
   private val disconnectBroadcastReceiver: BroadcastReceiver
   private var listener: SerialListener? = null
@@ -76,13 +79,11 @@ class SerialSocketKt(val context: Context, var device: BluetoothDevice) : Blueto
   init {
 //    if (context instanceof Activity)
 //      throw new InvalidParameterException("expected non UI context");
-    writeBuffer = ArrayList()
-    pairingIntentFilter = IntentFilter()
     pairingIntentFilter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED)
     pairingIntentFilter.addAction(BluetoothDevice.ACTION_PAIRING_REQUEST)
     pairingBroadcastReceiver = object : BroadcastReceiver() {
       override fun onReceive(context: Context, intent: Intent) {
-        onPairingBroadcastReceive(context, intent)
+        onPairingBroadcastReceive(intent)
       }
     }
     disconnectBroadcastReceiver = object : BroadcastReceiver() {
@@ -136,25 +137,26 @@ class SerialSocketKt(val context: Context, var device: BluetoothDevice) : Blueto
     if (connected || gatt != null) throw IOException("already connected")
     canceled = false
     this.listener = listener
-    context.registerReceiver(
-      disconnectBroadcastReceiver,
-      IntentFilter(Constants.INTENT_ACTION_DISCONNECT)
-    )
-    Timber.tag(TAG).d(
-      "connect %s",
-      device
-    )
-    context.registerReceiver(pairingBroadcastReceiver, pairingIntentFilter)
-    Timber.tag(TAG).d("connectGatt,LE")
+//    context.registerReceiver(
+//      disconnectBroadcastReceiver,
+//      IntentFilter(Constants.INTENT_ACTION_DISCONNECT)
+//    )
+    Timber.tag(TAG).d("connect %s", device)
+//    context.registerReceiver(pairingBroadcastReceiver, pairingIntentFilter)
+    Timber.tag(TAG).d("connectGatt, LE")
     gatt = device.connectGatt(context, false, this, BluetoothDevice.TRANSPORT_LE)
     if (gatt == null) throw IOException("connectGatt failed")
     // continues asynchronously in onPairingBroadcastReceive() and onConnectionStateChange()
   }
 
-  private fun onPairingBroadcastReceive(context: Context, intent: Intent) {
+  private fun onPairingBroadcastReceive(intent: Intent) {
     // for ARM Mbed, Microbit, ... use pairing from Android bluetooth settings
     // for HM10-clone, ... pairing is initiated here
-    val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
+//    val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
+
+    val device = intent.parcelable<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
+
+
     if (device == null || device != this.device) return
     when (intent.action) {
       BluetoothDevice.ACTION_PAIRING_REQUEST -> {
@@ -292,10 +294,11 @@ class SerialSocketKt(val context: Context, var device: BluetoothDevice) : Blueto
     }
   }
 
+  //  For android < 12
+  @Deprecated("Deprecated in Java")
   override fun onCharacteristicChanged(
     gatt: BluetoothGatt,
     characteristic: BluetoothGattCharacteristic,
-    value: ByteArray
   ) {
     if (canceled) return
     delegate!!.onCharacteristicChanged(gatt, characteristic)
@@ -307,7 +310,21 @@ class SerialSocketKt(val context: Context, var device: BluetoothDevice) : Blueto
     }
   }
 
-  @Throws(IOException::class)
+  override fun onCharacteristicChanged(
+    gatt: BluetoothGatt,
+    characteristic: BluetoothGattCharacteristic,
+    value: ByteArray
+  ) {
+    if (canceled) return
+    delegate!!.onCharacteristicChanged(gatt, characteristic)
+    if (canceled) return
+    if (characteristic === readCharacteristic) { // NOPMD - test object identity
+      onSerialRead(value)
+      Timber.tag(TAG).d("read, len=%s", value.size)
+    }
+  }
+
+
   fun write(data: ByteArray) {
     if (canceled || !connected || writeCharacteristic == null) throw IOException("not connected")
     var data0: ByteArray?
@@ -429,10 +446,10 @@ class SerialSocketKt(val context: Context, var device: BluetoothDevice) : Blueto
   }
 
   private inner class NrfDelegate : DeviceDelegate() {
-    override fun connectCharacteristics(gattService: BluetoothGattService): Boolean {
+    override fun connectCharacteristics(s: BluetoothGattService): Boolean {
       Timber.tag(TAG).d("service nrf uart")
-      val rw2 = gattService.getCharacteristic(BLUETOOTH_LE_NRF_CHAR_RW2)
-      val rw3 = gattService.getCharacteristic(BLUETOOTH_LE_NRF_CHAR_RW3)
+      val rw2 = s.getCharacteristic(BLUETOOTH_LE_NRF_CHAR_RW2)
+      val rw3 = s.getCharacteristic(BLUETOOTH_LE_NRF_CHAR_RW3)
       if (rw2 != null && rw3 != null) {
         val rw2prop = rw2.properties
         val rw3prop = rw3.properties
@@ -638,4 +655,20 @@ class SerialSocketKt(val context: Context, var device: BluetoothDevice) : Blueto
     private const val DEFAULT_MTU = 23
     private const val TAG = "SerialSocket"
   }
+}
+
+inline fun <reified T : Parcelable> Intent.parcelable(key: String): T? = when {
+  SDK_INT >= 33 ->
+    getParcelableExtra(key, T::class.java)
+
+  else ->
+    getParcelableExtra(key) as? T
+}
+
+inline fun <reified T : Parcelable> Bundle.parcelable(key: String): T? = when {
+  SDK_INT >= 33 ->
+    getParcelable(key, T::class.java)
+
+  else ->
+    getParcelable(key) as? T
 }
