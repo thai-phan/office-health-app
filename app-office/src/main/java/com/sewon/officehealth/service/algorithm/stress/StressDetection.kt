@@ -1,24 +1,27 @@
 package com.sewon.officehealth.service.algorithm.stress
 
+import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import com.sewon.officehealth.MainActivity
 import com.sewon.officehealth.service.algorithm.AlgorithmConstants
-import com.sewon.officehealth.service.algorithm.ecg.ECGAnalysisProc
 import com.sewon.officehealth.service.ble.Constants
 
 class StressDetection {
 
   companion object {
-    var oneMinuteRefCount = 1 * 60 * 20
+    //    1 * 60 * 20
+    var oneMinuteRefCount = 200
     var referenceTime = 5
-    var referenceCount = referenceTime * 60 * 20
+
+    //    referenceTime * 60 * 20
+    var referenceCount = 1000
 
     var sumRefHRV = 0.0
     var sumRefHR = 0.0
     var sumRefBR = 0.0
 
     var refHRV = 0.0
-    var refHR = 0.0
-    var refBR = 0.0
+
 
     var countNoVitalSign = 0
     var countNoTarget = 0
@@ -37,35 +40,35 @@ class StressDetection {
       }
     }
 
-    var countReferenceHR = 0
-    var countReferenceBR = 0
+    var refHR = mutableDoubleStateOf(0.0)
+    var refBR = mutableDoubleStateOf(0.0)
 
-
-    val ignoreArray = intArrayOf(1, 2, 3)
+    var countReferenceHR = mutableIntStateOf(0)
+    var countReferenceBR = mutableIntStateOf(0)
 
     var isHRRefCalculated = false
     var isBRRefCalculated = false
 
     fun calculateReference(topperData: TopperData) {
       if (!isHRRefCalculated) {
-        if (!ignoreArray.contains(topperData.HR)) {
+        if (topperData.HR > AlgorithmConstants.REF_HR_THRESHOLD) {
           sumRefHR += topperData.HR
-          countReferenceHR += 1
+          countReferenceHR.intValue += 1
         }
-        if (countReferenceHR == referenceCount) {
-          refHR = sumRefHR / referenceCount
+        if (countReferenceHR.intValue == referenceCount) {
+          refHR.doubleValue = sumRefHR / referenceCount
           // refHR calculated
           isHRRefCalculated = true
         }
       }
 
       if (!isBRRefCalculated) {
-        if (!ignoreArray.contains(topperData.BR)) {
+        if (topperData.BR > AlgorithmConstants.REF_BR_THRESHOLD) {
           sumRefBR += topperData.BR
-          countReferenceBR += 1
+          countReferenceBR.intValue += 1
         }
-        if (countReferenceBR == referenceCount) {
-          refBR = sumRefBR / referenceCount
+        if (countReferenceBR.intValue == referenceCount) {
+          refBR.doubleValue = sumRefBR / referenceCount
           // refBR calculated
           isBRRefCalculated = true
         }
@@ -76,33 +79,39 @@ class StressDetection {
     var sumOneMinBR = 0.0
     var meanOneMinHR = 0.0
     var meanOneMinBR = 0.0
-    var oneMinCount = 0
+
+    var oneMinHRCount = 0
+    var oneMinBRCount = 0
+
 
     private fun processTopperDataStress(messageList: List<String>) {
       val topperData = TopperData(messageList)
       calculateReference(topperData)
 
-      // if refHR and refBR not calculated
-      if (!isHRRefCalculated || !isBRRefCalculated) {
-        return
+      if (isHRRefCalculated) {
+        sumOneMinHR += topperData.HR
+        oneMinHRCount += 1
+        if (oneMinHRCount == oneMinuteRefCount) {
+          meanOneMinHR = sumRefHR / oneMinuteRefCount
+          statusDetect(topperData)
+          oneMinHRCount = 0
+        }
       }
 
-      sumOneMinHR += topperData.HR
-      sumOneMinBR += topperData.BR
-      oneMinCount += 1
-
-      if (oneMinCount == oneMinuteRefCount) {
-        meanOneMinHR = sumRefBR / oneMinuteRefCount
-        meanOneMinBR = sumRefHR / oneMinuteRefCount
-        oneMinCount = 0
-
-        statusDetect(topperData)
+      if (isBRRefCalculated) {
+        sumOneMinBR += topperData.BR
+        oneMinBRCount += 1
+        if (oneMinBRCount == oneMinuteRefCount) {
+          meanOneMinBR = sumRefBR / oneMinuteRefCount
+          statusDetect(topperData)
+          oneMinBRCount = 0
+        }
       }
     }
 
     fun statusDetect(topperData: TopperData) {
-      if (topperData.HR > refHR * AlgorithmConstants.NORMAL_HR_THRESHOLD) {
-        if (topperData.HR > refHR * AlgorithmConstants.ALERT_HR_THRESHOLD) {
+      if (topperData.HR > refHR.doubleValue * AlgorithmConstants.NORMAL_HR_THRESHOLD) {
+        if (topperData.HR > refHR.doubleValue * AlgorithmConstants.ALERT_HR_THRESHOLD) {
           stress()
         } else {
           alert()
@@ -111,8 +120,8 @@ class StressDetection {
         normal()
       }
 
-      if (topperData.BR > refBR * AlgorithmConstants.NORMAL_BR_THRESHOLD) {
-        if (topperData.BR > refBR * AlgorithmConstants.ALERT_BR_THRESHOLD) {
+      if (topperData.BR > refBR.doubleValue * AlgorithmConstants.NORMAL_BR_THRESHOLD) {
+        if (topperData.BR > refBR.doubleValue * AlgorithmConstants.ALERT_BR_THRESHOLD) {
           stress()
         } else {
           alert()

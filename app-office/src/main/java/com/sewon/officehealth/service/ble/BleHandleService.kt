@@ -150,7 +150,6 @@ class BleHandleService : Service(), SerialListener {
   }
 
   fun createTimerNotification() {
-    playSoundStretch()
 //    val defaultSoundUri =
 //      Uri.parse("android.resource://" + packageName + "/" + R.raw.stress_release)
 //    val att = AudioAttributes.Builder()

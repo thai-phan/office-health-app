@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -53,6 +54,7 @@ import androidx.navigation.compose.rememberNavController
 import com.sewon.officehealth.MainActivity
 import com.sewon.officehealth.R
 import com.sewon.officehealth.common.AppDestinations
+import com.sewon.officehealth.service.algorithm.stress.StressDetection
 import java.util.Calendar
 import java.util.Calendar.DAY_OF_MONTH
 import java.util.Calendar.MONTH
@@ -85,15 +87,21 @@ fun ScreenActivity(
   val month = (calendar.get(MONTH) + 1).toString()
   val date = calendar.get(DAY_OF_MONTH).toString()
 
-  val logUI by MainActivity.bleDataListener.log
-  val textUI = MainActivity.bleDataListener.receiveText.toString()
+  val logUI by remember {
+    MainActivity.bleDataListener.log
+  }
 
-  val isStretchUI by MainActivity.bleDataListener.isStretch
-  val isStressUI by MainActivity.bleDataListener.isStress
-  val isWrongDeviceUi by MainActivity.bleDataListener.isWrongDeviceType
+  val isStretchUI by remember { MainActivity.bleDataListener.isStretch }
+  val isStressUI by remember { MainActivity.bleDataListener.isStress }
+  val isWrongDeviceUi by remember { MainActivity.bleDataListener.isWrongDeviceType }
+  val isPlayStretch by remember { MainActivity.bleHandleService.isPlaySoundStretch }
+  val isPlayStress by remember { MainActivity.bleHandleService.isPlaySoundStress }
 
-  val isPlayStretch by MainActivity.bleHandleService.isPlaySoundStretch
-  val isPlayStress by MainActivity.bleHandleService.isPlaySoundStress
+  val uiCountHR by remember { StressDetection.countReferenceHR }
+  val uiCountBR by remember { StressDetection.countReferenceBR }
+  val uiRefHR by remember { StressDetection.refHR }
+  val uiRefBR by remember { StressDetection.refBR }
+
 
   val rowHeight = 80.dp
 
@@ -114,7 +122,9 @@ fun ScreenActivity(
       .systemBarsPadding()
       .padding(vertical = 10.dp)
 
+
   ) {
+    Spacer(modifier = Modifier.height(20.dp))
 
     Row(
       modifier = Modifier.fillMaxWidth(),
@@ -229,7 +239,6 @@ fun ScreenActivity(
         )
       )
 
-
       if (isPlayStretch) {
         Button(
           colors = ButtonDefaults.buttonColors(Color(0xCC60AC70)),
@@ -255,6 +264,7 @@ fun ScreenActivity(
           )
         }
       }
+
     }
     Row(
       modifier = Modifier
@@ -294,7 +304,6 @@ fun ScreenActivity(
             tint = Color.Black
           )
         }
-
       } else {
         Button(
           colors = ButtonDefaults.buttonColors(Color(0x9960AC70)),
@@ -308,6 +317,8 @@ fun ScreenActivity(
           )
         }
       }
+
+
     }
 
     Spacer(modifier = Modifier.height(20.dp))
@@ -320,7 +331,11 @@ fun ScreenActivity(
       Button(
         colors = ButtonDefaults.buttonColors(Color(0xFFFFFFFF)),
         modifier = Modifier
-          .shadow(elevation = 4.dp, spotColor = Color(0x1A000000), ambientColor = Color(0x1A000000))
+          .shadow(
+            elevation = 4.dp,
+            spotColor = Color(0x1A000000),
+            ambientColor = Color(0x1A000000)
+          )
           .border(
             width = 4.dp,
             color = Color(0xFF4EA162),
@@ -414,9 +429,14 @@ fun ScreenActivity(
         )
       }
       if (isShowLog) {
-        Text(logUI, fontWeight = FontWeight.Bold, color = Color.Black)
+        Column {
+          Text(logUI, fontWeight = FontWeight.Bold, color = Color.Black)
+          Text("HR count $uiCountHR", color = Color.Black)
+          Text("BR count $uiCountBR", color = Color.Black)
+          Text("HR ref $uiRefHR", color = Color.Black)
+          Text("BR ref $uiRefBR", color = Color.Black)
+        }
       }
-
     }
     fun onDismissRequest() {
       MainActivity.bleDataListener.isWrongDeviceType.value = false

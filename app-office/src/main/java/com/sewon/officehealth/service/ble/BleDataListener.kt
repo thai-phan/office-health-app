@@ -24,7 +24,7 @@ class BleDataListener : SerialListener {
   val isStress = mutableStateOf(false)
   val isWrongDeviceType = mutableStateOf(false)
 
-
+  private val topperCountLoop = 20
   private val totalDuration = 50 * 60 * 1000L
 //  private val totalDuration = 10 * 1000L
 
@@ -75,6 +75,7 @@ class BleDataListener : SerialListener {
 
   fun stretchDetected() {
     MainActivity.bleHandleService.createTimerNotification()
+    MainActivity.bleHandleService.playSoundStretch()
     isStretch.value = true
   }
 
@@ -109,7 +110,7 @@ class BleDataListener : SerialListener {
       }
     }
 
-    if (topperCount < 5) {
+    if (topperCount < topperCountLoop) {
       topperCount += 1
     } else {
       topperCount = 0
