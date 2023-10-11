@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -68,18 +70,20 @@ fun WelcomeScreen(
     modifier = Modifier
       .fillMaxSize()
       .whiteBackground()
-      .paint(
-        painterResource(id = R.mipmap.ic_image_2_foreground),
-        alignment = Alignment.BottomCenter,
-        contentScale = ContentScale.FillWidth
-      ),
-  ) {
 
+  ) {
+    Spacer(
+      modifier = Modifier.height(20.dp)
+    )
     Image(
       painter = painterResource(id = R.mipmap.ic_ohealp_foreground),
       contentDescription = "Logo",
       modifier = Modifier
-        .size(width = 300.dp, height = 150.dp)
+        .fillMaxWidth()
+        .height(150.dp)
+    )
+    Spacer(
+      modifier = Modifier.height(30.dp)
     )
     Text(
       text = "반갑습니다~ ",
@@ -87,8 +91,7 @@ fun WelcomeScreen(
     )
     Spacer(
       modifier = Modifier
-        .padding(0.dp)
-        .width(280.dp)
+        .fillMaxWidth(fraction = 0.8f)
         .height(1.dp)
         .background(color = Color(0x66000000))
     )
@@ -116,10 +119,9 @@ fun WelcomeScreen(
 
     Spacer(
       modifier = Modifier
-        .padding(0.dp)
-        .width(280.dp)
+        .fillMaxWidth(fraction = 0.8f)
         .height(1.dp)
-        .background(color = Color(0x66000000)),
+        .background(color = Color(0x66000000))
     )
     Text(
       text = " 먼저 기기를 연결해주세요",
@@ -127,16 +129,14 @@ fun WelcomeScreen(
     )
     Spacer(
       modifier = Modifier
-        .padding(0.dp)
-        .width(280.dp)
+        .fillMaxWidth(fraction = 0.8f)
         .height(1.dp)
         .background(color = Color(0x66000000))
     )
 
     Spacer(
-      modifier = Modifier.height(320.dp)
+      modifier = Modifier.height(50.dp)
     )
-
 
     Button(
       colors = ButtonDefaults.buttonColors(Color(0xFFFFFFFF)),
@@ -162,9 +162,15 @@ fun WelcomeScreen(
         )
       )
     }
-
-
+    Spacer(
+      modifier = Modifier.height(20.dp)
+    )
+    Image(
+      painter = painterResource(id = R.mipmap.ic_image_2_foreground),
+      contentDescription = "Logo",
+      modifier = Modifier
+        .fillMaxWidth()
+        .fillMaxHeight()
+    )
   }
-
-
 }
