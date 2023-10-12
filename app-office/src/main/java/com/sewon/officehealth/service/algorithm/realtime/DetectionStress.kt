@@ -1,5 +1,6 @@
 package com.sewon.officehealth.service.algorithm.realtime
 
+import android.icu.text.DecimalFormat
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -12,10 +13,10 @@ class DetectionStress {
   private val TAG = "DetectionStress"
 
   //  var oneMinuteRefCount = 20
-  var oneMinuteRefCount = 1 * 60 * 20
+  private var meanDuration = AlgorithmConstants.MEAN_DURATION
 
   //  var referenceCount = 100
-  var referenceCount = 5 * 60 * 20
+  private var referenceCount = AlgorithmConstants.STRESS_REF_DURATION
 
   var sumOneMinHR = 0.0
   var sumOneMinBR = 0.0
@@ -34,8 +35,8 @@ class DetectionStress {
       sumOneMinHR += topperData.HR
       oneMinHRCount += 1
 //        Timber.tag(TAG).d("HR count $oneMinHRCount")
-      if (oneMinHRCount == oneMinuteRefCount) {
-        val meanOneMinHR = sumOneMinHR / oneMinuteRefCount
+      if (oneMinHRCount == meanDuration) {
+        val meanOneMinHR = sumOneMinHR / meanDuration
         statusDetectHR(meanOneMinHR)
         oneMinHRCount = 0
         sumOneMinHR = 0.0
@@ -45,8 +46,8 @@ class DetectionStress {
       sumOneMinBR += topperData.BR
       oneMinBRCount += 1
 //        Timber.tag(TAG).d("BR count $oneMinBRCount")
-      if (oneMinBRCount == oneMinuteRefCount) {
-        val meanOneMinBR = sumOneMinBR / oneMinuteRefCount
+      if (oneMinBRCount == meanDuration) {
+        val meanOneMinBR = sumOneMinBR / meanDuration
         statusDetectBR(meanOneMinBR)
         oneMinBRCount = 0
         sumOneMinBR = 0.0
@@ -61,6 +62,8 @@ class DetectionStress {
   var refHRV = 0.0
   var refHR = mutableDoubleStateOf(0.0)
   var refBR = mutableDoubleStateOf(0.0)
+  var decimalFormat: DecimalFormat = DecimalFormat("#.##")
+
 
   var countReferenceHR = mutableIntStateOf(0)
   var countReferenceBR = mutableIntStateOf(0)
@@ -73,8 +76,7 @@ class DetectionStress {
       sumRefHR += topperData.HR
       countReferenceHR.intValue += 1
       if (countReferenceHR.intValue == referenceCount) {
-        refHR.doubleValue = sumRefHR / referenceCount
-
+        refHR.doubleValue = decimalFormat.format(sumRefHR / referenceCount).toDouble()
         isHRRefCalculated = true
       }
     }
@@ -83,8 +85,7 @@ class DetectionStress {
       sumRefBR += topperData.BR
       countReferenceBR.intValue += 1
       if (countReferenceBR.intValue == referenceCount) {
-        refBR.doubleValue = sumRefBR / referenceCount
-
+        refBR.doubleValue = decimalFormat.format(sumRefBR / referenceCount).toDouble()
         isBRRefCalculated = true
       }
     }

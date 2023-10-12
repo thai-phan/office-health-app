@@ -64,7 +64,7 @@ fun ScreenActivity(
 
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-  val milliseconds by MainActivity.listenerBleData.timeRemaining
+  val milliseconds by MainActivity.listenerBleData.realtimeDataObject.stretchObj.timeRemaining
 
   val second = milliseconds / 1000
   val minuteStr = ((second % 3600) / 60).toString();
@@ -83,17 +83,17 @@ fun ScreenActivity(
 
   val logUI by remember { MainActivity.listenerBleData.log }
 
-  val isStretchUI by remember { MainActivity.listenerBleData.isStretch }
+//  val isStretchUI by remember { MainActivity.listenerBleData.isStretch }
   val isStressUI by remember { MainActivity.listenerBleData.isStress }
 
   val isPlayStretch by remember { MainActivity.serviceBleHandle.isPlaySoundStretch }
   val isPlayStress by remember { MainActivity.serviceBleHandle.isPlaySoundStress }
 
-  val uiCountHR by remember { MainActivity.listenerBleData.realtimeDataObject.detectionStress.countReferenceHR }
-  val uiCountBR by remember { MainActivity.listenerBleData.realtimeDataObject.detectionStress.countReferenceBR }
-  val uiRefHR by remember { MainActivity.listenerBleData.realtimeDataObject.detectionStress.refHR }
-  val uiRefBR by remember { MainActivity.listenerBleData.realtimeDataObject.detectionStress.refBR }
-  val uiStressMessage by remember { MainActivity.listenerBleData.realtimeDataObject.detectionStress.stressMessage }
+  val uiCountHR by remember { MainActivity.listenerBleData.realtimeDataObject.stressObj.countReferenceHR }
+  val uiCountBR by remember { MainActivity.listenerBleData.realtimeDataObject.stressObj.countReferenceBR }
+  val uiRefHR by remember { MainActivity.listenerBleData.realtimeDataObject.stressObj.refHR }
+  val uiRefBR by remember { MainActivity.listenerBleData.realtimeDataObject.stressObj.refBR }
+  val uiStressMessage by remember { MainActivity.listenerBleData.realtimeDataObject.stressObj.stressMessage }
 
 
   val rowHeight = 80.dp
@@ -350,27 +350,27 @@ fun ScreenActivity(
       }
     }
 
-    when {
-      isStretchUI -> {
-        AlertDialog(
-          onDismissRequest = {
-            MainActivity.listenerBleData.stretchStop()
-          },
-          onConfirmation = {
-            if (isPlayStretch) {
-              MainActivity.serviceBleHandle.stopSoundStretch()
-            } else {
-              MainActivity.serviceBleHandle.playSoundStretch()
-            }
-          },
-          dialogTitle = "스트레칭 솔루션",
-          dialogText = "스트레칭이 필요한 시간입니다.\n" +
-              "솔루션을 재생하시겠습니까?",
-          icon = Icons.Default.AddAlert,
-          isPlay = isPlayStretch
-        )
-      }
-    }
+//    when {
+//      isStretchUI -> {
+//        AlertDialog(
+//          onDismissRequest = {
+//            MainActivity.listenerBleData.stretchStop()
+//          },
+//          onConfirmation = {
+//            if (isPlayStretch) {
+//              MainActivity.serviceBleHandle.stopSoundStretch()
+//            } else {
+//              MainActivity.serviceBleHandle.playSoundStretch()
+//            }
+//          },
+//          dialogTitle = "스트레칭 솔루션",
+//          dialogText = "스트레칭이 필요한 시간입니다.\n" +
+//              "솔루션을 재생하시겠습니까?",
+//          icon = Icons.Default.AddAlert,
+//          isPlay = isPlayStretch
+//        )
+//      }
+//    }
 
     when {
       isStressUI -> {

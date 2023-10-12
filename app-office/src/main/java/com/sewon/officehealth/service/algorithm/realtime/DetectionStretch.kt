@@ -1,6 +1,9 @@
 package com.sewon.officehealth.service.algorithm.realtime
 
+import android.os.CountDownTimer
+import androidx.compose.runtime.mutableLongStateOf
 import com.sewon.officehealth.MainActivity
+import com.sewon.officehealth.service.algorithm.AlgorithmConstants
 import com.sewon.officehealth.service.ble.Constants
 import timber.log.Timber
 
@@ -10,6 +13,21 @@ class DetectionStretch {
 
   private var countNoVitalSign = 0
   private var countNoTarget = 0
+
+  val totalDuration = AlgorithmConstants.STRETCH_COUNTDOWN_DURATION
+
+  val timeRemaining = mutableLongStateOf(totalDuration)
+
+  val countDownTimer = object : CountDownTimer(totalDuration, 1000L) {
+    override fun onTick(millisUntilFinished: Long) {
+      timeRemaining.longValue = totalDuration - millisUntilFinished
+    }
+
+    override fun onFinish() {
+      MainActivity.listenerBleData.stretchDetected()
+      timeRemaining.longValue = 0
+    }
+  }
 
   fun processTopperDataStretch(messageList: List<String>) {
     //  STABLE_NO_VITAL_SIGN = "1"

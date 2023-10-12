@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,9 +34,12 @@ fun DeviceList(
 ) {
 
   Column(
-    modifier = modifier.padding(
-      start = 20.dp, top = 20.dp, end = 20.dp, bottom = 10.dp
-    ),
+    modifier = modifier
+      .systemBarsPadding()
+      .statusBarsPadding()
+      .padding(
+        horizontal = 20.dp,
+      ),
   ) {
     Spacer(modifier = Modifier.height(20.dp))
     Column(

@@ -5,8 +5,8 @@ import timber.log.Timber
 
 class RealtimeDataObject {
 
-  var detectionStretch: DetectionStretch = DetectionStretch()
-  var detectionStress: DetectionStress = DetectionStress()
+  var stretchObj: DetectionStretch = DetectionStretch()
+  var stressObj: DetectionStress = DetectionStress()
 
 //  init {
 //    stretchDetection =
@@ -20,8 +20,8 @@ class RealtimeDataObject {
   fun validateDataFormat(dataStr: String) {
     val messageList = dataStr.split(" ").filter { it != "" }
     if (messageList.size == 6 && messageList[0].matches(regex)) {
-      detectionStretch.processTopperDataStretch(messageList)
-      detectionStress.processTopperDataStress(messageList)
+      stretchObj.processTopperDataStretch(messageList)
+      stressObj.processTopperDataStress(messageList)
     } else {
       Timber.tag("DataProcess").d("Wrong Device Type")
       MainActivity.listenerBleData.isWrongDeviceType.value = true

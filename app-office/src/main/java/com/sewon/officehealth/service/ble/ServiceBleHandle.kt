@@ -6,7 +6,9 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
+import android.media.AudioAttributes
 import android.media.MediaPlayer
+import android.media.RingtoneManager
 import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
@@ -96,7 +98,7 @@ class ServiceBleHandle : Service(), ISerialListener {
 
   @Throws(IOException::class)
   fun connect(socket: SocketBleGatt) {
-    listenerBleData?.countDownTimer?.start()
+    listenerBleData?.realtimeDataObject?.stretchObj?.countDownTimer?.start()
     socket.connect(this)
     this.socket = socket
     connected = true
@@ -105,7 +107,8 @@ class ServiceBleHandle : Service(), ISerialListener {
   fun disconnect() {
     isPlaySoundStress.value = false
     isPlaySoundStretch.value = false
-    listenerBleData?.countDownTimer?.cancel()
+    listenerBleData?.realtimeDataObject?.stretchObj?.countDownTimer?.cancel()
+    listenerBleData?.resetRealtimeDataObject()
     connected = false // ignore data,errors while disconnecting
     cancelNotification()
     if (socket != null) {
@@ -130,7 +133,6 @@ class ServiceBleHandle : Service(), ISerialListener {
     // new items will not be added to queue1 because mainLooper.post and attach() run in main thread
     synchronized(this) {
       this.listenerBleData = listener
-      listener.resetRealtimeDataObject()
     }
     for (item in queue1) {
       when (item.type) {
@@ -155,10 +157,11 @@ class ServiceBleHandle : Service(), ISerialListener {
   fun createTimerNotification() {
 //    val defaultSoundUri =
 //      Uri.parse("android.resource://" + packageName + "/" + R.raw.stress_release)
-//    val att = AudioAttributes.Builder()
-//      .setUsage(AudioAttributes.USAGE_NOTIFICATION)
-//      .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
-//      .build()
+    val att = AudioAttributes.Builder()
+      .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+      .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+      .build()
+    val alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
     val notificationChannel = NotificationChannel(
       Constants.NOTIFICATION_CHANNEL,
       resources.getString(R.string.app_name),
@@ -169,7 +172,7 @@ class ServiceBleHandle : Service(), ISerialListener {
     notificationChannel.enableVibration(true)
     notificationChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC;
     notificationChannel.setShowBadge(false)
-//    notificationChannel.setSound(defaultSoundUri, att)
+    notificationChannel.setSound(alarmSound, att)
 
     val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
     notificationManager.createNotificationChannel(notificationChannel)

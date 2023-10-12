@@ -1,8 +1,6 @@
 package com.sewon.officehealth.service.ble
 
-import android.os.CountDownTimer
 import android.text.SpannableStringBuilder
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import com.sewon.officehealth.MainActivity
 import com.sewon.officehealth.service.algorithm.realtime.RealtimeDataObject
@@ -10,6 +8,7 @@ import timber.log.Timber
 import java.util.ArrayDeque
 
 class ListenerBleData : ISerialListener {
+  val TAG = "ListenerBleData"
 
   private enum class Connected {
     False, Pending, True
@@ -20,7 +19,9 @@ class ListenerBleData : ISerialListener {
 
   var realtimeDataObject: RealtimeDataObject = RealtimeDataObject()
 
+
   fun resetRealtimeDataObject() {
+    Timber.tag(TAG).d("resetRealtimeDataObject")
     realtimeDataObject = RealtimeDataObject()
   }
 
@@ -28,23 +29,6 @@ class ListenerBleData : ISerialListener {
   val isStretch = mutableStateOf(false)
   val isStress = mutableStateOf(false)
   val isWrongDeviceType = mutableStateOf(false)
-
-  private val topperCountLoop = 20
-  private val totalDuration = 50 * 60 * 1000L
-
-  //  private val totalDuration = 10 * 1000L
-  private val countDownInterval = 1000L
-  val timeRemaining = mutableLongStateOf(totalDuration)
-  val countDownTimer = object : CountDownTimer(totalDuration, countDownInterval) {
-    override fun onTick(millisUntilFinished: Long) {
-      timeRemaining.longValue = totalDuration - millisUntilFinished
-    }
-
-    override fun onFinish() {
-      stretchDetected()
-      timeRemaining.longValue = 0
-    }
-  }
 
 
   override fun onSerialConnect() {
@@ -66,18 +50,18 @@ class ListenerBleData : ISerialListener {
   }
 
   override fun onSerialIoError(e: Exception) {
-    Timber.tag("Timber").d("onSerialRead")
+    Timber.tag(TAG).d("onSerialRead")
   }
 
   fun resetTimer() {
-    countDownTimer.cancel()
-    countDownTimer.start()
+    realtimeDataObject.stretchObj.countDownTimer.cancel()
+    realtimeDataObject.stretchObj.countDownTimer.start()
   }
 
   fun stretchDetected() {
     MainActivity.serviceBleHandle.createTimerNotification()
-    MainActivity.serviceBleHandle.playSoundStretch()
-    isStretch.value = true
+//    MainActivity.serviceBleHandle.playSoundStretch()
+//    isStretch.value = true
   }
 
   fun stretchStop() {
@@ -85,8 +69,8 @@ class ListenerBleData : ISerialListener {
   }
 
   fun stressDetected() {
-    MainActivity.serviceBleHandle.createTimerNotification()
-    isStretch.value = true
+//    MainActivity.serviceBleHandle.createTimerNotification()
+    //    Popup show
     isStress.value = true
   }
 
@@ -96,6 +80,7 @@ class ListenerBleData : ISerialListener {
 
 
   private var topperCount = 0
+  private val topperCountLoop = 20
 
   private fun receive(datas: ArrayDeque<ByteArray>) {
     val spn = SpannableStringBuilder()

@@ -1,6 +1,17 @@
 package com.sewon.officehealth.service.algorithm
 
 object AlgorithmConstants {
+
+  //  const val STRETCH_COUNTDOWN_DURATION = 5 * 1000L
+  const val STRETCH_COUNTDOWN_DURATION = 50 * 60 * 1000L
+
+  //  const val MEAN_DURATION = 20
+  const val MEAN_DURATION = 1 * 60 * 20
+
+  //  const val STRESS_REF_DURATION = 100
+  const val STRESS_REF_DURATION = 3000
+
+
   const val REPORT_STAGE_WAKE = 4
   const val REPORT_STAGE_REM = 3
   const val REPORT_STAGE_N1 = 2

@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material3.Button
@@ -88,7 +90,7 @@ internal fun FindDevicesScreen(navController: NavHostController = rememberNavCon
     )
     // Stop scanning after a while
     LaunchedEffect(true) {
-      delay(3000)
+      delay(5000)
       scanning = false
     }
   }
@@ -118,7 +120,9 @@ internal fun FindDevicesScreen(navController: NavHostController = rememberNavCon
     }
 
     LazyColumn(
-      modifier = Modifier.padding(16.dp),
+      modifier = Modifier
+        .fillMaxSize()
+        .padding(16.dp),
       verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
       if (devices.isEmpty()) {
