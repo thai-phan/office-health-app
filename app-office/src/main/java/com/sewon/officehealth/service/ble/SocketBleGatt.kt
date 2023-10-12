@@ -27,7 +27,7 @@ import java.util.UUID
  */
 @SuppressLint("MissingPermission") // various BluetoothGatt, BluetoothDevice methods
 
-class SerialSocket(val context: Context, var device: BluetoothDevice) : BluetoothGattCallback() {
+class SocketBleGatt(val context: Context, var device: BluetoothDevice) : BluetoothGattCallback() {
   /**
    * delegate device specific behaviour to inner class
    */
@@ -66,7 +66,7 @@ class SerialSocket(val context: Context, var device: BluetoothDevice) : Bluetoot
   private val pairingIntentFilter: IntentFilter = IntentFilter()
   private val pairingBroadcastReceiver: BroadcastReceiver
   private val disconnectBroadcastReceiver: BroadcastReceiver
-  private var listener: SerialListener? = null
+  private var listener: ISerialListener? = null
   private var delegate: DeviceDelegate? = null
   private var gatt: BluetoothGatt? = null
   private var readCharacteristic: BluetoothGattCharacteristic? = null
@@ -133,7 +133,7 @@ class SerialSocket(val context: Context, var device: BluetoothDevice) : Bluetoot
    * connect-success and most connect-errors are returned asynchronously to listener
    */
   @Throws(IOException::class)
-  fun connect(listener: SerialListener) {
+  fun connect(listener: ISerialListener) {
     if (connected || gatt != null) throw IOException("already connected")
     canceled = false
     this.listener = listener

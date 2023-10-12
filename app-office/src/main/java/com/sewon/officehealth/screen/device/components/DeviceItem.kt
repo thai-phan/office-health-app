@@ -32,7 +32,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.sewon.officehealth.MainActivity
 import com.sewon.officehealth.common.AppDestinations
-import com.sewon.officehealth.service.ble.SerialSocket
+import com.sewon.officehealth.service.ble.SocketBleGatt
 import timber.log.Timber
 
 
@@ -50,10 +50,10 @@ fun DeviceItem(
       val adapter = context.getSystemService<BluetoothManager>()?.adapter
       val device = adapter?.getRemoteDevice(address)
       val socket = device?.let {
-        SerialSocket(context, it)
+        SocketBleGatt(context, it)
       }
       if (socket != null) {
-        MainActivity.bleHandleService.connect(socket)
+        MainActivity.serviceBleHandle.connect(socket)
       }
       navController.navigate(AppDestinations.ACTIVITY_ROUTE)
     } catch (exception: IllegalArgumentException) {

@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -27,8 +26,6 @@ import androidx.compose.material.icons.filled.PauseCircleOutline
 import androidx.compose.material.icons.filled.PlayCircleOutline
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -45,7 +42,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
@@ -53,7 +49,6 @@ import androidx.navigation.compose.rememberNavController
 import com.sewon.officehealth.MainActivity
 import com.sewon.officehealth.R
 import com.sewon.officehealth.common.AppDestinations
-import com.sewon.officehealth.service.algorithm.realtime.StressDetection
 import java.util.Calendar
 import java.util.Calendar.DAY_OF_MONTH
 import java.util.Calendar.MONTH
@@ -69,7 +64,7 @@ fun ScreenActivity(
 
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-  val milliseconds by MainActivity.bleDataListener.timeRemaining
+  val milliseconds by MainActivity.listenerBleData.timeRemaining
 
   val second = milliseconds / 1000
   val minuteStr = ((second % 3600) / 60).toString();
@@ -77,7 +72,7 @@ fun ScreenActivity(
 
 
   fun disconnect() {
-    MainActivity.bleHandleService.disconnect()
+    MainActivity.serviceBleHandle.disconnect()
     navController.navigate(AppDestinations.DEVICE_ROUTE)
   }
 
@@ -86,21 +81,19 @@ fun ScreenActivity(
   val month = (calendar.get(MONTH) + 1).toString()
   val date = calendar.get(DAY_OF_MONTH).toString()
 
-  val logUI by remember {
-    MainActivity.bleDataListener.log
-  }
+  val logUI by remember { MainActivity.listenerBleData.log }
 
-  val isStretchUI by remember { MainActivity.bleDataListener.isStretch }
-  val isStressUI by remember { MainActivity.bleDataListener.isStress }
-  val isWrongDeviceUi by remember { MainActivity.bleDataListener.isWrongDeviceType }
-  val isPlayStretch by remember { MainActivity.bleHandleService.isPlaySoundStretch }
-  val isPlayStress by remember { MainActivity.bleHandleService.isPlaySoundStress }
+  val isStretchUI by remember { MainActivity.listenerBleData.isStretch }
+  val isStressUI by remember { MainActivity.listenerBleData.isStress }
 
-  val uiCountHR by remember { StressDetection.countReferenceHR }
-  val uiCountBR by remember { StressDetection.countReferenceBR }
-  val uiRefHR by remember { StressDetection.refHR }
-  val uiRefBR by remember { StressDetection.refBR }
-  val uiStressMessage by remember { StressDetection.stressMessage }
+  val isPlayStretch by remember { MainActivity.serviceBleHandle.isPlaySoundStretch }
+  val isPlayStress by remember { MainActivity.serviceBleHandle.isPlaySoundStress }
+
+  val uiCountHR by remember { MainActivity.listenerBleData.realtimeDataObject.detectionStress.countReferenceHR }
+  val uiCountBR by remember { MainActivity.listenerBleData.realtimeDataObject.detectionStress.countReferenceBR }
+  val uiRefHR by remember { MainActivity.listenerBleData.realtimeDataObject.detectionStress.refHR }
+  val uiRefBR by remember { MainActivity.listenerBleData.realtimeDataObject.detectionStress.refBR }
+  val uiStressMessage by remember { MainActivity.listenerBleData.realtimeDataObject.detectionStress.stressMessage }
 
 
   val rowHeight = 80.dp
@@ -243,7 +236,7 @@ fun ScreenActivity(
         Button(
           colors = ButtonDefaults.buttonColors(Color(0xCC60AC70)),
           onClick = {
-            MainActivity.bleHandleService.stopSoundStretch()
+            MainActivity.serviceBleHandle.stopSoundStretch()
           }) {
           Icon(
             Icons.Filled.PauseCircleOutline,
@@ -255,7 +248,7 @@ fun ScreenActivity(
         Button(
           colors = ButtonDefaults.buttonColors(Color(0xCC60AC70)),
           onClick = {
-            MainActivity.bleHandleService.playSoundStretch()
+            MainActivity.serviceBleHandle.playSoundStretch()
           }) {
           Icon(
             Icons.Filled.PlayCircleOutline,
@@ -296,7 +289,7 @@ fun ScreenActivity(
         Button(
           colors = ButtonDefaults.buttonColors(Color(0x9960AC70)),
           onClick = {
-            MainActivity.bleHandleService.stopSoundStress()
+            MainActivity.serviceBleHandle.stopSoundStress()
           }) {
           Icon(
             Icons.Filled.PauseCircleOutline,
@@ -308,7 +301,7 @@ fun ScreenActivity(
         Button(
           colors = ButtonDefaults.buttonColors(Color(0x9960AC70)),
           onClick = {
-            MainActivity.bleHandleService.playSoundStress()
+            MainActivity.serviceBleHandle.playSoundStress()
           }) {
           Icon(
             Icons.Filled.PlayCircleOutline,
@@ -361,13 +354,13 @@ fun ScreenActivity(
       isStretchUI -> {
         AlertDialog(
           onDismissRequest = {
-            MainActivity.bleDataListener.stretchStop()
+            MainActivity.listenerBleData.stretchStop()
           },
           onConfirmation = {
             if (isPlayStretch) {
-              MainActivity.bleHandleService.stopSoundStretch()
+              MainActivity.serviceBleHandle.stopSoundStretch()
             } else {
-              MainActivity.bleHandleService.playSoundStretch()
+              MainActivity.serviceBleHandle.playSoundStretch()
             }
           },
           dialogTitle = "스트레칭 솔루션",
@@ -383,13 +376,13 @@ fun ScreenActivity(
       isStressUI -> {
         AlertDialog(
           onDismissRequest = {
-            MainActivity.bleDataListener.stressStop()
+            MainActivity.listenerBleData.stressStop()
           },
           onConfirmation = {
             if (isPlayStress) {
-              MainActivity.bleHandleService.stopSoundStress()
+              MainActivity.serviceBleHandle.stopSoundStress()
             } else {
-              MainActivity.bleHandleService.playSoundStress()
+              MainActivity.serviceBleHandle.playSoundStress()
             }
           },
           dialogTitle = "스트레스 솔루션",
@@ -400,10 +393,6 @@ fun ScreenActivity(
         )
       }
     }
-
-//    Button(onClick = { MainActivity.serialService.createNotificationHealth() }) {
-//        Text(text = "Test")
-//    }
 
     var isShowLog by remember {
       mutableStateOf(false)
@@ -430,42 +419,23 @@ fun ScreenActivity(
       if (isShowLog) {
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
           Text(logUI, fontWeight = FontWeight.Bold, color = Color.Black)
-          Text("HR count $uiCountHR", color = Color.Black)
-          Text("BR count $uiCountBR", color = Color.Black)
-          Text("HR ref $uiRefHR", color = Color.Black)
-          Text("BR ref $uiRefBR", color = Color.Black)
+          Row() {
+            Text("HR count $uiCountHR", color = Color.Black)
+            Spacer(modifier = Modifier.width(10.dp))
+            Text("BR count $uiCountBR", color = Color.Black)
+          }
+          Row() {
+            Text("HR ref $uiRefHR", color = Color.Black)
+            Spacer(modifier = Modifier.width(10.dp))
+            Text("BR ref $uiRefBR", color = Color.Black)
+          }
           Text(uiStressMessage, color = Color.Black)
         }
+
       }
     }
-    fun onDismissRequest() {
-      MainActivity.bleDataListener.isWrongDeviceType.value = false
-    }
 
-
-    when {
-      isWrongDeviceUi -> {
-        Dialog(onDismissRequest = { onDismissRequest() }) {
-          Card(
-            modifier = Modifier
-              .fillMaxWidth()
-              .height(150.dp)
-              .padding(16.dp),
-            colors = CardDefaults.cardColors(Color(0xFF4EA162)),
-            shape = RoundedCornerShape(16.dp),
-          ) {
-            Text(
-              text = "Wrong device!",
-              color = Color(0xFF003917),
-              modifier = Modifier
-                .fillMaxSize()
-                .wrapContentSize(Alignment.Center),
-              textAlign = TextAlign.Center,
-            )
-          }
-        }
-      }
-    }
+    DeviceCheck()
   }
 }
 

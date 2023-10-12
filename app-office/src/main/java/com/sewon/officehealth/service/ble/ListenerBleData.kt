@@ -5,11 +5,11 @@ import android.text.SpannableStringBuilder
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import com.sewon.officehealth.MainActivity
-import com.sewon.officehealth.service.algorithm.realtime.DataProcess
+import com.sewon.officehealth.service.algorithm.realtime.RealtimeDataObject
 import timber.log.Timber
 import java.util.ArrayDeque
 
-class BleDataListener : SerialListener {
+class ListenerBleData : ISerialListener {
 
   private enum class Connected {
     False, Pending, True
@@ -17,7 +17,12 @@ class BleDataListener : SerialListener {
 
   private var connected = Connected.False
   private val hexEnabled = false
-  val receiveText: SpannableStringBuilder = SpannableStringBuilder()
+
+  var realtimeDataObject: RealtimeDataObject = RealtimeDataObject()
+
+  fun resetRealtimeDataObject() {
+    realtimeDataObject = RealtimeDataObject()
+  }
 
   val log = mutableStateOf("")
   val isStretch = mutableStateOf(false)
@@ -26,13 +31,10 @@ class BleDataListener : SerialListener {
 
   private val topperCountLoop = 20
   private val totalDuration = 50 * 60 * 1000L
-//  private val totalDuration = 10 * 1000L
 
+  //  private val totalDuration = 10 * 1000L
   private val countDownInterval = 1000L
-
   val timeRemaining = mutableLongStateOf(totalDuration)
-
-
   val countDownTimer = object : CountDownTimer(totalDuration, countDownInterval) {
     override fun onTick(millisUntilFinished: Long) {
       timeRemaining.longValue = totalDuration - millisUntilFinished
@@ -43,6 +45,7 @@ class BleDataListener : SerialListener {
       timeRemaining.longValue = 0
     }
   }
+
 
   override fun onSerialConnect() {
     connected = Connected.True
@@ -71,10 +74,9 @@ class BleDataListener : SerialListener {
     countDownTimer.start()
   }
 
-
   fun stretchDetected() {
-    MainActivity.bleHandleService.createTimerNotification()
-    MainActivity.bleHandleService.playSoundStretch()
+    MainActivity.serviceBleHandle.createTimerNotification()
+    MainActivity.serviceBleHandle.playSoundStretch()
     isStretch.value = true
   }
 
@@ -83,15 +85,14 @@ class BleDataListener : SerialListener {
   }
 
   fun stressDetected() {
-    MainActivity.bleHandleService.createTimerNotification()
+    MainActivity.serviceBleHandle.createTimerNotification()
+    isStretch.value = true
     isStress.value = true
   }
 
   fun stressStop() {
     isStress.value = false
   }
-
-//  var prevValue = Constants.STABLE_MOVING;
 
 
   private var topperCount = 0
@@ -103,7 +104,7 @@ class BleDataListener : SerialListener {
         spn.append(TextUtil.toHexString(data)).append('\n')
       } else {
         val dataStr = String(data)
-        DataProcess.validateDataFormat(dataStr)
+        realtimeDataObject.validateDataFormat(dataStr)
         val text = TextUtil.toCaretString(dataStr, true)
         spn.append(text)
       }

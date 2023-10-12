@@ -23,10 +23,10 @@ import java.util.ArrayDeque
  * create notification and queue serial data while activity is not in the foreground
  * use listener chain: SerialSocket -> SerialService -> UI fragment
  */
-class BleHandleService : Service(), SerialListener {
+class ServiceBleHandle : Service(), ISerialListener {
   inner class SerialBinder : Binder() {
-    val service: BleHandleService
-      get() = this@BleHandleService
+    val service: ServiceBleHandle
+      get() = this@ServiceBleHandle
   }
 
   private enum class QueueType {
@@ -67,8 +67,8 @@ class BleHandleService : Service(), SerialListener {
   private val queue1: ArrayDeque<QueueItem>
   private val queue2: ArrayDeque<QueueItem>
   private val lastRead: QueueItem
-  private var socket: SerialSocket? = null
-  var bleDataListener: BleDataListener? = null
+  private var socket: SocketBleGatt? = null
+  var listenerBleData: ListenerBleData? = null
   private var connected = false
 
   val isPlaySoundStretch = mutableStateOf(false)
@@ -95,8 +95,8 @@ class BleHandleService : Service(), SerialListener {
   }
 
   @Throws(IOException::class)
-  fun connect(socket: SerialSocket) {
-    bleDataListener?.countDownTimer?.start()
+  fun connect(socket: SocketBleGatt) {
+    listenerBleData?.countDownTimer?.start()
     socket.connect(this)
     this.socket = socket
     connected = true
@@ -105,7 +105,7 @@ class BleHandleService : Service(), SerialListener {
   fun disconnect() {
     isPlaySoundStress.value = false
     isPlaySoundStretch.value = false
-    bleDataListener?.countDownTimer?.cancel()
+    listenerBleData?.countDownTimer?.cancel()
     connected = false // ignore data,errors while disconnecting
     cancelNotification()
     if (socket != null) {
@@ -122,13 +122,16 @@ class BleHandleService : Service(), SerialListener {
     }
   }
 
-  fun attach(listener: BleDataListener) {
+  fun attach(listener: ListenerBleData) {
 
     require(Looper.getMainLooper().thread === Thread.currentThread()) { "not in main thread" }
     cancelNotification()
     // use synchronized() to prevent new items in queue2
     // new items will not be added to queue1 because mainLooper.post and attach() run in main thread
-    synchronized(this) { this.bleDataListener = listener }
+    synchronized(this) {
+      this.listenerBleData = listener
+      listener.resetRealtimeDataObject()
+    }
     for (item in queue1) {
       when (item.type) {
         QueueType.Connect -> listener.onSerialConnect()
@@ -207,10 +210,10 @@ class BleHandleService : Service(), SerialListener {
   override fun onSerialConnect() {
     if (connected) {
       synchronized(this) {
-        if (bleDataListener != null) {
+        if (listenerBleData != null) {
           mainLooper.post {
-            if (bleDataListener != null) {
-              bleDataListener!!.onSerialConnect()
+            if (listenerBleData != null) {
+              listenerBleData!!.onSerialConnect()
             } else {
               queue1.add(QueueItem(QueueType.Connect))
             }
@@ -258,10 +261,10 @@ class BleHandleService : Service(), SerialListener {
   override fun onSerialConnectError(e: Exception) {
     if (connected) {
       synchronized(this) {
-        if (bleDataListener != null) {
+        if (listenerBleData != null) {
           mainLooper.post {
-            if (bleDataListener != null) {
-              bleDataListener!!.onSerialConnectError(e)
+            if (listenerBleData != null) {
+              listenerBleData!!.onSerialConnectError(e)
             } else {
               queue1.add(QueueItem(QueueType.ConnectError, e))
               disconnect()
@@ -291,7 +294,7 @@ class BleHandleService : Service(), SerialListener {
   override fun onSerialRead(data: ByteArray) {
     if (connected) {
       synchronized(this) {
-        if (bleDataListener != null) {
+        if (listenerBleData != null) {
           var first: Boolean
           synchronized(lastRead) {
             first = lastRead.datas!!.isEmpty() // (1)
@@ -304,8 +307,8 @@ class BleHandleService : Service(), SerialListener {
                 datas = lastRead.datas!!
                 lastRead.init() // (2)
               }
-              if (bleDataListener != null) {
-                datas.let { bleDataListener!!.onSerialRead(it) }
+              if (listenerBleData != null) {
+                datas.let { listenerBleData!!.onSerialRead(it) }
               } else {
                 queue1.add(QueueItem(QueueType.Read, datas))
               }
@@ -323,10 +326,10 @@ class BleHandleService : Service(), SerialListener {
   override fun onSerialIoError(e: Exception) {
     if (connected) {
       synchronized(this) {
-        if (bleDataListener != null) {
+        if (listenerBleData != null) {
           mainLooper.post {
-            if (bleDataListener != null) {
-              bleDataListener!!.onSerialIoError(e)
+            if (listenerBleData != null) {
+              listenerBleData!!.onSerialIoError(e)
             } else {
               queue1.add(QueueItem(QueueType.IoError, e))
               disconnect()

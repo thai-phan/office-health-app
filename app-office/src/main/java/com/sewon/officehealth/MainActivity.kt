@@ -9,8 +9,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
 import com.sewon.officehealth.common.RootCompose
-import com.sewon.officehealth.service.ble.BleDataListener
-import com.sewon.officehealth.service.ble.BleHandleService
+import com.sewon.officehealth.service.ble.ListenerBleData
+import com.sewon.officehealth.service.ble.ServiceBleHandle
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -19,8 +19,8 @@ import timber.log.Timber
 class MainActivity : ComponentActivity() {
 
   companion object {
-    lateinit var bleHandleService: BleHandleService
-    var bleDataListener = BleDataListener()
+    lateinit var serviceBleHandle: ServiceBleHandle
+    var listenerBleData = ListenerBleData()
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +38,7 @@ class MainActivity : ComponentActivity() {
 
   override fun onStart() {
     super.onStart()
-    val intent = Intent(this, BleHandleService::class.java)
+    val intent = Intent(this, ServiceBleHandle::class.java)
     startService(intent)
     bindService(intent, mServiceConnection, BIND_AUTO_CREATE)
   }
@@ -56,8 +56,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onServiceConnected(name: ComponentName, service: IBinder) {
       Timber.tag("Timber").d("onServiceConnected")
-      bleHandleService = (service as BleHandleService.SerialBinder).service
-      bleHandleService.attach(bleDataListener)
+      serviceBleHandle = (service as ServiceBleHandle.SerialBinder).service
+      serviceBleHandle.attach(listenerBleData)
     }
   }
 }

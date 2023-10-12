@@ -2,7 +2,7 @@ package com.sewon.officehealth.service.ble
 
 import java.util.ArrayDeque
 
-interface SerialListener {
+interface ISerialListener {
   fun onSerialConnect()
   fun onSerialConnectError(e: Exception)
   fun onSerialRead(data: ByteArray) // socket -> service
