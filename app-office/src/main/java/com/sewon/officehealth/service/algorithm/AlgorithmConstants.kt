@@ -11,8 +11,8 @@ object AlgorithmConstants {
   const val REF_BR_THRESHOLD = 10
 
   const val NORMAL_HR_THRESHOLD = 1.1
-  const val NORMAL_BR_THRESHOLD = 1.2
-
   const val ALERT_HR_THRESHOLD = 1.2
+
+  const val NORMAL_BR_THRESHOLD = 1.2
   const val ALERT_BR_THRESHOLD = 1.4
 }

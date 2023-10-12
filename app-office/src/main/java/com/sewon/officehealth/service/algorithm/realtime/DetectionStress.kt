@@ -70,10 +70,8 @@ class DetectionStress {
 
   fun calculateReference(topperData: TopperData) {
     if (!isHRRefCalculated) {
-      if (topperData.HR > AlgorithmConstants.REF_HR_THRESHOLD) {
-        sumRefHR += topperData.HR
-        countReferenceHR.intValue += 1
-      }
+      sumRefHR += topperData.HR
+      countReferenceHR.intValue += 1
       if (countReferenceHR.intValue == referenceCount) {
         refHR.doubleValue = sumRefHR / referenceCount
 
@@ -82,10 +80,8 @@ class DetectionStress {
     }
 
     if (!isBRRefCalculated) {
-      if (topperData.BR > AlgorithmConstants.REF_BR_THRESHOLD) {
-        sumRefBR += topperData.BR
-        countReferenceBR.intValue += 1
-      }
+      sumRefBR += topperData.BR
+      countReferenceBR.intValue += 1
       if (countReferenceBR.intValue == referenceCount) {
         refBR.doubleValue = sumRefBR / referenceCount
 
