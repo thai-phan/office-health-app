@@ -5,7 +5,7 @@ import android.text.SpannableStringBuilder
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import com.sewon.officehealth.MainActivity
-import com.sewon.officehealth.service.algorithm.stress.StressDetection
+import com.sewon.officehealth.service.algorithm.realtime.DataProcess
 import timber.log.Timber
 import java.util.ArrayDeque
 
@@ -28,18 +28,18 @@ class BleDataListener : SerialListener {
   private val totalDuration = 50 * 60 * 1000L
 //  private val totalDuration = 10 * 1000L
 
-  private val b = 1000L
-  val timeRemaining = mutableLongStateOf(0)
+  private val countDownInterval = 1000L
+
+  val timeRemaining = mutableLongStateOf(totalDuration)
 
 
-  val countDownTimer = object : CountDownTimer(totalDuration, b) {
+  val countDownTimer = object : CountDownTimer(totalDuration, countDownInterval) {
     override fun onTick(millisUntilFinished: Long) {
       timeRemaining.longValue = totalDuration - millisUntilFinished
     }
 
     override fun onFinish() {
       stretchDetected()
-
       timeRemaining.longValue = 0
     }
   }
@@ -51,7 +51,6 @@ class BleDataListener : SerialListener {
   override fun onSerialConnectError(e: Exception) {
     connected = Connected.False
   }
-
 
   override fun onSerialRead(data: ByteArray) {
     val datas = ArrayDeque<ByteArray>()
@@ -104,7 +103,7 @@ class BleDataListener : SerialListener {
         spn.append(TextUtil.toHexString(data)).append('\n')
       } else {
         val dataStr = String(data)
-        StressDetection.validateDataFormat(dataStr)
+        DataProcess.validateDataFormat(dataStr)
         val text = TextUtil.toCaretString(dataStr, true)
         spn.append(text)
       }

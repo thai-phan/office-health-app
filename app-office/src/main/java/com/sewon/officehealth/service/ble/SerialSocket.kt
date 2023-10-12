@@ -306,7 +306,7 @@ class SerialSocket(val context: Context, var device: BluetoothDevice) : Bluetoot
     if (characteristic === readCharacteristic) { // NOPMD - test object identity
       val data = readCharacteristic!!.value
       onSerialRead(data)
-      Timber.tag(TAG).d("read, len=%s", data.size)
+//      Timber.tag(TAG).d("read, len=%s", data.size)
     }
   }
 
@@ -320,7 +320,7 @@ class SerialSocket(val context: Context, var device: BluetoothDevice) : Bluetoot
     if (canceled) return
     if (characteristic === readCharacteristic) { // NOPMD - test object identity
       onSerialRead(value)
-      Timber.tag(TAG).d("read, len=%s", value.size)
+//      Timber.tag(TAG).d("read, len=%s", value.size)
     }
   }
 

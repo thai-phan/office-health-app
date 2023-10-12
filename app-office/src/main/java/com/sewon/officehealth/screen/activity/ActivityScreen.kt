@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -54,7 +53,7 @@ import androidx.navigation.compose.rememberNavController
 import com.sewon.officehealth.MainActivity
 import com.sewon.officehealth.R
 import com.sewon.officehealth.common.AppDestinations
-import com.sewon.officehealth.service.algorithm.stress.StressDetection
+import com.sewon.officehealth.service.algorithm.realtime.StressDetection
 import java.util.Calendar
 import java.util.Calendar.DAY_OF_MONTH
 import java.util.Calendar.MONTH
@@ -101,6 +100,7 @@ fun ScreenActivity(
   val uiCountBR by remember { StressDetection.countReferenceBR }
   val uiRefHR by remember { StressDetection.refHR }
   val uiRefBR by remember { StressDetection.refBR }
+  val uiStressMessage by remember { StressDetection.stressMessage }
 
 
   val rowHeight = 80.dp
@@ -412,7 +412,6 @@ fun ScreenActivity(
     Row(
       modifier = Modifier
         .padding(10.dp)
-        .verticalScroll(rememberScrollState())
     ) {
       Button(
         colors = ButtonDefaults.buttonColors(Color(0xFFFFFFFF)),
@@ -429,12 +428,13 @@ fun ScreenActivity(
         )
       }
       if (isShowLog) {
-        Column {
+        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
           Text(logUI, fontWeight = FontWeight.Bold, color = Color.Black)
           Text("HR count $uiCountHR", color = Color.Black)
           Text("BR count $uiCountBR", color = Color.Black)
           Text("HR ref $uiRefHR", color = Color.Black)
           Text("BR ref $uiRefBR", color = Color.Black)
+          Text(uiStressMessage, color = Color.Black)
         }
       }
     }

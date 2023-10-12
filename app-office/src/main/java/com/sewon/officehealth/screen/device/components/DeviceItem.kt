@@ -33,7 +33,6 @@ import androidx.navigation.compose.rememberNavController
 import com.sewon.officehealth.MainActivity
 import com.sewon.officehealth.common.AppDestinations
 import com.sewon.officehealth.service.ble.SerialSocket
-import com.sewon.officehealth.service.ble.SerialSocketJava
 import timber.log.Timber
 
 

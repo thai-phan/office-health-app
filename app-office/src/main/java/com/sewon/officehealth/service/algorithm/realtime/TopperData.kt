@@ -1,4 +1,4 @@
-package com.sewon.officehealth.service.algorithm.stress
+package com.sewon.officehealth.service.algorithm.realtime
 
 import java.time.LocalTime
 

@@ -19,6 +19,6 @@ internal object Constants {
   const val STABLE_BR_LOWER_50 = "3"
   const val STABLE_BR_UPPER_50 = "4"
 
-  const val NO_VITAL_SIGN_THRESHOLD = 1200
-  const val NO_TARGET_THRESHOLD = 1200
+  const val NO_VITAL_SIGN_THRESHOLD = 1 * 60 * 20
+  const val NO_TARGET_THRESHOLD = 1 * 60 * 20
 }
