@@ -26,10 +26,13 @@ import java.util.ArrayDeque
  * use listener chain: SerialSocket -> SerialService -> UI fragment
  */
 class ServiceBleHandler : Service(), ISerialListener {
+
+
   inner class SerialBinder : Binder() {
     val service: ServiceBleHandler
       get() = this@ServiceBleHandler
   }
+
 
   private enum class QueueType {
     Connect, ConnectError, Read, IoError
@@ -121,7 +124,7 @@ class ServiceBleHandler : Service(), ISerialListener {
   fun write(data: ByteArray?) {
     if (!connected) throw IOException("not connected")
     if (data != null) {
-      socket!!.write(data)
+      socket?.write(data)
     }
   }
 
@@ -344,42 +347,5 @@ class ServiceBleHandler : Service(), ISerialListener {
         }
       }
     }
-  }
-
-  private fun createNotification() {
-    val notificationChannel = NotificationChannel(
-      Constants.NOTIFICATION_CHANNEL,
-      "Background service", NotificationManager.IMPORTANCE_LOW
-    )
-    notificationChannel.setShowBadge(false)
-    val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-    notificationManager.createNotificationChannel(notificationChannel)
-    val flags = PendingIntent.FLAG_IMMUTABLE
-
-    val disconnectIntent = Intent(this, StopAlarmAction::class.java)
-    val disconnectPendingIntent = PendingIntent.getBroadcast(this, 1, disconnectIntent, flags)
-    val action = NotificationCompat.Action(
-      R.drawable.ic_intelli,
-      "Disconnect",
-      disconnectPendingIntent
-    )
-
-    val restartIntent = Intent()
-      .setClassName(this, Constants.INTENT_CLASS_MAIN_ACTIVITY)
-      .setAction(Intent.ACTION_MAIN)
-      .addCategory(Intent.CATEGORY_LAUNCHER)
-    val restartPendingIntent = PendingIntent.getActivity(this, 1, restartIntent, flags)
-
-    val builder = NotificationCompat.Builder(this, Constants.NOTIFICATION_CHANNEL)
-      .setSmallIcon(R.drawable.ic_bluetooth_searching)
-      .setContentTitle(resources.getString(R.string.app_name))
-      .setContentText(if (socket != null) "Connected to " + socket!!.name else "Background Service")
-      .setContentIntent(restartPendingIntent)
-      .setOngoing(true)
-      .addAction(action)
-    // @drawable/ic_notification created with Android Studio -> New -> Image Asset using @color/colorPrimaryDark as background color
-    // Android < API 21 does not support vectorDrawables in notifications, so both drawables used here, are created as .png instead of .xml
-    val notification = builder.build()
-    startForeground(Constants.NOTIFY_MANAGER_START_FOREGROUND_SERVICE, notification)
   }
 }
