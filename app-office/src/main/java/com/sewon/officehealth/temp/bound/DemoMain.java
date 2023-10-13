@@ -44,8 +44,7 @@ public class DemoMain extends AppCompatActivity {
           unbindService(mServiceConnection);
           mServiceBound = false;
         }
-        Intent intent = new Intent(DemoMain.this,
-            BoundService.class);
+        Intent intent = new Intent(DemoMain.this, BoundService.class);
         stopService(intent);
       }
     });

@@ -1,4 +1,4 @@
-package com.sewon.officehealth.temp;
+package com.sewon.officehealth.temp.ble;
 
 import android.bluetooth.BluetoothDevice;
 import android.view.LayoutInflater;

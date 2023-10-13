@@ -1,4 +1,4 @@
-package com.sewon.officehealth.screen.device.components
+package com.sewon.officehealth.temp.ble
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice

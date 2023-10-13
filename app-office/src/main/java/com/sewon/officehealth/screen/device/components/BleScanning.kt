@@ -23,7 +23,7 @@ import androidx.lifecycle.LifecycleOwner
 @SuppressLint("InlinedApi")
 @RequiresPermission(Manifest.permission.BLUETOOTH_SCAN)
 @Composable
-fun BluetoothScanEffect(
+fun BluetoothScanning(
   scanSettings: ScanSettings,
   lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
   onScanFailed: (Int) -> Unit,

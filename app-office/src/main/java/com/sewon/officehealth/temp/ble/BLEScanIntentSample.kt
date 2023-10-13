@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.sewon.officehealth.temp
+package com.sewon.officehealth.temp.ble
 
 import android.Manifest
 import android.annotation.SuppressLint

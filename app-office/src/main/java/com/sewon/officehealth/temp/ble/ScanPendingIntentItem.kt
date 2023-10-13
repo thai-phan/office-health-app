@@ -1,4 +1,4 @@
-package com.sewon.officehealth.temp
+package com.sewon.officehealth.temp.ble
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -25,7 +25,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import com.sewon.officehealth.screen.device.components.BLEDeviceItem
 
 
 @OptIn(ExperimentalFoundationApi::class)

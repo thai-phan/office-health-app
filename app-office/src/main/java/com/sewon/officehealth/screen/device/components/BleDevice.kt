@@ -38,7 +38,7 @@ import timber.log.Timber
 
 @SuppressLint("MissingPermission")
 @Composable
-fun DeviceItem(
+fun BleDevice(
   color: Color,
   navController: NavHostController = rememberNavController(),
   bluetoothDevice: BluetoothDevice,

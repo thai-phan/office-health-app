@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.Composable
@@ -22,7 +21,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.sewon.officehealth.R
 import com.sewon.officehealth.screen.device.components.BluetoothWrapper
-import com.sewon.officehealth.screen.device.components.FindDevicesScreen
+import com.sewon.officehealth.screen.device.components.BleFindDevices
 
 
 @SuppressLint("MissingPermission")
@@ -58,7 +57,7 @@ fun DeviceList(
         contentDescription = "Logo",
       )
       BluetoothWrapper {
-        FindDevicesScreen(navController)
+        BleFindDevices(navController)
       }
     }
 

@@ -1,4 +1,4 @@
-package com.sewon.officehealth.temp
+package com.sewon.officehealth.temp.ble
 
 import android.bluetooth.le.BluetoothLeScanner
 import android.bluetooth.le.ScanResult

@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.ScanSettings
-import android.os.ParcelUuid
 import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,11 +16,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Refresh
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -49,17 +45,13 @@ import timber.log.Timber
 @SuppressLint("InlinedApi", "MissingPermission")
 @RequiresPermission(Manifest.permission.BLUETOOTH_SCAN)
 @Composable
-internal fun FindDevicesScreen(navController: NavHostController = rememberNavController()) {
+internal fun BleFindDevices(navController: NavHostController = rememberNavController()) {
   val context = LocalContext.current
   val adapter = checkNotNull(context.getSystemService<BluetoothManager>()?.adapter)
 
-  var scanning by remember {
-    mutableStateOf(true)
-  }
+  var scanning by remember { mutableStateOf(true) }
 
-  val devices = remember {
-    mutableStateListOf<BluetoothDevice>()
-  }
+  val devices = remember { mutableStateListOf<BluetoothDevice>() }
 
   val pairedDevices = remember {
     // Get a list of previously paired devices
@@ -74,7 +66,7 @@ internal fun FindDevicesScreen(navController: NavHostController = rememberNavCon
   // This effect will start scanning for devices when the screen is visible
   // If scanning is stop removing the effect will stop the scanning.
   if (scanning) {
-    BluetoothScanEffect(
+    BluetoothScanning(
       scanSettings = scanSettings,
       onScanFailed = {
         scanning = false
@@ -82,7 +74,9 @@ internal fun FindDevicesScreen(navController: NavHostController = rememberNavCon
       },
       onDeviceFound = { scanResult ->
         if (!devices.contains(scanResult.device)) {
-          if (scanResult.device.name != null) {
+          if (scanResult.device.name != null &&
+            (scanResult.device.name.contains("SEWON") || scanResult.device.name.contains("RB"))
+          ) {
             devices.add(scanResult.device)
           }
         }
@@ -131,7 +125,7 @@ internal fun FindDevicesScreen(navController: NavHostController = rememberNavCon
         }
       }
       items(devices) { item ->
-        DeviceItem(
+        BleDevice(
           Color(0xFFE3ECA6),
           navController = navController,
           bluetoothDevice = item,
@@ -143,7 +137,7 @@ internal fun FindDevicesScreen(navController: NavHostController = rememberNavCon
           Text(text = "Saved devices", style = MaterialTheme.typography.titleSmall)
         }
         items(pairedDevices) {
-          DeviceItem(
+          BleDevice(
             Color(0xFFE3ECA6),
             bluetoothDevice = it,
           )
