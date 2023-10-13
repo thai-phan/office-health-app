@@ -59,7 +59,7 @@ class ListenerBleData : ISerialListener {
   }
 
   fun stretchDetected() {
-    MainActivity.serviceBleHandle.createTimerNotification()
+    MainActivity.serviceBleHandler.createTimerNotification()
 //    MainActivity.serviceBleHandle.playSoundStretch()
 //    isStretch.value = true
   }

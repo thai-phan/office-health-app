@@ -53,7 +53,7 @@ fun DeviceItem(
         SocketBleGatt(context, it)
       }
       if (socket != null) {
-        MainActivity.serviceBleHandle.connect(socket)
+        MainActivity.serviceBleHandler.connect(socket)
       }
       navController.navigate(AppDestinations.ACTIVITY_ROUTE)
     } catch (exception: IllegalArgumentException) {

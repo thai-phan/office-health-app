@@ -25,7 +25,7 @@ class RealtimeDataObject {
     } else {
       Timber.tag("DataProcess").d("Wrong Device Type")
       MainActivity.listenerBleData.isWrongDeviceType.value = true
-      MainActivity.serviceBleHandle.disconnect()
+      MainActivity.serviceBleHandler.disconnect()
     }
   }
 

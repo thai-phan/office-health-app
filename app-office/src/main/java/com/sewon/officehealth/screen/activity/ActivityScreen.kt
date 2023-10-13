@@ -72,7 +72,7 @@ fun ScreenActivity(
 
 
   fun disconnect() {
-    MainActivity.serviceBleHandle.disconnect()
+    MainActivity.serviceBleHandler.disconnect()
     navController.navigate(AppDestinations.DEVICE_ROUTE)
   }
 
@@ -86,8 +86,8 @@ fun ScreenActivity(
 //  val isStretchUI by remember { MainActivity.listenerBleData.isStretch }
   val isStressUI by remember { MainActivity.listenerBleData.isStress }
 
-  val isPlayStretch by remember { MainActivity.serviceBleHandle.isPlaySoundStretch }
-  val isPlayStress by remember { MainActivity.serviceBleHandle.isPlaySoundStress }
+  val isPlayStretch by remember { MainActivity.serviceBleHandler.isPlaySoundStretch }
+  val isPlayStress by remember { MainActivity.serviceBleHandler.isPlaySoundStress }
 
   val uiCountHR by remember { MainActivity.listenerBleData.realtimeDataObject.stressObj.countReferenceHR }
   val uiCountBR by remember { MainActivity.listenerBleData.realtimeDataObject.stressObj.countReferenceBR }
@@ -236,7 +236,7 @@ fun ScreenActivity(
         Button(
           colors = ButtonDefaults.buttonColors(Color(0xCC60AC70)),
           onClick = {
-            MainActivity.serviceBleHandle.stopSoundStretch()
+            MainActivity.serviceBleHandler.stopSoundStretch()
           }) {
           Icon(
             Icons.Filled.PauseCircleOutline,
@@ -248,7 +248,7 @@ fun ScreenActivity(
         Button(
           colors = ButtonDefaults.buttonColors(Color(0xCC60AC70)),
           onClick = {
-            MainActivity.serviceBleHandle.playSoundStretch()
+            MainActivity.serviceBleHandler.playSoundStretch()
           }) {
           Icon(
             Icons.Filled.PlayCircleOutline,
@@ -289,7 +289,7 @@ fun ScreenActivity(
         Button(
           colors = ButtonDefaults.buttonColors(Color(0x9960AC70)),
           onClick = {
-            MainActivity.serviceBleHandle.stopSoundStress()
+            MainActivity.serviceBleHandler.stopSoundStress()
           }) {
           Icon(
             Icons.Filled.PauseCircleOutline,
@@ -301,7 +301,7 @@ fun ScreenActivity(
         Button(
           colors = ButtonDefaults.buttonColors(Color(0x9960AC70)),
           onClick = {
-            MainActivity.serviceBleHandle.playSoundStress()
+            MainActivity.serviceBleHandler.playSoundStress()
           }) {
           Icon(
             Icons.Filled.PlayCircleOutline,
@@ -380,9 +380,9 @@ fun ScreenActivity(
           },
           onConfirmation = {
             if (isPlayStress) {
-              MainActivity.serviceBleHandle.stopSoundStress()
+              MainActivity.serviceBleHandler.stopSoundStress()
             } else {
-              MainActivity.serviceBleHandle.playSoundStress()
+              MainActivity.serviceBleHandler.playSoundStress()
             }
           },
           dialogTitle = "스트레스 솔루션",
