@@ -118,7 +118,7 @@ class ListenerBleData : ServiceConnection, ISerialListener {
       } else {
         data = (str + newline).toByteArray()
       }
-      service.write(data)
+      service?.write(data)
     } catch (e: java.lang.Exception) {
       onSerialIoError(e)
     }

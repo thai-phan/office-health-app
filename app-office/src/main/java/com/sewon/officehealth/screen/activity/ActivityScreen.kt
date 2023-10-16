@@ -398,42 +398,41 @@ fun ScreenActivity(
       mutableStateOf(false)
     }
 
-    Row(
-      modifier = Modifier
-        .padding(10.dp)
-    ) {
-      Button(
-        colors = ButtonDefaults.buttonColors(Color(0xFFFFFFFF)),
-        modifier = Modifier
-          .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 999.dp)),
-        onClick = { isShowLog = !isShowLog }
-      ) {
-        Text(
-          text = "Log",
-          style = TextStyle(
-            fontFamily = FontFamily(Font(R.font.jalnan)),
-            color = Color(0xFF4EA162),
-          )
-        )
-      }
-      if (isShowLog) {
-        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-          Text(logUI, fontWeight = FontWeight.Bold, color = Color.Black)
-          Row() {
-            Text("HR count $uiCountHR", color = Color.Black)
-            Spacer(modifier = Modifier.width(10.dp))
-            Text("BR count $uiCountBR", color = Color.Black)
-          }
-          Row() {
-            Text("HR ref $uiRefHR", color = Color.Black)
-            Spacer(modifier = Modifier.width(10.dp))
-            Text("BR ref $uiRefBR", color = Color.Black)
-          }
-          Text(uiStressMessage, color = Color.Black)
-        }
-
-      }
-    }
+//    Row(
+//      modifier = Modifier
+//        .padding(10.dp)
+//    ) {
+//      Button(
+//        colors = ButtonDefaults.buttonColors(Color(0xFFFFFFFF)),
+//        modifier = Modifier
+//          .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 999.dp)),
+//        onClick = { isShowLog = !isShowLog }
+//      ) {
+//        Text(
+//          text = "Log",
+//          style = TextStyle(
+//            fontFamily = FontFamily(Font(R.font.jalnan)),
+//            color = Color(0xFF4EA162),
+//          )
+//        )
+//      }
+//      if (isShowLog) {
+//        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+//          Text(logUI, fontWeight = FontWeight.Bold, color = Color.Black)
+//          Row() {
+//            Text("HR count $uiCountHR", color = Color.Black)
+//            Spacer(modifier = Modifier.width(10.dp))
+//            Text("BR count $uiCountBR", color = Color.Black)
+//          }
+//          Row() {
+//            Text("HR ref $uiRefHR", color = Color.Black)
+//            Spacer(modifier = Modifier.width(10.dp))
+//            Text("BR ref $uiRefBR", color = Color.Black)
+//          }
+//          Text(uiStressMessage, color = Color.Black)
+//        }
+//      }
+//    }
 
     DeviceCheck()
   }
