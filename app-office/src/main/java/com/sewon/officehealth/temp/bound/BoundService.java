@@ -10,7 +10,8 @@ import android.util.Log;
 import android.widget.Chronometer;
 
 public class BoundService extends Service {
-  private static String LOG_TAG = "BoundService";
+
+  private String LOG_TAG = this.getClass().getName();
   private IBinder mBinder = new MyBinder();
   private Chronometer mChronometer;
 

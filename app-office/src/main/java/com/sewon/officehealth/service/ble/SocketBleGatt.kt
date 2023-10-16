@@ -29,7 +29,6 @@ import java.util.UUID
 
 class SocketBleGatt(val context: Context, var device: BluetoothDevice) : BluetoothGattCallback() {
   companion object {
-    private const val TAG = "SocketBleGatt"
 
     private val BLUETOOTH_LE_CCCD = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb")
     private val BLUETOOTH_LE_CC254X_SERVICE =
@@ -73,6 +72,8 @@ class SocketBleGatt(val context: Context, var device: BluetoothDevice) : Bluetoo
     private const val MAX_MTU = 512
     private const val DEFAULT_MTU = 23
   }
+
+  val TAG: String = this.javaClass.name
 
   /**
    * delegate device specific behaviour to inner class

@@ -11,7 +11,7 @@ import timber.log.Timber
 import java.util.ArrayDeque
 
 class ListenerBleData : ServiceConnection, ISerialListener {
-  val TAG = "ListenerBleData"
+  val TAG = this.javaClass.name
 
   private enum class Connected {
     False, Pending, True

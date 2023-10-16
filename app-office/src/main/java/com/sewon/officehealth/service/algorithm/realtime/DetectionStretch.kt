@@ -9,7 +9,7 @@ import timber.log.Timber
 
 class DetectionStretch {
 
-  private val TAG = "DetectionStretch"
+  private val TAG = this.javaClass.name
 
   private var countNoVitalSign = 0
   private var countNoTarget = 0

@@ -10,7 +10,7 @@ import timber.log.Timber
 
 class DetectionStress {
 
-  private val TAG = "DetectionStress"
+  private val TAG = this.javaClass.name
 
   //  var oneMinuteRefCount = 20
   private var meanDuration = AlgorithmConstants.MEAN_DURATION
