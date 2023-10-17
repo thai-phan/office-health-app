@@ -119,6 +119,12 @@ fun ScreenActivity(
   ) {
     Spacer(modifier = Modifier.height(20.dp))
 
+    Button(onClick = {
+      MainActivity.listenerBleData.send("aaaaa")
+    }) {
+      Text("Test")
+    }
+    
     Row(
       modifier = Modifier.fillMaxWidth(),
       horizontalArrangement = Arrangement.Center

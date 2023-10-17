@@ -101,7 +101,7 @@ class ListenerBleData : ServiceConnection, ISerialListener {
 
   private val newline = TextUtil.newline_crlf
 
-  private fun send(str: String) {
+  fun send(str: String) {
 //    if (connected != Connected.True) {
 //      Toast.makeText(getActivity(), "not connected", Toast.LENGTH_SHORT).show()
 //      return

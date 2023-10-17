@@ -6,19 +6,20 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.SystemClock;
-import android.util.Log;
 import android.widget.Chronometer;
+
+import timber.log.Timber;
 
 public class BoundService extends Service {
 
-  private String LOG_TAG = this.getClass().getName();
-  private IBinder mBinder = new MyBinder();
+  private final String TAG = this.getClass().getName();
+  private final IBinder mBinder = new MyBinder();
   private Chronometer mChronometer;
 
   @Override
   public void onCreate() {
     super.onCreate();
-    Log.v(LOG_TAG, "in onCreate");
+    Timber.tag(TAG).v("in onCreate");
     mChronometer = new Chronometer(this);
     mChronometer.setBase(SystemClock.elapsedRealtime());
     mChronometer.start();
@@ -26,26 +27,26 @@ public class BoundService extends Service {
 
   @Override
   public IBinder onBind(Intent intent) {
-    Log.v(LOG_TAG, "in onBind");
+    Timber.tag(TAG).v("in onBind");
     return mBinder;
   }
 
   @Override
   public void onRebind(Intent intent) {
-    Log.v(LOG_TAG, "in onRebind");
+    Timber.tag(TAG).v("in onRebind");
     super.onRebind(intent);
   }
 
   @Override
   public boolean onUnbind(Intent intent) {
-    Log.v(LOG_TAG, "in onUnbind");
+    Timber.tag(TAG).v("in onUnbind");
     return true;
   }
 
   @Override
   public void onDestroy() {
     super.onDestroy();
-    Log.v(LOG_TAG, "in onDestroy");
+    Timber.tag(TAG).v("in onDestroy");
     mChronometer.stop();
   }
 

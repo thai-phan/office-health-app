@@ -51,11 +51,10 @@ class MainActivity : ComponentActivity() {
 
   private val mServiceConnection: ServiceConnection = object : ServiceConnection {
     override fun onServiceDisconnected(name: ComponentName) {
-//      TODO: mServiceBound = false
+//      TODO: serviceBleHandler = null
     }
 
     override fun onServiceConnected(name: ComponentName, service: IBinder) {
-      Timber.tag("Timber").d("onServiceConnected")
       serviceBleHandler = (service as ServiceBleHandler.SerialBinder).service
       serviceBleHandler.attach(listenerBleData)
     }

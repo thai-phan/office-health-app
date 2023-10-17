@@ -229,11 +229,12 @@ class SocketBleGatt(val context: Context, var device: BluetoothDevice) : Bluetoo
       Timber.tag(TAG).d("connect status $status, discoverServices")
       if (!gatt.discoverServices()) onSerialConnectError(IOException("discoverServices failed"))
     } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-      if (connected) onSerialIoError(IOException("gatt status $status")) else onSerialConnectError(
-        IOException(
-          "gatt status $status"
-        )
-      )
+      // TODO: notify disconnected
+      if (connected) {
+        onSerialIoError(IOException("gatt status $status"))
+      } else {
+        onSerialConnectError(IOException("gatt status $status"))
+      }
     } else {
       Timber.tag(TAG).d("unknown connect state $newState $status")
     }
