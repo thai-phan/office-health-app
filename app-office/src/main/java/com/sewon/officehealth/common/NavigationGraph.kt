@@ -39,7 +39,7 @@ fun NavigationGraph(
     navController = navController,
     startDestination = startDestination
   ) {
-    var redirectRoute = AppDestinations.WELCOME_ROUTE
+    val redirectRoute = AppDestinations.WELCOME_ROUTE
 
     composable(AppDestinations.SPLASH_ROUTE) {
       // Intercept back in Onboarding: make it finish the activity
@@ -47,9 +47,10 @@ fun NavigationGraph(
         finishActivity()
       }
       SplashScreen(
-        navController = navController,
-        redirectRoute = redirectRoute
-      )
+        delayTime = 1000L
+      ) {
+        navController.navigate(redirectRoute)
+      }
     }
 
     composable(AppDestinations.WELCOME_ROUTE) {
@@ -90,7 +91,7 @@ enum class MainTabs(
   @DrawableRes val icon: Int,
   val route: String
 ) {
-  SPLASH(R.string.splash_screen, R.drawable.ic_menu_camera, AppDestinations.SPLASH_ROUTE),
-  DEVICE(R.string.device_list, R.drawable.ic_menu_camera, AppDestinations.DEVICE_ROUTE),
-  ACTIVITY(R.string.activity_page, R.drawable.ic_menu_camera, AppDestinations.ACTIVITY_ROUTE),
+  SPLASH(R.string.splash_screen, R.drawable.ic_graphic_eq, AppDestinations.SPLASH_ROUTE),
+  DEVICE(R.string.device_list, R.drawable.ic_graphic_eq, AppDestinations.DEVICE_ROUTE),
+  ACTIVITY(R.string.activity_page, R.drawable.ic_graphic_eq, AppDestinations.ACTIVITY_ROUTE),
 }

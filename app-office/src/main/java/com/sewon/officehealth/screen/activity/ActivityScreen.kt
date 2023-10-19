@@ -6,6 +6,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -54,6 +56,7 @@ import java.util.Calendar.DAY_OF_MONTH
 import java.util.Calendar.MONTH
 import java.util.Calendar.YEAR
 
+@OptIn(ExperimentalLayoutApi::class)
 @SuppressLint("RememberReturnType")
 @Composable
 fun ScreenActivity(
@@ -70,7 +73,6 @@ fun ScreenActivity(
   val minuteStr = ((second % 3600) / 60).toString();
   val secondStr = (second % 60).toString();
 
-
   fun disconnect() {
     MainActivity.serviceBleHandler.disconnect()
     navController.navigate(AppDestinations.DEVICE_ROUTE)
@@ -81,19 +83,12 @@ fun ScreenActivity(
   val month = (calendar.get(MONTH) + 1).toString()
   val date = calendar.get(DAY_OF_MONTH).toString()
 
-  val logUI by remember { MainActivity.listenerBleData.log }
 
 //  val isStretchUI by remember { MainActivity.listenerBleData.isStretch }
   val isStressUI by remember { MainActivity.listenerBleData.isStress }
 
   val isPlayStretch by remember { MainActivity.serviceBleHandler.isPlaySoundStretch }
   val isPlayStress by remember { MainActivity.serviceBleHandler.isPlaySoundStress }
-
-  val uiCountHR by remember { MainActivity.listenerBleData.realtimeDataObject.stressObj.countReferenceHR }
-  val uiCountBR by remember { MainActivity.listenerBleData.realtimeDataObject.stressObj.countReferenceBR }
-  val uiRefHR by remember { MainActivity.listenerBleData.realtimeDataObject.stressObj.refHR }
-  val uiRefBR by remember { MainActivity.listenerBleData.realtimeDataObject.stressObj.refBR }
-  val uiStressMessage by remember { MainActivity.listenerBleData.realtimeDataObject.stressObj.stressMessage }
 
 
   val rowHeight = 80.dp
@@ -103,280 +98,257 @@ fun ScreenActivity(
     lineHeight = 25.6.sp,
     fontFamily = FontFamily(Font(R.font.spoqa_han_sans_neo_regular)),
     fontWeight = FontWeight(400),
-    color = Color(0xFF000000),
+    color = Color(0xFFD5F3EB),
     textAlign = TextAlign.Center,
   )
 
   Column(
     modifier = modifier
       .background(Color(0xFFCCF8D4))
-      .fillMaxSize()
       .statusBarsPadding()
       .systemBarsPadding()
+      .fillMaxSize()
       .padding(vertical = 10.dp)
-
-
   ) {
-    Spacer(modifier = Modifier.height(20.dp))
 
-    Button(onClick = {
-      MainActivity.listenerBleData.send("aaaaa")
-    }) {
-      Text("Test")
-    }
-    
-    Row(
-      modifier = Modifier.fillMaxWidth(),
-      horizontalArrangement = Arrangement.Center
-    ) {
-      Text(
-        text = "앉아 계신지 ",
-        style = normalTextStyle
-      )
-      Text(
-        minuteStr + "분 ",
-        fontWeight = FontWeight.ExtraBold,
-        fontFamily = FontFamily(Font(R.font.spoqa_han_sans_neo_regular)),
-        fontSize = 20.sp,
-        color = Color(0xFF00AD53)
-      )
-      Text(
-        secondStr + "초",
-        fontFamily = FontFamily(Font(R.font.spoqa_han_sans_neo_regular)),
-        fontSize = 20.sp,
-        fontWeight = FontWeight.ExtraBold,
-        color = Color(0xFF00AD53)
-      )
-      Text(
-        text = " 되었습니다.",
-        style = normalTextStyle
-      )
-    }
-
-    Row(
-      modifier = Modifier.fillMaxWidth(),
-      horizontalArrangement = Arrangement.Center
-    ) {
-      Text(
-        text = " 스트레스는",
-        style = normalTextStyle
-      )
-      Text(
-        text = " 낮은 ",
-        style = TextStyle(
-          fontSize = 20.sp,
-          lineHeight = 25.6.sp,
-          fontFamily = FontFamily(Font(R.font.spoqa_han_sans_neo_regular)),
-          fontWeight = FontWeight.Black,
-          color = Color(0xFF00AD53),
-          textAlign = TextAlign.Center,
-        )
-      )
-      Text(
-        text = "상태입니다.",
-        style = normalTextStyle
-      )
-    }
-    Image(
-      painter = painterResource(id = R.mipmap.ic_image_3_foreground),
-      contentDescription = "Logo",
-      modifier = Modifier
-        .size(width = 400.dp, height = 150.dp)
-    )
-    Row(
-      modifier = Modifier
-        .fillMaxWidth()
-        .height(rowHeight)
-        .background(color = Color(0xFF60AC70))
-        .padding(horizontal = 20.dp),
-      horizontalArrangement = Arrangement.SpaceBetween,
-      verticalAlignment = Alignment.CenterVertically
-    ) {
-
-      Icon(
-        Icons.Filled.CalendarMonth,
-        contentDescription = "Localized description",
-        tint = Color.Black
-      )
-      //목요일
-      Text(
-        year + "년 " + month + "월 " + date + "일 ",
-        style = TextStyle(
-          fontSize = 20.sp,
-          lineHeight = 26.sp,
-          fontFamily = FontFamily(Font(R.font.spoqa_han_sans_neo_regular)),
-          fontWeight = FontWeight(500),
-          color = Color(0xFF00210A),
-          textAlign = TextAlign.Center,
-        )
-      )
-      Text("")
-    }
-
-    Row(
-      modifier = Modifier
-        .fillMaxWidth()
-        .height(rowHeight)
-        .background(color = Color(0xCC60AC70))
-        .padding(horizontal = 20.dp),
-      horizontalArrangement = Arrangement.SpaceBetween,
-      verticalAlignment = Alignment.CenterVertically
-    ) {
-      Image(
-        painter = painterResource(id = R.drawable.ic_graphic_eq),
-        contentDescription = "Logo",
-      )
-      Text(
-        text = "스트레스 해소",
-        style = TextStyle(
-          fontSize = 24.sp,
-          lineHeight = 31.2.sp,
-          fontFamily = FontFamily(Font(R.font.spoqa_han_sans_neo_regular)),
-          fontWeight = FontWeight(700),
-          color = Color(0xFF003917),
-          textAlign = TextAlign.Center,
-        )
-      )
-
-      if (isPlayStretch) {
-        Button(
-          colors = ButtonDefaults.buttonColors(Color(0xCC60AC70)),
-          onClick = {
-            MainActivity.serviceBleHandler.stopSoundStretch()
-          }) {
-          Icon(
-            Icons.Filled.PauseCircleOutline,
-            contentDescription = "Localized description",
-            tint = Color.Black
-          )
-        }
-      } else {
-        Button(
-          colors = ButtonDefaults.buttonColors(Color(0xCC60AC70)),
-          onClick = {
-            MainActivity.serviceBleHandler.playSoundStretch()
-          }) {
-          Icon(
-            Icons.Filled.PlayCircleOutline,
-            contentDescription = "Localized description",
-            tint = Color.Black
-          )
-        }
-      }
-
-    }
-    Row(
-      modifier = Modifier
-        .fillMaxWidth()
-        .height(rowHeight)
-        .background(color = Color(0x9960AC70))
-        .padding(horizontal = 20.dp),
-      horizontalArrangement = Arrangement.SpaceBetween,
-      verticalAlignment = Alignment.CenterVertically
-    ) {
-      Image(
-        painter = painterResource(id = R.drawable.ic_ar_on_you),
-        contentDescription = "Logo",
-      )
-
-      Text(
-        text = "집중력 향상",
-        style = TextStyle(
-          fontSize = 24.sp,
-          lineHeight = 31.2.sp,
-          fontFamily = FontFamily(Font(R.font.spoqa_han_sans_neo_regular)),
-          fontWeight = FontWeight(700),
-          color = Color(0xFF003917),
-          textAlign = TextAlign.Center,
-        )
-      )
-
-      if (isPlayStress) {
-        Button(
-          colors = ButtonDefaults.buttonColors(Color(0x9960AC70)),
-          onClick = {
-            MainActivity.serviceBleHandler.stopSoundStress()
-          }) {
-          Icon(
-            Icons.Filled.PauseCircleOutline,
-            contentDescription = "Localized description",
-            tint = Color.Black
-          )
-        }
-      } else {
-        Button(
-          colors = ButtonDefaults.buttonColors(Color(0x9960AC70)),
-          onClick = {
-            MainActivity.serviceBleHandler.playSoundStress()
-          }) {
-          Icon(
-            Icons.Filled.PlayCircleOutline,
-            contentDescription = "Localized description",
-            tint = Color.Black
-          )
-        }
-      }
-
-
-    }
-
-    Spacer(modifier = Modifier.height(20.dp))
-
-    Row(
-      modifier = Modifier.fillMaxWidth(),
-      horizontalArrangement = Arrangement.Center,
-      verticalAlignment = Alignment.CenterVertically
-    ) {
-      Button(
-        colors = ButtonDefaults.buttonColors(Color(0xFFFFFFFF)),
-        modifier = Modifier
-          .shadow(
-            elevation = 4.dp,
-            spotColor = Color(0x1A000000),
-            ambientColor = Color(0x1A000000)
-          )
-          .border(
-            width = 4.dp,
-            color = Color(0xFF4EA162),
-            shape = RoundedCornerShape(size = 999.dp)
-          )
-          .width(320.dp)
-          .height(72.dp),
-        onClick = { disconnect() }
+//    Button(onClick = {
+//      MainActivity.listenerBleData.send("aaaaa")
+//    }) {
+//      Text("Test")
+//    }
+    Column(modifier = Modifier.weight(3f)) {
+      FlowRow(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center
       ) {
         Text(
-          text = "연결됨",
+          text = "앉아 계신지 ",
+          style = normalTextStyle
+        )
+        Text(
+          minuteStr + "분 ",
+          fontWeight = FontWeight.ExtraBold,
+          fontFamily = FontFamily(Font(R.font.spoqa_han_sans_neo_regular)),
+          fontSize = 20.sp,
+          color = Color(0xFF00AD53)
+        )
+        Text(
+          secondStr + "초",
+          fontFamily = FontFamily(Font(R.font.spoqa_han_sans_neo_regular)),
+          fontSize = 20.sp,
+          fontWeight = FontWeight.ExtraBold,
+          color = Color(0xFF00AD53)
+        )
+        Text(
+          text = " 되었습니다.",
+          style = normalTextStyle
+        )
+      }
+
+      FlowRow(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center
+      ) {
+        Text(
+          text = " 스트레스는",
+          style = normalTextStyle
+        )
+        Text(
+          text = " 낮은 ",
           style = TextStyle(
-            fontSize = 24.sp,
-            fontFamily = FontFamily(Font(R.font.jalnan)),
-            fontWeight = FontWeight(700),
-            color = Color(0xFF4EA162),
+            fontSize = 20.sp,
+            lineHeight = 25.6.sp,
+            fontFamily = FontFamily(Font(R.font.spoqa_han_sans_neo_regular)),
+            fontWeight = FontWeight.Black,
+            color = Color(0xFF00AD53),
+            textAlign = TextAlign.Center,
           )
         )
+        Text(
+          text = "상태입니다.",
+          style = normalTextStyle
+        )
+      }
+      Image(
+        modifier = Modifier
+          .size(width = 400.dp, height = 150.dp),
+        painter = painterResource(id = R.mipmap.ic_image_3_foreground),
+        contentDescription = "Logo",
+
+        )
+    }
+    Column(modifier = Modifier.weight(5f)) {
+      Row(
+        modifier = Modifier
+          .weight(1f)
+          .fillMaxWidth()
+          .height(rowHeight)
+          .background(color = Color(0xFF7AC6B5))
+          .padding(horizontal = 20.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+      ) {
+
+        Icon(
+          Icons.Filled.CalendarMonth,
+          contentDescription = "Localized description",
+          tint = Color.Black
+        )
+        //목요일
+        Text(
+          year + "년 " + month + "월 " + date + "일 ",
+          style = TextStyle(
+            fontSize = 20.sp,
+            lineHeight = 26.sp,
+            fontFamily = FontFamily(Font(R.font.spoqa_han_sans_neo_regular)),
+            fontWeight = FontWeight(500),
+            color = Color(0xFF00210A),
+            textAlign = TextAlign.Center,
+          )
+        )
+        Text("")
+      }
+      Row(
+        modifier = Modifier
+          .fillMaxWidth()
+          .height(rowHeight)
+          .background(color = Color(0xFF4DB39D))
+          .padding(horizontal = 20.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+      ) {
+        Image(
+          painter = painterResource(id = R.drawable.ic_graphic_eq),
+          contentDescription = "Logo",
+        )
+        Text(
+          text = "스트레스 해소",
+          style = TextStyle(
+            fontSize = 24.sp,
+            lineHeight = 31.2.sp,
+            fontFamily = FontFamily(Font(R.font.spoqa_han_sans_neo_regular)),
+            fontWeight = FontWeight(700),
+            color = Color(0xFF003917),
+            textAlign = TextAlign.Center,
+          )
+        )
+
+        if (isPlayStretch) {
+          Button(
+            colors = ButtonDefaults.buttonColors(Color(0xCC60AC70)),
+            onClick = {
+              MainActivity.serviceBleHandler.stopSoundStretch()
+            }) {
+            Icon(
+              Icons.Filled.PauseCircleOutline,
+              contentDescription = "Localized description",
+              tint = Color.Black
+            )
+          }
+        } else {
+          Button(
+            colors = ButtonDefaults.buttonColors(Color(0xCC60AC70)),
+            onClick = {
+              MainActivity.serviceBleHandler.playSoundStretch()
+            }) {
+            Icon(
+              Icons.Filled.PlayCircleOutline,
+              contentDescription = "Localized description",
+              tint = Color.Black
+            )
+          }
+        }
+
+      }
+      Row(
+        modifier = Modifier
+          .fillMaxWidth()
+          .height(rowHeight)
+          .background(color = Color(0xFF45A18D))
+          .padding(horizontal = 20.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+      ) {
+        Image(
+          painter = painterResource(id = R.drawable.ic_ar_on_you),
+          contentDescription = "Logo",
+        )
+
+        Text(
+          text = "집중력 향상",
+          style = TextStyle(
+            fontSize = 24.sp,
+            lineHeight = 31.2.sp,
+            fontFamily = FontFamily(Font(R.font.spoqa_han_sans_neo_regular)),
+            fontWeight = FontWeight(700),
+            color = Color(0xFF003917),
+            textAlign = TextAlign.Center,
+          )
+        )
+
+        if (isPlayStress) {
+          Button(
+            colors = ButtonDefaults.buttonColors(Color(0x9960AC70)),
+            onClick = {
+              MainActivity.serviceBleHandler.stopSoundStress()
+            }) {
+            Icon(
+              Icons.Filled.PauseCircleOutline,
+              contentDescription = "Localized description",
+              tint = Color.Black
+            )
+          }
+        } else {
+          Button(
+            colors = ButtonDefaults.buttonColors(Color(0x9960AC70)),
+            onClick = {
+              MainActivity.serviceBleHandler.playSoundStress()
+            }) {
+            Icon(
+              Icons.Filled.PlayCircleOutline,
+              contentDescription = "Localized description",
+              tint = Color.Black
+            )
+          }
+        }
+      }
+    }
+    Column(modifier = Modifier.weight(2f)) {
+      Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+      ) {
+        Button(
+          colors = ButtonDefaults.buttonColors(Color(0xFFFFFFFF)),
+          modifier = Modifier
+            .shadow(
+              elevation = 4.dp,
+              spotColor = Color(0x1A000000),
+              ambientColor = Color(0x1A000000)
+            )
+            .border(
+              width = 4.dp,
+              color = Color(0xFF4EA162),
+              shape = RoundedCornerShape(size = 999.dp)
+            )
+            .width(320.dp)
+            .height(72.dp),
+          onClick = { disconnect() }
+        ) {
+          Text(
+            text = "연결됨",
+            style = TextStyle(
+              fontSize = 24.sp,
+              fontFamily = FontFamily(Font(R.font.jalnan)),
+              fontWeight = FontWeight(700),
+              color = Color(0xFF4EA162),
+            )
+          )
+        }
       }
     }
 
-//    when {
-//      isStretchUI -> {
-//        AlertDialog(
-//          onDismissRequest = {
-//            MainActivity.listenerBleData.stretchStop()
-//          },
-//          onConfirmation = {
-//            if (isPlayStretch) {
-//              MainActivity.serviceBleHandle.stopSoundStretch()
-//            } else {
-//              MainActivity.serviceBleHandle.playSoundStretch()
-//            }
-//          },
-//          dialogTitle = "스트레칭 솔루션",
-//          dialogText = "스트레칭이 필요한 시간입니다.\n" +
-//              "솔루션을 재생하시겠습니까?",
-//          icon = Icons.Default.AddAlert,
-//          isPlay = isPlayStretch
-//        )
-//      }
-//    }
 
     when {
       isStressUI -> {
@@ -400,45 +372,7 @@ fun ScreenActivity(
       }
     }
 
-    var isShowLog by remember {
-      mutableStateOf(false)
-    }
-
-//    Row(
-//      modifier = Modifier
-//        .padding(10.dp)
-//    ) {
-//      Button(
-//        colors = ButtonDefaults.buttonColors(Color(0xFFFFFFFF)),
-//        modifier = Modifier
-//          .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 999.dp)),
-//        onClick = { isShowLog = !isShowLog }
-//      ) {
-//        Text(
-//          text = "Log",
-//          style = TextStyle(
-//            fontFamily = FontFamily(Font(R.font.jalnan)),
-//            color = Color(0xFF4EA162),
-//          )
-//        )
-//      }
-//      if (isShowLog) {
-//        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-//          Text(logUI, fontWeight = FontWeight.Bold, color = Color.Black)
-//          Row() {
-//            Text("HR count $uiCountHR", color = Color.Black)
-//            Spacer(modifier = Modifier.width(10.dp))
-//            Text("BR count $uiCountBR", color = Color.Black)
-//          }
-//          Row() {
-//            Text("HR ref $uiRefHR", color = Color.Black)
-//            Spacer(modifier = Modifier.width(10.dp))
-//            Text("BR ref $uiRefBR", color = Color.Black)
-//          }
-//          Text(uiStressMessage, color = Color.Black)
-//        }
-//      }
-//    }
+    Log()
 
     DeviceCheck()
   }

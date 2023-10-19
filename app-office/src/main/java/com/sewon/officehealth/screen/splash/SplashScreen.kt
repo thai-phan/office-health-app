@@ -2,11 +2,14 @@ package com.sewon.officehealth.screen.splash
 
 import android.view.animation.OvershootInterpolator
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,7 +37,7 @@ import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun SplashScreen(navController: NavController, redirectRoute: String) {
+fun SplashScreen(delayTime: Long, onRedirectRoute: () -> Unit) {
   val scale = remember {
     androidx.compose.animation.core.Animatable(0f)
   }
@@ -50,9 +53,8 @@ fun SplashScreen(navController: NavController, redirectRoute: String) {
           OvershootInterpolator(4f).getInterpolation(it)
         })
     )
-    // Customize the delay time
-    delay(1000L)
-    navController.navigate(redirectRoute)
+    delay(delayTime)
+    onRedirectRoute()
   }
   Column(
     verticalArrangement = Arrangement.Top,
@@ -63,6 +65,19 @@ fun SplashScreen(navController: NavController, redirectRoute: String) {
     Column(
       horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+
+      Row(horizontalArrangement = Arrangement.End) {
+        Image(
+          modifier = Modifier
+            .border(BorderStroke(1.dp, Color.Red))
+            .height(250.dp),
+          painter = painterResource(id = R.mipmap.ic_image_4_foreground),
+          contentDescription = "Logo",
+
+          )
+      }
+
+
       Image(
         painter = painterResource(id = R.mipmap.ic_ohealp_foreground),
         contentDescription = "Logo",
@@ -71,33 +86,27 @@ fun SplashScreen(navController: NavController, redirectRoute: String) {
           .height(200.dp)
           .scale(scale.value)
       )
-      FlowRow(horizontalArrangement = Arrangement.Center) {
-        val textStyle = TextStyle(
-          fontSize = 20.sp,
-          fontFamily = FontFamily(Font(R.font.jalnan)),
-          fontWeight = FontWeight(700),
-          color = Color(0xFFFFFFFF),
-          letterSpacing = 1.4.sp,
-        )
-        Text(text = "OFFICE HEALTH ", style = textStyle)
-        Text(
-          "PROTECTOR!", style = textStyle
-        )
-      }
+//      FlowRow(horizontalArrangement = Arrangement.Center) {
+//        val textStyle = TextStyle(
+//          fontSize = 20.sp,
+//          fontFamily = FontFamily(Font(R.font.jalnan)),
+//          fontWeight = FontWeight(700),
+//          color = Color(0xFFFFFFFF),
+//          letterSpacing = 1.4.sp,
+//        )
+//        Text(text = "OFFICE HEALTH ", style = textStyle)
+//        Text(
+//          "PROTECTOR!", style = textStyle
+//        )
+//      }
 
-      Image(
-        painter = painterResource(id = R.mipmap.ic_image_4_foreground),
-        contentDescription = "Logo",
-        modifier = Modifier
-          .fillMaxWidth()
-          .height(250.dp)
-      )
-      Image(
-        painter = painterResource(id = R.mipmap.ic_logo_png_foreground),
-        contentDescription = "Table Logo",
-        modifier = Modifier
-          .size(200.dp)
-      )
+
+//      Image(
+//        painter = painterResource(id = R.mipmap.ic_logo_png_foreground),
+//        contentDescription = "Table Logo",
+//        modifier = Modifier
+//          .size(200.dp)
+//      )
     }
   }
 }
