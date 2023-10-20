@@ -2,6 +2,7 @@ package com.sewon.officehealth.screen.a0common.theme
 
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 
 // Material 3 color schemes
@@ -38,10 +39,18 @@ private val DarkColorScheme = darkColorScheme(
 fun OfficeHealthTheme(
   content: @Composable () -> Unit
 ) {
-  val colorScheme = DarkColorScheme
+
+  val systemUiController = rememberSystemUiController()
+
+//  systemUiController.setNavigationBarColor(
+//    color = Color.Red
+//  )
+
+  systemUiController.setStatusBarColor(color = DarkBackground)
+  systemUiController.setNavigationBarColor(color = DarkSurface)
 
   androidx.compose.material3.MaterialTheme(
-    colorScheme = colorScheme,
+    colorScheme = DarkColorScheme,
     typography = typography,
     shapes = shapes,
     content = content

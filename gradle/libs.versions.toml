@@ -1,5 +1,6 @@
 [versions]
 accompanist-permissions = "0.32.0"
+accompanistSystemuicontroller = "0.27.0"
 activity-compose = "1.8.0"
 androidx-junit = "1.1.5"
 annotation = "1.7.0"
@@ -25,6 +26,7 @@ timber = "5.0.1"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist-permissions" }
+accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
 androidx-animation = { module = "androidx.compose.animation:animation", version.ref = "composeVersion" }
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
