@@ -1,8 +1,10 @@
 package com.sewon.officehealth.screen.activity
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -188,20 +190,22 @@ fun ScreenActivity(
           .fillMaxWidth()
           .background(color = Color(0xFF7AC6B5))
           .padding(horizontal = 20.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
       ) {
         Icon(
           Icons.Filled.CalendarMonth,
           contentDescription = "Localized description",
+          modifier = Modifier
+            .weight(2f),
           tint = Color.Black
         )
-        //목요일
         Text(
           year + "년 " + month + "월 " + date + "일 ",
-          style = actionTextStyle
+          style = actionTextStyle,
+          modifier = Modifier
+            .weight(6f)
         )
-        Text("")
+        Spacer(modifier = Modifier.weight(2f))
       }
       Row(
         modifier = Modifier
@@ -213,31 +217,33 @@ fun ScreenActivity(
         verticalAlignment = Alignment.CenterVertically
       ) {
         Image(
+          modifier = Modifier.weight(2f),
           painter = painterResource(id = R.drawable.ic_graphic_eq),
           contentDescription = "Logo",
         )
         Text(
+          modifier = Modifier
+            .weight(6f),
           text = "스트레스 해소",
           style = actionTextStyle
         )
-        if (isPlayStretch) {
-          Button(
-            colors = ButtonDefaults.buttonColors(Color(0xFF378171)),
-            onClick = {
+        Button(
+          modifier = Modifier.weight(2f),
+          colors = ButtonDefaults.buttonColors(Color(0xFF378171)),
+          onClick = {
+            if (isPlayStretch) {
               MainActivity.serviceBleHandler.stopSoundStretch()
-            }) {
+            } else {
+              MainActivity.serviceBleHandler.playSoundStretch()
+            }
+          }) {
+          if (isPlayStretch) {
             Icon(
               Icons.Filled.PauseCircleOutline,
               contentDescription = "Localized description",
               tint = Color.Black
             )
-          }
-        } else {
-          Button(
-            colors = ButtonDefaults.buttonColors(Color(0xFF378171)),
-            onClick = {
-              MainActivity.serviceBleHandler.playSoundStretch()
-            }) {
+          } else {
             Icon(
               Icons.Filled.PlayCircleOutline,
               contentDescription = "Localized description",
@@ -256,31 +262,35 @@ fun ScreenActivity(
         verticalAlignment = Alignment.CenterVertically
       ) {
         Image(
+          modifier = Modifier.weight(2f),
           painter = painterResource(id = R.drawable.ic_ar_on_you),
           contentDescription = "Logo",
         )
+
         Text(
           text = "집중력 향상",
+          modifier = Modifier.weight(6f),
           style = actionTextStyle
         )
-        if (isPlayStress) {
-          Button(
-            colors = ButtonDefaults.buttonColors(Color(0xFF378171)),
-            onClick = {
+
+        Button(
+          modifier = Modifier.weight(2f),
+          colors = ButtonDefaults.buttonColors(Color(0xFF378171)),
+          onClick = {
+            if (isPlayStress) {
               MainActivity.serviceBleHandler.stopSoundStress()
-            }) {
+            } else {
+              MainActivity.serviceBleHandler.playSoundStress()
+            }
+          }
+        ) {
+          if (isPlayStress) {
             Icon(
               Icons.Filled.PauseCircleOutline,
               contentDescription = "Localized description",
               tint = Color.Black
             )
-          }
-        } else {
-          Button(
-            colors = ButtonDefaults.buttonColors(Color(0xFF378171)),
-            onClick = {
-              MainActivity.serviceBleHandler.playSoundStress()
-            }) {
+          } else {
             Icon(
               Icons.Filled.PlayCircleOutline,
               contentDescription = "Localized description",
@@ -290,6 +300,7 @@ fun ScreenActivity(
         }
       }
     }
+
     Column(
       modifier = Modifier
         .weight(2f)
