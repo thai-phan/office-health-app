@@ -1,4 +1,4 @@
-package com.sewon.officehealth.common.theme
+package com.sewon.officehealth.screen.a0common.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

@@ -31,7 +31,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.sewon.officehealth.MainActivity
-import com.sewon.officehealth.common.AppDestinations
+import com.sewon.officehealth.screen.AppDestinations
 import com.sewon.officehealth.service.ble.SocketBleGatt
 import timber.log.Timber
 

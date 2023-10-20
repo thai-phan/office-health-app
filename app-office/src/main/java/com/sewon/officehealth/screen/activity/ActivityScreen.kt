@@ -3,7 +3,6 @@ package com.sewon.officehealth.screen.activity
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -14,13 +13,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddAlert
 import androidx.compose.material.icons.filled.CalendarMonth
@@ -33,7 +28,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -50,7 +44,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.sewon.officehealth.MainActivity
 import com.sewon.officehealth.R
-import com.sewon.officehealth.common.AppDestinations
+import com.sewon.officehealth.screen.AppDestinations
 import java.util.Calendar
 import java.util.Calendar.DAY_OF_MONTH
 import java.util.Calendar.MONTH
@@ -90,25 +84,20 @@ fun ScreenActivity(
   val isPlayStretch by remember { MainActivity.serviceBleHandler.isPlaySoundStretch }
   val isPlayStress by remember { MainActivity.serviceBleHandler.isPlaySoundStress }
 
-
-  val rowHeight = 80.dp
-
   val normalTextStyle = TextStyle(
     fontSize = 20.sp,
     lineHeight = 25.6.sp,
     fontFamily = FontFamily(Font(R.font.spoqa_han_sans_neo_regular)),
     fontWeight = FontWeight(400),
-    color = Color(0xFFD5F3EB),
+    color = Color(0xFF000000),
     textAlign = TextAlign.Center,
   )
 
   Column(
     modifier = modifier
-      .background(Color(0xFFCCF8D4))
       .statusBarsPadding()
       .systemBarsPadding()
       .fillMaxSize()
-      .padding(vertical = 10.dp)
   ) {
 
 //    Button(onClick = {
@@ -116,7 +105,13 @@ fun ScreenActivity(
 //    }) {
 //      Text("Test")
 //    }
-    Column(modifier = Modifier.weight(3f)) {
+    Column(
+      modifier = Modifier
+        .weight(3f),
+      verticalArrangement = Arrangement.Center,
+      horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+      Spacer(modifier = Modifier.height(20.dp))
       FlowRow(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
@@ -130,14 +125,14 @@ fun ScreenActivity(
           fontWeight = FontWeight.ExtraBold,
           fontFamily = FontFamily(Font(R.font.spoqa_han_sans_neo_regular)),
           fontSize = 20.sp,
-          color = Color(0xFF00AD53)
+          color = Color(0xFF4DB39D)
         )
         Text(
           secondStr + "초",
           fontFamily = FontFamily(Font(R.font.spoqa_han_sans_neo_regular)),
           fontSize = 20.sp,
           fontWeight = FontWeight.ExtraBold,
-          color = Color(0xFF00AD53)
+          color = Color(0xFF4DB39D)
         )
         Text(
           text = " 되었습니다.",
@@ -160,7 +155,7 @@ fun ScreenActivity(
             lineHeight = 25.6.sp,
             fontFamily = FontFamily(Font(R.font.spoqa_han_sans_neo_regular)),
             fontWeight = FontWeight.Black,
-            color = Color(0xFF00AD53),
+            color = Color(0xFF4DB39D),
             textAlign = TextAlign.Center,
           )
         )
@@ -171,24 +166,31 @@ fun ScreenActivity(
       }
       Image(
         modifier = Modifier
-          .size(width = 400.dp, height = 150.dp),
+          .weight(1f)
+          .fillMaxWidth(),
         painter = painterResource(id = R.mipmap.ic_image_3_foreground),
         contentDescription = "Logo",
 
         )
     }
+    val actionTextStyle = TextStyle(
+      fontSize = 24.sp,
+      lineHeight = 32.sp,
+      fontFamily = FontFamily(Font(R.font.spoqa_han_sans_neo_regular)),
+      fontWeight = FontWeight(700),
+      color = Color(0xFF003917),
+      textAlign = TextAlign.Center,
+    )
     Column(modifier = Modifier.weight(5f)) {
       Row(
         modifier = Modifier
           .weight(1f)
           .fillMaxWidth()
-          .height(rowHeight)
           .background(color = Color(0xFF7AC6B5))
           .padding(horizontal = 20.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
       ) {
-
         Icon(
           Icons.Filled.CalendarMonth,
           contentDescription = "Localized description",
@@ -197,21 +199,14 @@ fun ScreenActivity(
         //목요일
         Text(
           year + "년 " + month + "월 " + date + "일 ",
-          style = TextStyle(
-            fontSize = 20.sp,
-            lineHeight = 26.sp,
-            fontFamily = FontFamily(Font(R.font.spoqa_han_sans_neo_regular)),
-            fontWeight = FontWeight(500),
-            color = Color(0xFF00210A),
-            textAlign = TextAlign.Center,
-          )
+          style = actionTextStyle
         )
         Text("")
       }
       Row(
         modifier = Modifier
+          .weight(1f)
           .fillMaxWidth()
-          .height(rowHeight)
           .background(color = Color(0xFF4DB39D))
           .padding(horizontal = 20.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -223,19 +218,11 @@ fun ScreenActivity(
         )
         Text(
           text = "스트레스 해소",
-          style = TextStyle(
-            fontSize = 24.sp,
-            lineHeight = 31.2.sp,
-            fontFamily = FontFamily(Font(R.font.spoqa_han_sans_neo_regular)),
-            fontWeight = FontWeight(700),
-            color = Color(0xFF003917),
-            textAlign = TextAlign.Center,
-          )
+          style = actionTextStyle
         )
-
         if (isPlayStretch) {
           Button(
-            colors = ButtonDefaults.buttonColors(Color(0xCC60AC70)),
+            colors = ButtonDefaults.buttonColors(Color(0xFF378171)),
             onClick = {
               MainActivity.serviceBleHandler.stopSoundStretch()
             }) {
@@ -247,7 +234,7 @@ fun ScreenActivity(
           }
         } else {
           Button(
-            colors = ButtonDefaults.buttonColors(Color(0xCC60AC70)),
+            colors = ButtonDefaults.buttonColors(Color(0xFF378171)),
             onClick = {
               MainActivity.serviceBleHandler.playSoundStretch()
             }) {
@@ -258,12 +245,11 @@ fun ScreenActivity(
             )
           }
         }
-
       }
       Row(
         modifier = Modifier
+          .weight(1f)
           .fillMaxWidth()
-          .height(rowHeight)
           .background(color = Color(0xFF45A18D))
           .padding(horizontal = 20.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -273,22 +259,13 @@ fun ScreenActivity(
           painter = painterResource(id = R.drawable.ic_ar_on_you),
           contentDescription = "Logo",
         )
-
         Text(
           text = "집중력 향상",
-          style = TextStyle(
-            fontSize = 24.sp,
-            lineHeight = 31.2.sp,
-            fontFamily = FontFamily(Font(R.font.spoqa_han_sans_neo_regular)),
-            fontWeight = FontWeight(700),
-            color = Color(0xFF003917),
-            textAlign = TextAlign.Center,
-          )
+          style = actionTextStyle
         )
-
         if (isPlayStress) {
           Button(
-            colors = ButtonDefaults.buttonColors(Color(0x9960AC70)),
+            colors = ButtonDefaults.buttonColors(Color(0xFF378171)),
             onClick = {
               MainActivity.serviceBleHandler.stopSoundStress()
             }) {
@@ -300,7 +277,7 @@ fun ScreenActivity(
           }
         } else {
           Button(
-            colors = ButtonDefaults.buttonColors(Color(0x9960AC70)),
+            colors = ButtonDefaults.buttonColors(Color(0xFF378171)),
             onClick = {
               MainActivity.serviceBleHandler.playSoundStress()
             }) {
@@ -313,40 +290,33 @@ fun ScreenActivity(
         }
       }
     }
-    Column(modifier = Modifier.weight(2f)) {
-      Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
+    Column(
+      modifier = Modifier
+        .weight(2f)
+        .fillMaxWidth(),
+      verticalArrangement = Arrangement.Center,
+      horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+      Button(
+        colors = ButtonDefaults.buttonColors(Color(0xFFFFFFFF)),
+        modifier = Modifier
+          .width(320.dp)
+          .height(72.dp),
+        onClick = { disconnect() }
       ) {
-        Button(
-          colors = ButtonDefaults.buttonColors(Color(0xFFFFFFFF)),
-          modifier = Modifier
-            .shadow(
-              elevation = 4.dp,
-              spotColor = Color(0x1A000000),
-              ambientColor = Color(0x1A000000)
-            )
-            .border(
-              width = 4.dp,
-              color = Color(0xFF4EA162),
-              shape = RoundedCornerShape(size = 999.dp)
-            )
-            .width(320.dp)
-            .height(72.dp),
-          onClick = { disconnect() }
-        ) {
-          Text(
-            text = "연결됨",
-            style = TextStyle(
-              fontSize = 24.sp,
-              fontFamily = FontFamily(Font(R.font.jalnan)),
-              fontWeight = FontWeight(700),
-              color = Color(0xFF4EA162),
-            )
+        Text(
+          text = "연결됨",
+          style = TextStyle(
+            fontSize = 24.sp,
+            fontFamily = FontFamily(Font(R.font.jalnan)),
+            fontWeight = FontWeight(700),
+            color = Color(0xFF4DB39D),
           )
-        }
+        )
       }
+
+//      Log()
     }
 
 
@@ -372,7 +342,6 @@ fun ScreenActivity(
       }
     }
 
-    Log()
 
     DeviceCheck()
   }

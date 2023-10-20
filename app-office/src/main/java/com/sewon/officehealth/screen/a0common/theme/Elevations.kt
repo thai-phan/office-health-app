@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-package com.sewon.officehealth.common.theme
+package com.sewon.officehealth.screen.a0common.theme
 
-import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 
 /**
- * Images that can vary by theme.
+ * Elevation values that can be themed.
  */
 @Immutable
-data class Images(@DrawableRes val lockupLogo: Int)
+data class Elevations(val card: Dp = 0.dp)
 
-internal val LocalImages = staticCompositionLocalOf<Images> {
-  error("No LocalImages specified")
+internal val LocalElevations = staticCompositionLocalOf {
+  Elevations()
 }

@@ -14,19 +14,16 @@
  * limitations under the License.
  */
 
-package com.sewon.officehealth.common.theme
+package com.sewon.officehealth.screen.a0common.theme
 
-import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.compose.ui.unit.Dp
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Shapes
 import androidx.compose.ui.unit.dp
 
-/**
- * Elevation values that can be themed.
- */
-@Immutable
-data class Elevations(val card: Dp = 0.dp)
-
-internal val LocalElevations = staticCompositionLocalOf {
-    Elevations()
-}
+val shapes = Shapes(
+  extraSmall = RoundedCornerShape(4.dp),
+  small = RoundedCornerShape(8.dp),
+  medium = RoundedCornerShape(16.dp),
+  large = RoundedCornerShape(24.dp),
+  extraLarge = RoundedCornerShape(32.dp)
+)

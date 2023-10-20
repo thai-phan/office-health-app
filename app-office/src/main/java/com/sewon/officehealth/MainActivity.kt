@@ -8,11 +8,10 @@ import android.os.IBinder
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
-import com.sewon.officehealth.common.RootCompose
+import com.sewon.officehealth.screen.RootCompose
 import com.sewon.officehealth.service.ble.ListenerBleData
 import com.sewon.officehealth.service.ble.ServiceBleHandler
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 
 
 @AndroidEntryPoint

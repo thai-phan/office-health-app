@@ -46,7 +46,7 @@ fun DeviceList(
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
       Image(
-        painter = painterResource(id = R.mipmap.ic_ohealp_foreground),
+        painter = painterResource(id = R.drawable.ic_ohealp_old),
         contentDescription = "Logo",
         modifier = Modifier
           .fillMaxWidth()

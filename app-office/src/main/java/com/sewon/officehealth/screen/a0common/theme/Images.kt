@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-package com.sewon.officehealth.common.theme
+package com.sewon.officehealth.screen.a0common.theme
 
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Shapes
-import androidx.compose.ui.unit.dp
+import androidx.annotation.DrawableRes
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.staticCompositionLocalOf
 
-val shapes = Shapes(
-  extraSmall = RoundedCornerShape(4.dp),
-  small = RoundedCornerShape(8.dp),
-  medium = RoundedCornerShape(16.dp),
-  large = RoundedCornerShape(24.dp),
-  extraLarge = RoundedCornerShape(32.dp)
-)
+/**
+ * Images that can vary by theme.
+ */
+@Immutable
+data class Images(@DrawableRes val lockupLogo: Int)
+
+internal val LocalImages = staticCompositionLocalOf<Images> {
+  error("No LocalImages specified")
+}

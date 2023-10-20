@@ -1,4 +1,4 @@
-package com.sewon.officehealth.common
+package com.sewon.officehealth.screen.a0common
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
@@ -18,6 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.sewon.officehealth.screen.MainTabs
 import java.util.Locale
 
 @Composable

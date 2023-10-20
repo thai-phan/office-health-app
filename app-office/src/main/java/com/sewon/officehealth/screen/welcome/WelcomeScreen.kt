@@ -2,21 +2,15 @@ package com.sewon.officehealth.screen.welcome
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -25,11 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.paint
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -39,11 +29,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.sewon.officehealth.MainActivity
 import com.sewon.officehealth.R
-import com.sewon.officehealth.common.AppDestinations
-import com.sewon.officehealth.common.whiteBackground
+import com.sewon.officehealth.screen.AppDestinations
+import com.sewon.officehealth.screen.a0common.whiteBackground
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -76,7 +64,7 @@ fun WelcomeScreen(
       modifier = Modifier.height(20.dp)
     )
     Image(
-      painter = painterResource(id = R.mipmap.ic_ohealp_foreground),
+      painter = painterResource(id = R.drawable.ic_ohealp_old),
       contentDescription = "Logo",
       modifier = Modifier
         .fillMaxWidth()
@@ -107,7 +95,7 @@ fun WelcomeScreen(
           lineHeight = 50.sp,
           fontFamily = FontFamily(Font(R.font.pretendard_regular)),
           fontWeight = FontWeight(600),
-          color = Color(0xFF00AD53),
+          color = Color(0xFF4DB39D),
           textAlign = TextAlign.Center,
         )
       )
@@ -141,15 +129,12 @@ fun WelcomeScreen(
     Button(
       colors = ButtonDefaults.buttonColors(Color(0xFFFFFFFF)),
       modifier = Modifier
-        .shadow(elevation = 4.dp, spotColor = Color(0x1A000000), ambientColor = Color(0x1A000000))
-        .border(
-          width = 4.dp,
-          color = Color(0xFFACE1AF),
-          shape = RoundedCornerShape(size = 999.dp)
-        )
         .width(320.dp)
         .height(73.dp)
-        .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 999.dp)),
+        .background(
+          color = Color(0xFFFFFFFF),
+          shape = RoundedCornerShape(size = 999.dp)
+        ),
       onClick = { navigateToDevice() }
     ) {
       Text(
@@ -158,7 +143,7 @@ fun WelcomeScreen(
           fontSize = 24.sp,
           fontFamily = FontFamily(Font(R.font.jalnan)),
           fontWeight = FontWeight(700),
-          color = Color(0xFF4EA162),
+          color = Color(0xFF4DB39D),
         )
       )
     }
@@ -166,7 +151,7 @@ fun WelcomeScreen(
       modifier = Modifier.height(20.dp)
     )
     Image(
-      painter = painterResource(id = R.mipmap.ic_image_2_foreground),
+      painter = painterResource(id = R.mipmap.ic_image_3_foreground),
       contentDescription = "Logo",
       modifier = Modifier
         .fillMaxWidth()

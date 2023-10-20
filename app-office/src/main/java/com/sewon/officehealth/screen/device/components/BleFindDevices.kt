@@ -126,7 +126,7 @@ internal fun BleFindDevices(navController: NavHostController = rememberNavContro
       }
       items(devices) { item ->
         BleDevice(
-          Color(0xFFE3ECA6),
+          Color(0xFFFFFFFF),
           navController = navController,
           bluetoothDevice = item,
         )
@@ -138,7 +138,7 @@ internal fun BleFindDevices(navController: NavHostController = rememberNavContro
         }
         items(pairedDevices) {
           BleDevice(
-            Color(0xFFE3ECA6),
+            Color(0xFFFFFFFF),
             bluetoothDevice = it,
           )
         }

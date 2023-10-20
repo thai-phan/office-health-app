@@ -1,4 +1,4 @@
-package com.sewon.officehealth.common
+package com.sewon.officehealth.screen
 
 import androidx.activity.compose.BackHandler
 import androidx.annotation.DrawableRes
