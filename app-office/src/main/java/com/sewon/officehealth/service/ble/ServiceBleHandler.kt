@@ -26,8 +26,6 @@ import java.util.ArrayDeque
  * use listener chain: SerialSocket -> SerialService -> UI fragment
  */
 class ServiceBleHandler : Service(), ISerialListener {
-
-
   inner class SerialBinder : Binder() {
     val service: ServiceBleHandler
       get() = this@ServiceBleHandler
@@ -79,7 +77,6 @@ class ServiceBleHandler : Service(), ISerialListener {
   val isPlaySoundStretch = mutableStateOf(false)
   val isPlaySoundStress = mutableStateOf(false)
 
-
   init {
     mainLooper = Handler(Looper.getMainLooper())
     binder = SerialBinder()
@@ -87,7 +84,6 @@ class ServiceBleHandler : Service(), ISerialListener {
     queue2 = ArrayDeque()
     lastRead = QueueItem(QueueType.Read)
   }
-
 
   override fun onDestroy() {
     cancelNotification()
@@ -107,10 +103,19 @@ class ServiceBleHandler : Service(), ISerialListener {
     connected = true
   }
 
-  fun disconnect() {
-    isPlaySoundStress.value = false
-    isPlaySoundStretch.value = false
+
+  private fun resetSession() {
+    if (isPlaySoundStretch.value) {
+      stopSoundStretch()
+    }
+    if (isPlaySoundStress.value) {
+      stopSoundStress()
+    }
     listenerBleData?.realtimeDataObject?.stretchObj?.countDownTimer?.cancel()
+  }
+
+  fun disconnect() {
+    resetSession()
     listenerBleData?.resetRealtimeDataObject()
     connected = false // ignore data,errors while disconnecting
     cancelNotification()
@@ -173,7 +178,7 @@ class ServiceBleHandler : Service(), ISerialListener {
 //    notificationChannel.importance = NotificationManager.IMPORTANCE_HIGH
     notificationChannel.enableLights(true)
     notificationChannel.enableVibration(true)
-    notificationChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC;
+    notificationChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
     notificationChannel.setShowBadge(false)
     notificationChannel.setSound(alarmSound, att)
 

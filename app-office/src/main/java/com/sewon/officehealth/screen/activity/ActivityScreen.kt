@@ -64,8 +64,8 @@ fun ScreenActivity(
   val milliseconds by MainActivity.listenerBleData.realtimeDataObject.stretchObj.timeRemaining
 
   val second = milliseconds / 1000
-  val minuteStr = ((second % 3600) / 60).toString();
-  val secondStr = (second % 60).toString();
+  val minuteStr = ((second % 3600) / 60).toString()
+  val secondStr = (second % 60).toString()
 
   fun disconnect() {
     MainActivity.serviceBleHandler.disconnect()
@@ -107,7 +107,7 @@ fun ScreenActivity(
 //    }
     Column(
       modifier = Modifier
-        .weight(3f),
+        .weight(4f),
       verticalArrangement = Arrangement.Center,
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -181,7 +181,7 @@ fun ScreenActivity(
       color = Color(0xFF003917),
       textAlign = TextAlign.Center,
     )
-    Column(modifier = Modifier.weight(5f)) {
+    Column(modifier = Modifier.weight(4f)) {
       Row(
         modifier = Modifier
           .weight(1f)

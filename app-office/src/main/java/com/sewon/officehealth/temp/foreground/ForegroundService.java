@@ -32,7 +32,7 @@ public class ForegroundService extends Service {
     Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
         .setContentTitle("Foreground Service")
         .setContentText(input)
-        .setSmallIcon(R.drawable.ic_intelli)
+        .setSmallIcon(R.drawable.ic_ohealp)
         .setContentIntent(pendingIntent)
         .build();
     startForeground(1, notification);

@@ -1,4 +1,4 @@
-package com.sewon.officehealth.service.ble;
+package com.sewon.officehealth.service.ble
 
 import com.sewon.officehealth.BuildConfig
 

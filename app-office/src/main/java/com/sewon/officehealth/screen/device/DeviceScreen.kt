@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -46,17 +47,20 @@ fun DeviceList(
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
       Image(
-        painter = painterResource(id = R.drawable.ic_ohealp_old),
-        contentDescription = "Logo",
         modifier = Modifier
-          .fillMaxWidth()
-          .height(150.dp)
+          .weight(2f)
+          .fillMaxSize(0.7f),
+        painter = painterResource(id = R.drawable.ic_ohealp),
+        contentDescription = "Logo",
       )
       Image(
+        modifier = Modifier
+          .weight(1f)
+          .fillMaxSize(0.7f),
         painter = painterResource(id = R.drawable.ic_bluetooth_wing),
         contentDescription = "Logo",
       )
-      BluetoothWrapper {
+      BluetoothWrapper(modifier = Modifier.weight(7f)) {
         BleFindDevices(navController)
       }
     }

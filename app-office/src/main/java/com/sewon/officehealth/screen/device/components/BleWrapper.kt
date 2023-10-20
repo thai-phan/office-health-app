@@ -37,6 +37,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.getSystemService
@@ -48,6 +49,7 @@ import timber.log.Timber
  */
 @Composable
 fun BluetoothWrapper(
+  modifier: Modifier = Modifier,
   extraPermissions: Set<String> = emptySet(),
   content: @Composable BoxScope.(BluetoothAdapter) -> Unit,
 ) {
@@ -95,6 +97,7 @@ fun BluetoothWrapper(
   val permissionFinal = (bluetoothPermissionSet + locationPermission + extraPermissions).toList()
 
   PermissionScreen(
+    modifier = modifier,
     permissions = permissionFinal,
     contentAlignment = Alignment.Center,
   ) {
