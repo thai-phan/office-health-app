@@ -1,10 +1,8 @@
 package com.sewon.officehealth.screen.activity
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -47,6 +45,9 @@ import androidx.navigation.compose.rememberNavController
 import com.sewon.officehealth.MainActivity
 import com.sewon.officehealth.R
 import com.sewon.officehealth.screen.AppDestinations
+import com.sewon.officehealth.screen.activity.component.DialogStress
+import com.sewon.officehealth.screen.activity.component.DeviceCheckDialog
+import timber.log.Timber
 import java.util.Calendar
 import java.util.Calendar.DAY_OF_MONTH
 import java.util.Calendar.MONTH
@@ -60,6 +61,10 @@ fun ScreenActivity(
   navController: NavHostController = rememberNavController(),
   viewModel: ViewModelSleepActivity = hiltViewModel()
 ) {
+
+  SideEffect {
+    Timber.tag("ScreenActivity").d("recompose")
+  }
 
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -326,14 +331,13 @@ fun ScreenActivity(
           )
         )
       }
-
 //      Log()
     }
 
 
     when {
       isStressUI -> {
-        AlertDialog(
+        DialogStress(
           onDismissRequest = {
             MainActivity.listenerBleData.stressStop()
           },
@@ -354,7 +358,7 @@ fun ScreenActivity(
     }
 
 
-    DeviceCheck()
+    DeviceCheckDialog()
   }
 }
 

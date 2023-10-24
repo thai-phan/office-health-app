@@ -1,4 +1,4 @@
-package com.sewon.officehealth.screen.activity
+package com.sewon.officehealth.screen.activity.component
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,7 +21,7 @@ import androidx.compose.ui.window.Dialog
 import com.sewon.officehealth.MainActivity
 
 @Composable
-fun DeviceCheck() {
+fun DeviceCheckDialog() {
   val isWrongDeviceUi by remember { MainActivity.listenerBleData.isWrongDeviceType }
 
   fun onDismissRequest() {

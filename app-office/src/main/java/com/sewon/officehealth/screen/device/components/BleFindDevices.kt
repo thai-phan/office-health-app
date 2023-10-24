@@ -46,17 +46,9 @@ import timber.log.Timber
 @RequiresPermission(Manifest.permission.BLUETOOTH_SCAN)
 @Composable
 internal fun BleFindDevices(navController: NavHostController = rememberNavController()) {
-  val context = LocalContext.current
-  val adapter = checkNotNull(context.getSystemService<BluetoothManager>()?.adapter)
-
   var scanning by remember { mutableStateOf(true) }
 
   val devices = remember { mutableStateListOf<BluetoothDevice>() }
-
-  val pairedDevices = remember {
-    // Get a list of previously paired devices
-    mutableStateListOf<BluetoothDevice>(*adapter.bondedDevices.toTypedArray())
-  }
 
   val scanSettings: ScanSettings = ScanSettings.Builder()
     .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
@@ -131,19 +123,6 @@ internal fun BleFindDevices(navController: NavHostController = rememberNavContro
           bluetoothDevice = item,
         )
       }
-
-      if (pairedDevices.isNotEmpty()) {
-        item {
-          Text(text = "Saved devices", style = MaterialTheme.typography.titleSmall)
-        }
-        items(pairedDevices) {
-          BleDevice(
-            Color(0xFFFFFFFF),
-            bluetoothDevice = it,
-          )
-        }
-      }
     }
   }
-
 }

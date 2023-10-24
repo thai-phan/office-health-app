@@ -1,4 +1,4 @@
-package com.sewon.officehealth.screen.activity
+package com.sewon.officehealth.screen.activity.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -28,7 +28,7 @@ import com.sewon.officehealth.MainActivity
 import com.sewon.officehealth.R
 
 @Composable
-fun Log() {
+fun LogView() {
   val logUI by remember { MainActivity.listenerBleData.log }
   val uiCountHR by remember { MainActivity.listenerBleData.realtimeDataObject.stressObj.countReferenceHR }
   val uiCountBR by remember { MainActivity.listenerBleData.realtimeDataObject.stressObj.countReferenceBR }

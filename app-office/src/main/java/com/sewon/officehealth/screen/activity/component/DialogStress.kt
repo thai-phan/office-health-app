@@ -1,4 +1,4 @@
-package com.sewon.officehealth.screen.activity
+package com.sewon.officehealth.screen.activity.component
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.sp
 import com.sewon.officehealth.R
 
 @Composable
-fun AlertDialog(
+fun DialogStress(
   onDismissRequest: () -> Unit,
   onConfirmation: () -> Unit,
   dialogTitle: String,
