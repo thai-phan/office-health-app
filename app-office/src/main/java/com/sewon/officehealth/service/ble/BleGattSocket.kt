@@ -26,8 +26,7 @@ import java.util.UUID
  * - read + status is returned by SerialListener
  */
 @SuppressLint("MissingPermission") // various BluetoothGatt, BluetoothDevice methods
-
-class SocketBleGatt(val context: Context, var device: BluetoothDevice) : BluetoothGattCallback() {
+class BleGattSocket(val context: Context, var device: BluetoothDevice) : BluetoothGattCallback() {
   companion object {
 
     private val BLUETOOTH_LE_CCCD = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb")

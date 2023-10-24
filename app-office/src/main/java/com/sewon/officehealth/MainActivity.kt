@@ -9,8 +9,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
 import com.sewon.officehealth.screen.RootCompose
-import com.sewon.officehealth.service.ble.ListenerBleData
-import com.sewon.officehealth.service.ble.ServiceBleHandler
+import com.sewon.officehealth.service.ble.BleServiceListener
+import com.sewon.officehealth.service.ble.BleServiceHandler
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -18,8 +18,8 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
   companion object {
-    lateinit var serviceBleHandler: ServiceBleHandler
-    var listenerBleData = ListenerBleData()
+    lateinit var bleServiceHandler: BleServiceHandler
+    var bleServiceListener = BleServiceListener()
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
 
   override fun onStart() {
     super.onStart()
-    val intent = Intent(this, ServiceBleHandler::class.java)
+    val intent = Intent(this, BleServiceHandler::class.java)
     startService(intent)
     bindService(intent, mServiceConnection, BIND_AUTO_CREATE)
   }
@@ -54,8 +54,8 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onServiceConnected(name: ComponentName, service: IBinder) {
-      serviceBleHandler = (service as ServiceBleHandler.SerialBinder).service
-      serviceBleHandler.attach(listenerBleData)
+      bleServiceHandler = (service as BleServiceHandler.SerialBinder).service
+      bleServiceHandler.attach(bleServiceListener)
     }
   }
 }

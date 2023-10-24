@@ -122,7 +122,7 @@ class DetectionStress {
     val stressMess = "Detect Stress $message $meanOneMin ref $ref \n"
     Timber.tag(TAG).d(stressMess)
     stressMessage.value += stressMess
-    MainActivity.listenerBleData.stressDetected()
+    MainActivity.bleServiceListener.stressDetected()
   }
 
   private var alertCount = 0

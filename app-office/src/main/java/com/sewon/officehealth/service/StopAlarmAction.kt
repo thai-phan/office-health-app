@@ -10,6 +10,6 @@ import timber.log.Timber
 class StopAlarmAction : BroadcastReceiver() {
   override fun onReceive(context: Context, intent: Intent) {
     Timber.tag("StopAlarmAction").d("stop")
-    MainActivity.listenerBleData.stretchStop()
+    MainActivity.bleServiceListener.stretchStop()
   }
 }

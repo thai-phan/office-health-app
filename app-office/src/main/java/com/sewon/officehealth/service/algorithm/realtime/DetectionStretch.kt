@@ -24,7 +24,7 @@ class DetectionStretch {
     }
 
     override fun onFinish() {
-      MainActivity.listenerBleData.stretchDetected()
+      MainActivity.bleServiceListener.stretchDetected()
       timeRemaining.longValue = 0
     }
   }
@@ -35,7 +35,7 @@ class DetectionStretch {
       countNoVitalSign += 1
       if (countNoVitalSign == Constants.NO_VITAL_SIGN_THRESHOLD) {
         Timber.tag(TAG).d("STABLE_NO_VITAL_SIGN")
-        MainActivity.listenerBleData.resetTimer()
+        MainActivity.bleServiceListener.resetTimer()
         countNoVitalSign = 0
       }
     } else {
@@ -47,7 +47,7 @@ class DetectionStretch {
       countNoTarget += 1
       if (countNoTarget == Constants.NO_TARGET_THRESHOLD) {
         Timber.tag(TAG).d("STABLE_NO_TARGET")
-        MainActivity.listenerBleData.resetTimer()
+        MainActivity.bleServiceListener.resetTimer()
         countNoTarget = 0
       }
     } else {

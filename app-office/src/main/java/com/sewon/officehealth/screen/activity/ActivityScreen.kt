@@ -68,14 +68,14 @@ fun ScreenActivity(
 
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-  val milliseconds by MainActivity.listenerBleData.realtimeDataObject.stretchObj.timeRemaining
+  val milliseconds by MainActivity.bleServiceListener.realtimeDataObject.stretchObj.timeRemaining
 
   val second = milliseconds / 1000
   val minuteStr = ((second % 3600) / 60).toString()
   val secondStr = (second % 60).toString()
 
   fun disconnect() {
-    MainActivity.serviceBleHandler.disconnect()
+    MainActivity.bleServiceHandler.disconnect()
     navController.navigate(AppDestinations.DEVICE_ROUTE)
   }
 
@@ -86,10 +86,10 @@ fun ScreenActivity(
 
 
 //  val isStretchUI by remember { MainActivity.listenerBleData.isStretch }
-  val isStressUI by remember { MainActivity.listenerBleData.isStress }
+  val isStressUI by remember { MainActivity.bleServiceListener.isStress }
 
-  val isPlayStretch by remember { MainActivity.serviceBleHandler.isPlaySoundStretch }
-  val isPlayStress by remember { MainActivity.serviceBleHandler.isPlaySoundStress }
+  val isPlayStretch by remember { MainActivity.bleServiceHandler.isPlaySoundStretch }
+  val isPlayStress by remember { MainActivity.bleServiceHandler.isPlaySoundStress }
 
   val normalTextStyle = TextStyle(
     fontSize = 20.sp,
@@ -237,9 +237,9 @@ fun ScreenActivity(
           colors = ButtonDefaults.buttonColors(Color(0xFF378171)),
           onClick = {
             if (isPlayStretch) {
-              MainActivity.serviceBleHandler.stopSoundStretch()
+              MainActivity.bleServiceHandler.stopSoundStretch()
             } else {
-              MainActivity.serviceBleHandler.playSoundStretch()
+              MainActivity.bleServiceHandler.playSoundStretch()
             }
           }) {
           if (isPlayStretch) {
@@ -283,9 +283,9 @@ fun ScreenActivity(
           colors = ButtonDefaults.buttonColors(Color(0xFF378171)),
           onClick = {
             if (isPlayStress) {
-              MainActivity.serviceBleHandler.stopSoundStress()
+              MainActivity.bleServiceHandler.stopSoundStress()
             } else {
-              MainActivity.serviceBleHandler.playSoundStress()
+              MainActivity.bleServiceHandler.playSoundStress()
             }
           }
         ) {
@@ -339,13 +339,13 @@ fun ScreenActivity(
       isStressUI -> {
         DialogStress(
           onDismissRequest = {
-            MainActivity.listenerBleData.stressStop()
+            MainActivity.bleServiceListener.stressStop()
           },
           onConfirmation = {
             if (isPlayStress) {
-              MainActivity.serviceBleHandler.stopSoundStress()
+              MainActivity.bleServiceHandler.stopSoundStress()
             } else {
-              MainActivity.serviceBleHandler.playSoundStress()
+              MainActivity.bleServiceHandler.playSoundStress()
             }
           },
           dialogTitle = "스트레스 솔루션",
