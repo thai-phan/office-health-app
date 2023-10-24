@@ -27,50 +27,7 @@ import java.util.UUID
  */
 @SuppressLint("MissingPermission") // various BluetoothGatt, BluetoothDevice methods
 class BleGattSocket(val context: Context, var device: BluetoothDevice) : BluetoothGattCallback() {
-  companion object {
 
-    private val BLUETOOTH_LE_CCCD = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb")
-    private val BLUETOOTH_LE_CC254X_SERVICE =
-      UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb")
-    private val BLUETOOTH_LE_CC254X_CHAR_RW =
-      UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb")
-    private val BLUETOOTH_LE_NRF_SERVICE = UUID.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e")
-
-    // read on microbit, write on adafruit
-    private val BLUETOOTH_LE_NRF_CHAR_RW2 =
-      UUID.fromString("6e400002-b5a3-f393-e0a9-e50e24dcca9e")
-    private val BLUETOOTH_LE_NRF_CHAR_RW3 = UUID.fromString("6e400003-b5a3-f393-e0a9-e50e24dcca9e")
-    private val BLUETOOTH_LE_MICROCHIP_SERVICE =
-      UUID.fromString("49535343-FE7D-4AE5-8FA9-9FAFD205E455")
-    private val BLUETOOTH_LE_MICROCHIP_CHAR_RW =
-      UUID.fromString("49535343-1E4D-4BD9-BA61-23C647249616")
-    private val BLUETOOTH_LE_MICROCHIP_CHAR_W =
-      UUID.fromString("49535343-8841-43F4-A8D4-ECBE34729BB3")
-
-    // https://play.google.com/store/apps/details?id=com.telit.tiosample
-    // https://www.telit.com/wp-content/uploads/2017/09/TIO_Implementation_Guide_r6.pdf
-    private val BLUETOOTH_LE_TIO_SERVICE = UUID.fromString("0000FEFB-0000-1000-8000-00805F9B34FB")
-
-    // WNR
-    private val BLUETOOTH_LE_TIO_CHAR_TX =
-      UUID.fromString("00000001-0000-1000-8000-008025000000")
-
-    // N
-    private val BLUETOOTH_LE_TIO_CHAR_RX =
-      UUID.fromString("00000002-0000-1000-8000-008025000000")
-
-    // W
-    private val BLUETOOTH_LE_TIO_CHAR_TX_CREDITS =
-      UUID.fromString("00000003-0000-1000-8000-008025000000")
-
-    // I
-    private val BLUETOOTH_LE_TIO_CHAR_RX_CREDITS =
-      UUID.fromString("00000004-0000-1000-8000-008025000000")
-
-    // BLE standard does not limit, some BLE 4.2 devices support 251, various source say that Android has max 512
-    private const val MAX_MTU = 512
-    private const val DEFAULT_MTU = 23
-  }
 
   val TAG: String = this.javaClass.name
 
@@ -250,10 +207,10 @@ class BleGattSocket(val context: Context, var device: BluetoothDevice) : Bluetoo
     var sync = true
     writePending = false
     for (gattService in gatt.services) {
-      if (gattService.uuid == BLUETOOTH_LE_CC254X_SERVICE) delegate = Cc245XDelegate()
-      if (gattService.uuid == BLUETOOTH_LE_MICROCHIP_SERVICE) delegate = MicrochipDelegate()
-      if (gattService.uuid == BLUETOOTH_LE_NRF_SERVICE) delegate = NrfDelegate()
-      if (gattService.uuid == BLUETOOTH_LE_TIO_SERVICE) delegate = TelitDelegate()
+      if (gattService.uuid == BLE_CC254X_SERVICE) delegate = Cc245XDelegate()
+      if (gattService.uuid == BLE_MICROCHIP_SERVICE) delegate = MicrochipDelegate()
+      if (gattService.uuid == BLE_NRF_SERVICE) delegate = NrfDelegate()
+      if (gattService.uuid == BLE_TIO_SERVICE) delegate = TelitDelegate()
       if (delegate != null) {
         sync = delegate!!.connectCharacteristics(gattService)
         break
@@ -298,7 +255,7 @@ class BleGattSocket(val context: Context, var device: BluetoothDevice) : Bluetoo
       onSerialConnectError(IOException("no notification for read characteristic"))
       return
     }
-    val readDescriptor = readCharacteristic!!.getDescriptor(BLUETOOTH_LE_CCCD)
+    val readDescriptor = readCharacteristic!!.getDescriptor(BLE_CCCD)
     if (readDescriptor == null) {
       onSerialConnectError(IOException("no CCCD descriptor for read characteristic"))
       return
@@ -469,14 +426,41 @@ class BleGattSocket(val context: Context, var device: BluetoothDevice) : Bluetoo
     if (listener != null) listener!!.onSerialIoError(e)
   }
 
+  companion object {
+
+    private val BLE_CCCD = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb")
+    private val BLE_CC254X_SERVICE = UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb")
+    private val BLE_CC254X_CHAR_RW = UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb")
+    private val BLE_NRF_SERVICE = UUID.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e")
+
+    // read on microbit, write on adafruit
+    private val BLE_NRF_CHAR_RW2 = UUID.fromString("6e400002-b5a3-f393-e0a9-e50e24dcca9e")
+    private val BLE_NRF_CHAR_RW3 = UUID.fromString("6e400003-b5a3-f393-e0a9-e50e24dcca9e")
+    private val BLE_MICROCHIP_SERVICE = UUID.fromString("49535343-FE7D-4AE5-8FA9-9FAFD205E455")
+    private val BLE_MICROCHIP_CHAR_RW = UUID.fromString("49535343-1E4D-4BD9-BA61-23C647249616")
+    private val BLE_MICROCHIP_CHAR_W = UUID.fromString("49535343-8841-43F4-A8D4-ECBE34729BB3")
+
+    // https://play.google.com/store/apps/details?id=com.telit.tiosample
+    // https://www.telit.com/wp-content/uploads/2017/09/TIO_Implementation_Guide_r6.pdf
+    private val BLE_TIO_SERVICE = UUID.fromString("0000FEFB-0000-1000-8000-00805F9B34FB")
+    private val BLE_TIO_CHAR_TX = UUID.fromString("00000001-0000-1000-8000-008025000000")
+    private val BLE_TIO_CHAR_RX = UUID.fromString("00000002-0000-1000-8000-008025000000")
+    private val BLE_TIO_CHAR_TX_CREDITS = UUID.fromString("00000003-0000-1000-8000-008025000000")
+    private val BLE_TIO_CHAR_RX_CREDITS = UUID.fromString("00000004-0000-1000-8000-008025000000")
+
+    // BLE standard does not limit, some BLE 4.2 devices support 251, various source say that Android has max 512
+    private const val MAX_MTU = 512
+    private const val DEFAULT_MTU = 23
+  }
+  
   /**
    * device delegates
    */
   private inner class Cc245XDelegate : DeviceDelegate() {
     override fun connectCharacteristics(s: BluetoothGattService): Boolean {
       Timber.tag(TAG).d("service cc254x uart")
-      readCharacteristic = s.getCharacteristic(BLUETOOTH_LE_CC254X_CHAR_RW)
-      writeCharacteristic = s.getCharacteristic(BLUETOOTH_LE_CC254X_CHAR_RW)
+      readCharacteristic = s.getCharacteristic(BLE_CC254X_CHAR_RW)
+      writeCharacteristic = s.getCharacteristic(BLE_CC254X_CHAR_RW)
       return true
     }
   }
@@ -484,10 +468,10 @@ class BleGattSocket(val context: Context, var device: BluetoothDevice) : Bluetoo
   private inner class MicrochipDelegate : DeviceDelegate() {
     override fun connectCharacteristics(s: BluetoothGattService): Boolean {
       Timber.tag(TAG).d("service microchip uart")
-      readCharacteristic = s.getCharacteristic(BLUETOOTH_LE_MICROCHIP_CHAR_RW)
-      writeCharacteristic = s.getCharacteristic(BLUETOOTH_LE_MICROCHIP_CHAR_W)
+      readCharacteristic = s.getCharacteristic(BLE_MICROCHIP_CHAR_RW)
+      writeCharacteristic = s.getCharacteristic(BLE_MICROCHIP_CHAR_W)
       if (writeCharacteristic == null) writeCharacteristic = s.getCharacteristic(
-        BLUETOOTH_LE_MICROCHIP_CHAR_RW
+        BLE_MICROCHIP_CHAR_RW
       )
       return true
     }
@@ -496,8 +480,8 @@ class BleGattSocket(val context: Context, var device: BluetoothDevice) : Bluetoo
   private inner class NrfDelegate : DeviceDelegate() {
     override fun connectCharacteristics(s: BluetoothGattService): Boolean {
       Timber.tag(TAG).d("service nrf uart")
-      val rw2 = s.getCharacteristic(BLUETOOTH_LE_NRF_CHAR_RW2)
-      val rw3 = s.getCharacteristic(BLUETOOTH_LE_NRF_CHAR_RW3)
+      val rw2 = s.getCharacteristic(BLE_NRF_CHAR_RW2)
+      val rw3 = s.getCharacteristic(BLE_NRF_CHAR_RW3)
       if (rw2 != null && rw3 != null) {
         val rw2prop = rw2.properties
         val rw3prop = rw3.properties
@@ -529,13 +513,13 @@ class BleGattSocket(val context: Context, var device: BluetoothDevice) : Bluetoo
       Timber.tag(TAG).d("service telit tio 2.0")
       readCredits = 0
       writeCredits = 0
-      readCharacteristic = s.getCharacteristic(BLUETOOTH_LE_TIO_CHAR_RX)
-      writeCharacteristic = s.getCharacteristic(BLUETOOTH_LE_TIO_CHAR_TX)
+      readCharacteristic = s.getCharacteristic(BLE_TIO_CHAR_RX)
+      writeCharacteristic = s.getCharacteristic(BLE_TIO_CHAR_TX)
       readCreditsCharacteristic = s.getCharacteristic(
-        BLUETOOTH_LE_TIO_CHAR_RX_CREDITS
+        BLE_TIO_CHAR_RX_CREDITS
       )
       writeCreditsCharacteristic = s.getCharacteristic(
-        BLUETOOTH_LE_TIO_CHAR_TX_CREDITS
+        BLE_TIO_CHAR_TX_CREDITS
       )
       if (readCharacteristic == null) {
         onSerialConnectError(IOException("read characteristic not found"))
@@ -557,7 +541,7 @@ class BleGattSocket(val context: Context, var device: BluetoothDevice) : Bluetoo
         onSerialConnectError(IOException("no notification for read credits characteristic"))
         return false
       }
-      val readCreditsDescriptor = readCreditsCharacteristic!!.getDescriptor(BLUETOOTH_LE_CCCD)
+      val readCreditsDescriptor = readCreditsCharacteristic!!.getDescriptor(BLE_CCCD)
       if (readCreditsDescriptor == null) {
         onSerialConnectError(IOException("no CCCD descriptor for read credits characteristic"))
         return false
