@@ -76,7 +76,7 @@ fun ScreenActivity(
 
   fun disconnect() {
     MainActivity.lowEnergyService.disconnect()
-    navController.navigate(AppDestinations.DEVICE_ROUTE)
+//    navController.navigate(AppDestinations.DEVICE_ROUTE)
   }
 
   val calendar = Calendar.getInstance()
@@ -106,12 +106,6 @@ fun ScreenActivity(
       .systemBarsPadding()
       .fillMaxSize()
   ) {
-
-//    Button(onClick = {
-//      MainActivity.listenerBleData.send("aaaaa")
-//    }) {
-//      Text("Test")
-//    }
     Column(
       modifier = Modifier
         .weight(4f),
