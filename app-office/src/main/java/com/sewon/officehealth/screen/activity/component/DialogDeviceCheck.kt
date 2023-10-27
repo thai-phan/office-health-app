@@ -22,10 +22,10 @@ import com.sewon.officehealth.MainActivity
 
 @Composable
 fun DeviceCheckDialog() {
-  val isWrongDeviceUi by remember { MainActivity.bleServiceListener.isWrongDeviceType }
+  val isWrongDeviceUi by remember { MainActivity.lowEnergyClient.isWrongDeviceType }
 
   fun onDismissRequest() {
-    MainActivity.bleServiceListener.isWrongDeviceType.value = false
+    MainActivity.lowEnergyClient.isWrongDeviceType.value = false
   }
 
   when {

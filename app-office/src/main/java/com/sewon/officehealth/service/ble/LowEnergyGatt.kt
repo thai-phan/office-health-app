@@ -26,7 +26,7 @@ import java.util.UUID
  * - read + status is returned by SerialListener
  */
 @SuppressLint("MissingPermission") // various BluetoothGatt, BluetoothDevice methods
-class BleGattSocket(val context: Context, var device: BluetoothDevice) : BluetoothGattCallback() {
+class LowEnergyGatt(val context: Context, var device: BluetoothDevice) : BluetoothGattCallback() {
 
 
   val TAG: String = this.javaClass.name
@@ -452,7 +452,7 @@ class BleGattSocket(val context: Context, var device: BluetoothDevice) : Bluetoo
     private const val MAX_MTU = 512
     private const val DEFAULT_MTU = 23
   }
-  
+
   /**
    * device delegates
    */

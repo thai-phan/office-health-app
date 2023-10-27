@@ -29,12 +29,12 @@ import com.sewon.officehealth.R
 
 @Composable
 fun LogView() {
-  val logUI by remember { MainActivity.bleServiceListener.log }
-  val uiCountHR by remember { MainActivity.bleServiceListener.realtimeDataObject.stressObj.countReferenceHR }
-  val uiCountBR by remember { MainActivity.bleServiceListener.realtimeDataObject.stressObj.countReferenceBR }
-  val uiRefHR by remember { MainActivity.bleServiceListener.realtimeDataObject.stressObj.refHR }
-  val uiRefBR by remember { MainActivity.bleServiceListener.realtimeDataObject.stressObj.refBR }
-  val uiStressMessage by remember { MainActivity.bleServiceListener.realtimeDataObject.stressObj.stressMessage }
+  val logUI by remember { MainActivity.lowEnergyClient.log }
+  val uiCountHR by remember { MainActivity.lowEnergyClient.realtimeDataObject.stressObj.countReferenceHR }
+  val uiCountBR by remember { MainActivity.lowEnergyClient.realtimeDataObject.stressObj.countReferenceBR }
+  val uiRefHR by remember { MainActivity.lowEnergyClient.realtimeDataObject.stressObj.refHR }
+  val uiRefBR by remember { MainActivity.lowEnergyClient.realtimeDataObject.stressObj.refBR }
+  val uiStressMessage by remember { MainActivity.lowEnergyClient.realtimeDataObject.stressObj.stressMessage }
 
   var isShowLog by remember { mutableStateOf(false) }
 

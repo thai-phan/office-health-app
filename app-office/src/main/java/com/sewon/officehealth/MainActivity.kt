@@ -9,8 +9,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
 import com.sewon.officehealth.screen.RootCompose
-import com.sewon.officehealth.service.ble.BleServiceListener
-import com.sewon.officehealth.service.ble.BleServiceHandler
+import com.sewon.officehealth.service.ble.LowEnergyClient
+import com.sewon.officehealth.service.ble.LowEnergyService
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -18,8 +18,8 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
   companion object {
-    lateinit var bleServiceHandler: BleServiceHandler
-    var bleServiceListener = BleServiceListener()
+    lateinit var lowEnergyService: LowEnergyService
+    var lowEnergyClient = LowEnergyClient()
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
 
   override fun onStart() {
     super.onStart()
-    val intent = Intent(this, BleServiceHandler::class.java)
+    val intent = Intent(this, LowEnergyService::class.java)
     startService(intent)
     bindService(intent, mServiceConnection, BIND_AUTO_CREATE)
   }
@@ -54,8 +54,8 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onServiceConnected(name: ComponentName, service: IBinder) {
-      bleServiceHandler = (service as BleServiceHandler.SerialBinder).service
-      bleServiceHandler.attach(bleServiceListener)
+      lowEnergyService = (service as LowEnergyService.SerialBinder).service
+      lowEnergyService.attach(lowEnergyClient)
     }
   }
 }

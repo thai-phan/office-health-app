@@ -10,7 +10,7 @@ import com.sewon.officehealth.service.algorithm.realtime.RealtimeDataObject
 import timber.log.Timber
 import java.util.ArrayDeque
 
-class BleServiceListener : ServiceConnection, ISerialListener {
+class LowEnergyClient : ServiceConnection, ISerialListener {
   val TAG = this.javaClass.name
 
   private enum class Connected {
@@ -33,10 +33,10 @@ class BleServiceListener : ServiceConnection, ISerialListener {
   val isStress = mutableStateOf(false)
   val isWrongDeviceType = mutableStateOf(false)
 
-  private var service: BleServiceHandler? = null
+  private var service: LowEnergyService? = null
 
   override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
-    service = (binder as BleServiceHandler.SerialBinder).service
+    service = (binder as LowEnergyService.SerialBinder).service
 //    if (initialStart && isResumed()) {
 //      initialStart = false
 //      getActivity().runOnUiThread(Runnable { this.connect() })
@@ -75,7 +75,7 @@ class BleServiceListener : ServiceConnection, ISerialListener {
   }
 
   fun stretchDetected() {
-    MainActivity.bleServiceHandler.createTimerNotification()
+    MainActivity.lowEnergyService.createTimerNotification()
     resetTimer()
 //    MainActivity.serviceBleHandle.playSoundStretch()
 //    isStretch.value = true

@@ -25,10 +25,10 @@ import java.util.ArrayDeque
  * create notification and queue serial data while activity is not in the foreground
  * use listener chain: SerialSocket -> SerialService -> UI fragment
  */
-class BleServiceHandler : Service(), ISerialListener {
+class LowEnergyService : Service(), ISerialListener {
   inner class SerialBinder : Binder() {
-    val service: BleServiceHandler
-      get() = this@BleServiceHandler
+    val service: LowEnergyService
+      get() = this@LowEnergyService
   }
 
 
@@ -70,8 +70,8 @@ class BleServiceHandler : Service(), ISerialListener {
   private val queue1: ArrayDeque<QueueItem>
   private val queue2: ArrayDeque<QueueItem>
   private val lastRead: QueueItem
-  private var socket: BleGattSocket? = null
-  var listenerBleData: BleServiceListener? = null
+  private var socket: LowEnergyGatt? = null
+  var listenerBleData: LowEnergyClient? = null
   private var connected = false
 
   val isPlaySoundStretch = mutableStateOf(false)
@@ -96,7 +96,7 @@ class BleServiceHandler : Service(), ISerialListener {
   }
 
   @Throws(IOException::class)
-  fun connect(socket: BleGattSocket) {
+  fun connect(socket: LowEnergyGatt) {
     listenerBleData?.realtimeDataObject?.stretchObj?.countDownTimer?.start()
     socket.connect(this)
     this.socket = socket
@@ -133,7 +133,7 @@ class BleServiceHandler : Service(), ISerialListener {
     }
   }
 
-  fun attach(listener: BleServiceListener) {
+  fun attach(listener: LowEnergyClient) {
 
     require(Looper.getMainLooper().thread === Thread.currentThread()) { "not in main thread" }
     cancelNotification()

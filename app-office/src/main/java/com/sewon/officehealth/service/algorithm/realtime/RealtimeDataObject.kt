@@ -24,8 +24,8 @@ class RealtimeDataObject {
       stressObj.processTopperDataStress(messageList)
     } else {
       Timber.tag("DataProcess").d("Wrong Device Type")
-      MainActivity.bleServiceListener.isWrongDeviceType.value = true
-      MainActivity.bleServiceHandler.disconnect()
+      MainActivity.lowEnergyClient.isWrongDeviceType.value = true
+      MainActivity.lowEnergyService.disconnect()
     }
   }
 
