@@ -1,11 +1,11 @@
 [versions]
 accompanist-permissions = "0.32.0"
 accompanistSystemuicontroller = "0.32.0"
-activity-compose = "1.8.0"
+activity-compose = "1.8.2"
 androidx-junit = "1.1.5"
-annotation = "1.7.0"
+annotation = "1.7.1"
 appcompat = "1.6.1"
-compiler = "1.5.3"
+composeCompiler = "1.5.7"
 composeVersion = "1.5.4"
 constraintlayout = "2.1.4"
 constraintlayout-compose = "1.0.1"
@@ -14,13 +14,13 @@ core-ktx = "1.12.0"
 datastore-preferences = "1.0.0"
 espressoCore = "3.5.1"
 hilt-android = "2.48.1"
-hilt-compiler = "1.0.0"
+hilt-compiler = "1.1.0"
 junit = "4.13.2"
 lifecycle-livedata-ktx = "2.6.2"
 lifecycle-viewmodel-ktx = "2.6.2"
 lifecycle-runtime-compose = "2.6.2"
 material3 = "1.1.2"
-navigation-ui-ktx = "2.7.4"
+navigation-ui-ktx = "2.7.6"
 preference-ktx = "1.2.1"
 timber = "5.0.1"
 
@@ -31,7 +31,7 @@ androidx-activity-compose = { module = "androidx.activity:activity-compose", ver
 androidx-animation = { module = "androidx.compose.animation:animation", version.ref = "composeVersion" }
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
-androidx-compiler = { module = "androidx.compose.compiler:compiler", version.ref = "compiler" }
+androidx-compiler = { module = "androidx.compose.compiler:compiler", version.ref = "composeCompiler" }
 androidx-compose-ui-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "composeVersion" }
 androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
 androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayout-compose" }
